@@ -6,37 +6,29 @@ Think OS[中文译本]
 
 ### 章节
 
-[ ] 序
 
+- [ ] 序
 
-[ ] Chapter 1 explains some of the differences between compiled and
-interpreted languages, with some insight into how compilers work.
-Recommended reading: Head First C Chapter 1.
+- [ ] 第1章: 介绍编译语言和解释语言的差异, 以及编译器工作原理.
+推荐阅读: Head First C Chapter 1.
 
-[ ] Chapter 2 explains how the operating system uses processes to
-protect running programs from interfering with each other.
+- [ ] 第2章: 介绍操作系统如何用进程隔离运行程序.
 
-[ ] Chapter 3 explains virtual memory and address translation.
-Recommended reading: Head First C Chapter 2.
+- [ ] 第3章: 介绍虚拟内存和地址转换. 推荐阅读: Head First C 第2章.
 
-[ ] Chapter 4 is about file systems and data streams.
-Recommended reading: Head First C Chapter 3.
+- [ ] 第4章: 介绍文件系统和数据流. 推荐阅读: Head First C 第3章.
 
-[ ] Chapter 5 describes how numbers, letters, and other values are
-encoded, and presents the bitwise operators.
+- [ ] 第6章: 讲述数字, 字母等值的编码, 以及介绍按位运算符.
 
-[ ] Chapter 6 explains how to use dynamic memory management, and how
-it works.
-Recommended reading: Head First C Chapter 6.
+- [ ] 第6章: 介绍动态存储管理以及工作原理. 推荐阅读: Head First C 第6章.
 
-[ ] Chapter 7 is about caching and the memory hierarchy.
+- [ ] 第7章: 缓存和存储层次.
 
-[ ] Chapter 8 is about multitasking and scheduling.
+- [ ] 第8章: 多任务和调度.
 
-[ ] 第9章: 线程.
+- [ ] 第9章: 线程.
 
-[ ] Chapter 10 will be about synchronization with POSIX mutexes and
-condition variables.
+- [ ] 第9章 使用 POSIX 信号量以及在 C 中的实现.
 
 ### 备注
 
