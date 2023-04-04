@@ -40,3 +40,5 @@ Think OS[中文译本]
 ### 原文待修正[记录]
 
 - READEME.md 只包含了10章，和书中的序不一致.
+- 代码使用: download Zip file，目前GitHub 下载按钮在仓库右上，而不是右下了.
+
