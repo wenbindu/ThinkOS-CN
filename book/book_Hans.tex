@@ -384,53 +384,45 @@ Jim Tyson, Donald Robertson, Jeremy Vermast, Yuzhong Huang 和 Ian Hill.
 
 \section{编译语言和解释语言}
 
-People often describe programming languages as either compiled or interpreted.
-``Compiled'' means that programs are translated into machine language and
-then executed by hardware; ``interpreted'' means that programs
-are read and executed by a software interpreter.
-Usually C is considered a compiled language and Python is
-considered an interpreted language.  But the distinction is not always
-clear-cut.
+人们通常将编程语言分为编译型或解释型.
+``编译''意味着程序被翻译为机器语言, 然后硬件执行;
+``解释''则意味着程序由软件解释器读取并执行.
+通常认为C是编译型语言, 而Python是解释型语言.
+但是两者差异并非泾渭分明.
 
-First, many languages can be either compiled or interpreted.  For
-example, there are C interpreters and Python compilers.
-Second, there are languages like Java that use a hybrid
-approach, compiling programs into an intermediate language and then
-running the translated program in an interpreter.  Java uses an
-intermediate language called Java bytecode, which is similar to
-machine language, but it is executed by a software interpreter, the
-Java virtual machine (JVM).
+首先, 很多语言是既可以被编译也可以被解释的.
+例如, 也有C解释器和Python编译器.
+其次, 像Java一样, 有些语言会使用混合方法,
+将程序编译为一种中间语言, 然后在解释器中运行翻译后的程序.
+Java使用了一种叫做Java字节码的中间语言, 和机器语言类似,
+但它需要由软件解释器执行, 也就是Java虚拟机(JVM).
 
-So being compiled or interpreted is not an intrinsic
-characteristic of a language; nevertheless, there are some general
-differences between compiled and interpreted languages.
+所以被编译还是被解释, 并不是一个语言的内在特征;
+然而无论如何, 编译语言和解释语言之间确实会存在一些普遍的差异.
 
 
-\section{Static types}
+\section{静态类型}
 
-Many interpreted languages support dynamic types, but compiled
-languages are usually limited to static types.  In a statically-typed
-language, you can tell by looking at the program what type each
-variable refers to.  In a dynamically-typed language,
-you don't always know the type of a variable until the
-program is running.  In general, {\bf static} refers to things that
-happen at compile time (while a program is being compiled), and {\bf dynamic} refers to things that happen
-at run time (while a program is running).
+多数解释语言支持的是动态类型, 但是编译语言通常受限于静态类型.
+在静态类型语言中, 你可以通过查看程序便能区分变量引用的类型.
+而在动态类型语言中, 直到程序运行, 你才能确切知道变量类型.
+通常, {\bf 静态} 是指在编译时发生的事情, 
+而{\bf 动态} 是指运行时发生的事情.
 
-For example, in Python you can write a function like this:
+例如, 可以用Python编写如下函数:
 
 \begin{verbatim}
 def add(x, y):
     return x + y
 \end{verbatim}
 
-Looking at this code, you can't tell what type {\tt x} and {\tt y}
-will refer to at run time.  This function might be called several
-times, each time with values with different types.  Any values that
-support the addition operator will work; any other types will cause an
-exception or {\bf runtime error}.
+看这个代码, 你很难在运行时% 此处是否存在歧义, email author. 
+确定{\tt x} 和 {\tt y} 所引用的类型.
+这个函数可能被调用多次, 每次都可能是不同类型的值.
+任何支持加法运算的值都可以运行; 
+其他类型则会引发异常或{\bf 运行时错误}.
 
-In C you would write the same function like this:
+而在C中, 同样函数编写如下::
 
 \begin{verbatim}
 int add(int x, int y) {
@@ -438,28 +430,26 @@ int add(int x, int y) {
 }
 \end{verbatim}
 
-The first line of the function includes {\bf type declarations} for the
-parameters and the return value: {\tt x} and {\tt y} are declared to
-be integers, which means that we can check at compile time
-whether the addition operator is legal for this type (it is).  The
-return value is also declared to be an integer.
+函数第一行包括对参数和返回值的{\bf 类型声明}:
+{\tt x} 和 {\tt y} 被声明为了整数, 
+这就意味着在编译时, 我们可以检查这种类型是否支持加法运算(此处支持).
+返回值也同样被声明为了整数.
 
-Because of these declarations, when this function is called elsewhere
-in the program, the compiler can check whether the arguments provided
-have the right type, and whether the return value is used correctly.
+因为这些声明的存在, 在程序其他位置调用这个函数时, 
+编译器便可以检查提供的参数是否具有正确的类型, 
+以及返回值是否使用正确.
 
-These checks happen before the program starts executing, so errors can
-be found earlier.  More importantly, errors can be found in parts
-of the program that have never run.  Furthermore, these checks don't
-have to happen at run time, which is one of the reasons compiled
-languages generally run faster than interpreted languages.
+这些检查发生在程序运行之前, 
+所以错误可以被提前发现.
+更重要的, 可以在未执行的程序部分发现错误.
+此外, 这些检查在运行时便无需发生, 这也是编译语言比解释语言
+运行更快的一个原因.
 
-Declaring types at compile time also saves space.  In dynamic
-languages, variable names are stored in memory while the program runs,
-and they are often accessible by the program.  For example, in Python
-the built-in function {\tt locals} returns a dictionary that contains
-variable names and their values.  Here's an example in a Python
-interpreter:
+编译时声明类型还能节省空间.
+在动态语言中, 程序运行时, 变量名称需要保存在内存中,
+同时它们会被程序频繁访问.
+例如, 在Python中, 内置函数{\tt locals} 会返回一个包含变量名称的字典.
+下面一个用Python解释器执行的示例:
 
 \begin{verbatim}
 >>> x = 5
@@ -468,18 +458,16 @@ interpreter:
 '__name__': '__main__', '__doc__': None, '__package__': None}
 \end{verbatim}
 
-This shows that the name of the variable is stored in memory while
-the program is running (along with some other values that are part
-of the default runtime environment).
+这说明在程序运行时, 变量名是存储在内存中的(以及一些作为默认
+运行环境一部分的其他值).
 
-In compiled languages, variable names exist at compile-time but not at
-run time.  The compiler chooses a location for each variable and
-records these locations as part of the compiled program.\footnote{This
-  is a simplification; we will go into more detail later.}  The
-location of a variable is called its {\bf address}.  At run time, the
-value of each variable is stored at its address, but the names of the
-variables are not stored at all (unless they are added by the compiler
-for purposes of debugging).
+编译语言中, 变量名存在于编译时, 而不是运行时.
+编译器会为每个变量选择一个位置,
+同时将这些位置记录为编译后的程序的一部分.\footnote{
+这只是一个简单描述, 稍后我们会详细说明.}  
+变量的位置被称为{\bf 地址}.
+运行时, 每个变量的值被存储在它的地址上,
+变量的名称则不会被存储(除非编译器出于调试的目的而添加它们).
 
 %This difference is reflected in the way people draw diagrams for
 %different languages.  In Python, every variable is a reference to
@@ -498,14 +486,14 @@ for purposes of debugging).
 
 
 
-\section{The compilation process}
+\section{编译流程}
 
-As a programmer, you should have a mental model of what happens
-during compilation.  If you understand the process, it will help
-you interpret error messages, debug your code, and avoid
-common pitfalls.
+作为程序员, 你应该对编译期间发生了什么有个大致脉络.
+如果你熟悉这个过程, 便可以帮你了解错误信息, 调试代码, 
+以及避免常见的陷阱.
 
-The steps of compilation are:
+
+编译步骤如下:
 
 \begin{enumerate}
 
