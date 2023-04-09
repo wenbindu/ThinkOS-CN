@@ -497,40 +497,31 @@ int add(int x, int y) {
 
 \begin{enumerate}
 
-\item Preprocessing: C is one of several languages that include
-  {\bf preprocessing directives} that take effect before the program is
-  compiled.  For example, the \verb"#include" directive causes the
-  source code from another file to be inserted at the location of the
-  directive.
+\item 预处理: C 是一种包括 {\bf 预处理指令} 的语言, 
+  这些指令是在编译之前起效的. 比如, \verb"#include" 指令会
+  将另一个文件的源代码插入到指令的位置.
 
-\item Parsing: During parsing, the compiler reads the source code and
-  builds an internal representation of the program, called an
-  {\bf abstract syntax tree}.  Errors
-  detected during this step are generally syntax errors.
+\item 解析: 解析期间, 编译器会读取源码并构建程序的内在结构, 也
+  就是{\bf 抽象语法树}. 在此期间检查出来的错误, 通常是语法错误.
 
-\item Static checking: The compiler checks whether variables and
-  values have the right type, whether functions are called with the
-  right number and type of arguments, etc.  Errors detected during
-  this step are sometimes called {\bf static semantic} errors.
+\item 静态检查: 编译器会检查变量和值的类型是否正确, 
+  调用函数是否使用了正确数量和类型的参数, 等等.
+  此阶段侦测到的错误通常是 {\bf 静态语义} 错误.
 
-\item Code generation: The compiler reads the internal representation
-  of the program and generates machine code or byte code.
+\item 代码生成: 编译器会读取程序的内在结构, 
+  并生成机器码或字节码.
 
-\item Linking: If the program uses values and functions defined in a
-  library, the compiler has to find the appropriate library and
-  include the required code.
+\item 链接: 如果程序使用了库中定义的值和函数, 
+  编译器需要找到合适的库, 并囊括所需的代码.
 
-\item Optimization: At several points in the process, the compiler
-  can transform the program to generate code that runs faster or
-  uses less space.  Most optimizations are simple changes that eliminate
-  obvious waste, but some compilers perform sophisticated analyses and
-  transformations.
+\item 优化: 在整个流程的各个阶段, 编译器可以转换程序, 生成
+  运行更快, 或更加节约空间的代码. 大部分的优化是一些简单的修改, 可以消除
+  明显的耗费, 但有些编译器可以执行更复杂的分析和代码转换.
 
 \end{enumerate}
 
-Normally when you run {\tt gcc}, it runs all of these steps and
-generates an executable file.  For example, here is a minimal C
-program:
+通常运行{\tt gcc}时, 它会执行所有这些步骤, 生成一个可执行文件.
+比如, 下面是一个极简的C程序代码:
 
 \begin{verbatim}
 #include <stdio.h>
@@ -540,21 +531,20 @@ int main()
 }
 \end{verbatim}
 
-If you save this code in a file called
-{\tt hello.c}, you can compile and run it like this:
+如果你将上述代码保存为一个名为{\tt hello.c}的文件, 
+你便能像这样对其进行编译和执行:
 
 \begin{verbatim}
 $ gcc hello.c
 $ ./a.out
 \end{verbatim}
 
-By default, {\tt gcc} stores the executable code in a file
-called {\tt a.out} (which originally stood for ``assembler output'').
-The second line runs the executable.  The prefix \verb"./" tells
-the shell to look for it in the current directory.
+默认情况下, {\tt gcc} 将可执行代码存储在名为 {\tt a.out}
+(起初表示``assembler output'')的文件中.
+第二行会运行可执行文件. 
+前缀 \verb"./"是告诉shell在当前目录中查找.
 
-It is usually a good idea to use the {\tt -o} flag to provide a
-better name for the executable:
+通常最好使用{\tt -o} 标识为可执行文件提供一个合适的名称:
 
 \begin{verbatim}
 $ gcc hello.c -o hello
@@ -562,7 +552,7 @@ $ ./hello
 \end{verbatim}
 
 
-\section{Object code}
+\section{目标码}
 
 The {\tt -c} flag tells {\tt gcc} to compile the program and
 generate machine code, but not to link it or generate an executable:
