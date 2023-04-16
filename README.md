@@ -9,7 +9,7 @@ Think OS[中文译本]
 
 :white_check_mark: 序
 
-:white_medium_square: 第一章: 介绍编译语言和解释语言的差异, 以及编译器工作原理.
+:white_check_mark: 第一章: 介绍编译语言和解释语言的差异, 以及编译器工作原理.
 推荐阅读: 《Head First C》 第1章.
 
 :white_medium_square: 第二章: 解释了操作系统如何使用进程隔离程序运行.
