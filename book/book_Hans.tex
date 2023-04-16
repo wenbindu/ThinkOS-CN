@@ -554,19 +554,18 @@ $ ./hello
 
 \section{目标码}
 
-The {\tt -c} flag tells {\tt gcc} to compile the program and
-generate machine code, but not to link it or generate an executable:
+使用{\tt -c}标识, 可以令{\tt gcc}编译程序并生成机器码, 但并不会链接库中函数, 也就不会生成可执行文件:
 
 \begin{verbatim}
 $ gcc hello.c -c
 \end{verbatim}
 
-The result is a file named {\tt hello.o}, where the {\tt o} stands for
-{\bf object code}, which is the compiled program.  Object code is not
-executable, but it can be linked into an executable.
+结果是一个名为{\tt hello.o}的文件, 其中{\tt o}表示
+{\bf 目标码}, 也就是编译后的程序. 
+目标码不可执行, 但可以链接到可执行文件中.
 
-The UNIX command {\tt nm} reads an object file and generates
-information about the names it defines and uses.  For example:
+UNIX 命令{\tt nm} 可以读取目标文件, 并生成涉及其所定义和应用的
+名称的信息. 例如:
 
 \begin{verbatim}
 $ nm hello.o
@@ -574,38 +573,33 @@ $ nm hello.o
                  U puts
 \end{verbatim}
 
-This output indicates that {\tt hello.o} defines the name {\tt main}
-and uses a function named {\tt puts}, which stands for ``put string''.
-In this example, {\tt gcc} performs an optimization by replacing
-{\tt printf}, which is a large and complicated function, with
-{\tt puts}, which is relatively simple.
+输出结果表明{\tt hello.o}定义了名称{\tt main}, 以及名
+为{\tt puts}的函数, 这个名字表示``put string''.
+在这个例子中, {\tt gcc} 通过将庞大复杂的{\tt printf}函数,
+替换为相对简单的{\tt puts}, 以进行优化.
 
-You can control how much optimization {\tt gcc} does with
-the {\tt -O} flag.  By default, it does very little optimization, which
-can make debugging easier.  The option {\tt -O1} turns on the most
-common and safe optimizations.  Higher numbers turn on additional
-optimizations that require longer compilation time.
+你可以使用{\tt -O}标识来控制{\tt gcc}进行多大程度的优化.
+默认情况下, 它优化得很少, 这会令调试相对简单.
+而选项{\tt -O1}会开启常用且安全得优化.
+更高得数字会开启更多得优化, 而这也就会需要更长得编译时间.
 
-In theory, optimization should not change the behavior of the program,
-other than to speed it up.  But if your program has a subtle bug,
-you might find that optimization makes the bug appear or disappear.
-It is usually a good idea to turn off optimization while you are developing
-new code.  Once the program is working and passing appropriate tests,
-you can turn on optimization and confirm that the tests still pass.
+理论上, 优化除了加速程序之外, 不应该改变程序的行为. 
+但如果你的程序存在微妙的错误, 那你可能会发现, 优化会令错误暴露
+或消失. 通常在开发新代码时, 最好关闭优化.
+一旦程序正常运行, 并能通过适当的测试, 你便可以
+开启优化, 并确认测试仍然通过.
 
 
-\section{Assembly code}
+\section{汇编码}
 
-Similar to the {\tt -c} flag, the {\tt -S} flag tells {\tt gcc}
-to compile the program and generate assembly code, which is basically
-a human-readable form of machine code.
+类似于{\tt -c}标识, {\tt -S} 标识会令{\tt gcc}编译程序并生成
+汇编码, 而这基本上是一种人可读的机器码形式.
 
 \begin{verbatim}
 $ gcc hello.c -S
 \end{verbatim}
 
-The result is a file named {\tt hello.s}, which might look something like
-this:
+结果是一个名为{\tt hello.s}的文件, 看起来像这样:
 
 \begin{verbatim}
         .file        "hello.c"
@@ -636,53 +630,51 @@ main:
         .section     .note.GNU-stack,"",@progbits
 \end{verbatim}
 
-{\tt gcc} is usually configured to generate code for the machine you
-are running on, so for me it generates x86 assembly language,
-which runs on a wide variety of processors from Intel, AMD, and
-others.  If you are running on a different architecture, you might
-see different code.
+{\tt gcc} 通常会被设置, 为你运行的机器生成相应的代码,
+所以对我来说, 它会生成x86汇编语言,
+这可以在Intel, AMD 和其他厂商的多种处理器上运行.
+如果你在不同架构上运行, 你可能会得到不同的代码.
 
 
-\section{Preprocessing}
+\section{预处理}
 
-Taking another step backward through the compilation process, you
-can use the {\tt -E} flag to run the preprocessor only:
+现在我们在编译过程中向后再走一步.
+你可以用{\tt -E}标识, 仅仅只运行预处理器:
 
 \begin{verbatim}
 $ gcc hello.c -E
 \end{verbatim}
 
-The result is the output from the preprocessor.  In this example,
-it contains the included code from {\tt stdio.h}, and all the files
-included from {\tt stdio.h}, and all the files included from those
-files, and so on.  On my machine, the total is more than 800 lines
-of code.  Since almost every C program includes {\tt stdio.h}, those
-800 lines of code get compiled a lot.  If, like many C programs,
-you also include {\tt stdlib.h}, the result is more than 1800 lines
-of code.
+结果是预处理器的输出.
+这个例子中, 它包含了{\tt stdio.h}中包含的代码, 
+以及{\tt stdio.h}中包含的所有文件, 依此类推.
+在我的机器上, 结果有800多行代码.
+由于几乎每个C程序都包括{\tt stdio.h}, 所以这800行代码会被编译多次.
+如果像很多C程序一样, 你也包含了{\tt stdlib.h},
+那么结果要超过1800行代码了.
 
 
-\section{Understanding errors}
+\section{理解错误}
 
-Now that we know the steps in the compilation process, it is easier
-to understand error messages.  For example, if there is an error
-in a \verb"#include" directive, you'll get a message from the
-preprocessor:
+现在我们知道了编译过程的各个步骤, 
+便更容易理解错误信息了.
+比如, 如果\verb"#include" 指令中存在错误, 
+你会从预处理器得到下面这条信息:
 
 \begin{verbatim}
 hello.c:1:20: fatal error: stdioo.h: No such file or directory
 compilation terminated.
 \end{verbatim}
 
-If there's a syntax error, you get a message from the compiler:
+如果存在语法错误, 你会从编译器得到下面信息:
 
 \begin{verbatim}
 hello.c: In function 'main':
 hello.c:6:1: error: expected ';' before '}' token
 \end{verbatim}
 
-If you use a function that's not defined in any of the standard
-libraries, you get a message from the linker:
+如果使用了任何标准库都没有定义的函数,
+你会从链接器得到下面错误信息:
 
 \begin{verbatim}
 /tmp/cc7iAUbN.o: In function `main':
@@ -690,21 +682,20 @@ hello.c:(.text+0xf): undefined reference to `printff'
 collect2: error: ld returned 1 exit status
 \end{verbatim}
 
-{\tt ld} is the name of the UNIX linker, so named because ``loading''
-is another step in the compilation process that is closely related
-to linking.
+{\tt ld}是UNIX链接器的名称, 
+如此命名是因为``loading'' 是编译过程中和链接关系密切的另一步骤.
 
-Once the program starts, C does very little runtime checking,
-so there are only a few runtime errors you are likely to see.  If you
-divide by zero, or perform another illegal floating-point operation, you
-will get a ``Floating point exception.''  And if you try to read or
-write an incorrect location in memory, you will get a ``Segmentation
-fault.''
+一旦程序运行, C 便几乎不会进行运行时检查,
+所以你可能只会看到极少的运行时错误.
+如果你除以零, 或者执行了其他非法的浮点操作, 
+你会得到一个``Floating point exception(浮点异常).''
+同时, 如果你尝试读取或写入一个错误的内存位置,
+你会遇到 ``Segmentation fault(段错误).''
 
 % TODO: -Wall and lint
 
 
-\chapter{Processes}
+\chapter{进程}
 
 \section{Abstraction and virtualization}
 
