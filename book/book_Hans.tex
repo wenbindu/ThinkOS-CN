@@ -697,59 +697,47 @@ collect2: error: ld returned 1 exit status
 
 \chapter{进程}
 
-\section{Abstraction and virtualization}
+\section{抽象和虚拟化}
 
-Before we talk about processes, I want to define a few words:
+在我们谈论进程之前, 我想先定义几个词汇:
 
 \begin{itemize}
 
-\item Abstraction: An abstraction is a simplified representation
-of something complicated.  For example, if you drive a car, you
-understand that when you turn the wheel left, the car goes left,
-and vice versa.  Of course, the steering wheel is connected to
-a sequence of mechanical and (often) hydraulic systems that turn
-the wheels, and the wheels interact with the road in ways that
-can be complex, but as a driver, you normally don't have to think
-about any of those details.  You can get along very well with
-a simple mental model of steering.  Your mental model is an
-abstraction.
+\item 抽象: 抽象是某个复杂事物的简化表达.
+例如, 当你开车时, 你知道当你左转方向盘时, 车会左转,
+反之亦然. 当然, 方向盘连接着一系列机械和(通常是)液压系统, 
+这些会使车轮转动, 同时车轮会以复杂的方式和路面互动.
+作为一个司机, 你通常无需考虑这些细节. 你只需要一个
+简单的逻辑模型来进行驾驶. 你的这个逻辑模型便是一种抽象.
 
-Similarly, when you use a web browser, you understand that when
-you click on a link, the browser displays the page the link refers
-to.  The software and network communication that make that possible
-are complex, but as a user, you don't have to know the
-details.
+同样地, 当你使用网络浏览器时, 你知道当你点击链接时,
+浏览器会显示该链接所指的页面.
+使这一切成为可能的软件和网络通信是复杂的.
+但作为一个用户, 你不必了解其细节.
 
-A large part of software engineering is designing abstractions like
-these that allow users and other programmers to use powerful
-and complicated systems without having to know about the details
-of their implementation.
+软件工程中一个重要部分就是设计想这样的抽象,
+这些抽象可以使用户和其他程序员能够使用强大而复杂的系统,
+而无需了解其实现的细节.
 
-\item Virtualization: An important kind of abstraction is
-virtualization, which is the process of creating a desirable
-illusion.
+\item 虚拟化: 一种重要的抽象便是虚拟化, 这是创建一个令人满意的幻觉的过程.
 
-For example, many public libraries participate in inter-library
-collaborations that allow them to borrow books from each other.
-When I request a book, sometimes the book is on the shelf at my
-local library, but other times it has to be transferred from another
-collection.  Either way, I get a notification when it is available
-for pickup.  I don't need to know where it came from, and I don't
-need to know which books my library has.  As a whole, the system
-creates the illusion that my library has every book in the world.
+例如, 很多公共图书馆会参与图书馆之间的协作, 允许其相互借书.
+当我请求一本图书时, 有时这本书是在我当地的图书馆的书架上,
+但其他时候, 它需要从另外的地方转移过来.
+无论哪种情况, 当书籍可以领取时, 我都会接到通知.
+我不必知道它来自哪里, 我也不需要知道我的图书馆里有哪些书.
+整个系统创建了一个假象, 让我相信我的图书馆拥有世界上的任意一本图书.
 
-The collection physically located at my local library might be small,
-but the collection available to me virtually includes every book
-in the inter-library collaboration.
+我当地的图书馆里实际可用的书可能很少,
+但对我来说, 可用的虚拟书籍包括合作的图书馆中的每一本书.
 
-As another example, most computers are only connected to one
-network, but that network is connected to others, and so on.  What
-we call the Internet is a collection of networks and a set of
-protocols that forward packets from one network to the next.
-From the point of view of a user or programmer, the system behaves
-as if every computer on the Internet is connected to every other
-computer.  The number of physical connections is small, but the
-number of virtual connections is very large.
+再举个例子, 大多数计算机只连接到一个网络, 
+但该网络会连接到其他网络, 依此类推.
+我们所称的互联网是一组网络和协议, 
+它们可以将数据包从一个网络转发到下一个网络. 
+从用户或程序员的角度来看, 
+该系统表现得好像互联网上的每台计算机都与其他计算机相连. 
+物理连接的数量虽然很少, 但虚拟连接的数量是非常大的.
 
 \end{itemize}
 
