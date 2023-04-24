@@ -737,129 +737,109 @@ collect2: error: ld returned 1 exit status
 它们可以将数据包从一个网络转发到下一个网络. 
 从用户或程序员的角度来看, 
 该系统表现得好像互联网上的每台计算机都与其他计算机相连. 
-物理连接的数量虽然很少, 但虚拟连接的数量是非常大的.
+所以物理连接的数量虽然很少, 但虚拟连接的数量是非常大的.
 
 \end{itemize}
 
-The word ``virtual'' is often used in the context of a virtual
-machine, which is software that creates the illusion of a dedicated
-computer running a particular operating system, when in reality
-the virtual machine might be running, along with many other virtual
-machines, on a computer running a different operating system.
+``虚拟''一词通常在虚拟机的上下文中使用, 虚拟机是一种软件, 会给你一种假象,
+彷佛你运行在一个运行着特定操作系统的专有机器上.
+而实际上, 虚拟机可能和很多其他虚拟机一起运行在同一台计算机上, 这些虚拟机可能运行着
+不同的操作系统.
 
-In the context of virtualization, we sometimes call what is
-really happening ``physical'', and what is virtually happening
-either ``logical'' or ``abstract.''
+在虚拟化的上下文中, 我们有时称真实发生的事情为``物理事件'', 
+而虚拟发生的事情为``逻辑事件''或者``抽象事件''.
 
 
-\section{Isolation}
+\section{隔离}
 
-One of the most important principles of engineering is isolation:
-when you are designing a system with multiple components, it is usually
-a good idea to isolate them from each other so that a change in one
-component doesn't have undesired effects on other components.
+工程学最重要的一个原则便是隔离:
+当你设计一个包括多个部件的系统时, 最好将其相互之间进行隔离,
+如此一个部件的改变就不会给其他组件带来不良影响.
 
-One of the most important goals of an operating system is to isolate
-each running program from the others so that programmers don't have to
-think about every possible interaction.  The software object that
-provides this isolation is a {\bf process}.
+操作系统的一个重要目标便是将每个运行的程序和其他程序进行隔离,
+如此程序员便无需关注任何交互的可能.
+提供这种隔离性的软件对象叫做{\bf 进程}.
 
-A process is a software object that represents a running program.
-I mean ``software object'' in the sense of object-oriented programming;
-in general, an object contains data and provides methods
-that operate on the data.  A process is an object that contains the
-following data:
+进程是一个表示当前运行程序的软件对象.
+我说的``软件对象''是指面向对象编程中的对象;
+通常, 对象包含数据以及操作数据的方法.
+一个进程便是一个包含下面数据的对象:
 
 \begin{itemize}
 
-\item The text of the program, usually a sequence of
-  machine language instructions.
+\item 程序的文本, 通常是一系列机器语言指令.
 
-\item Data associated with the program, including static data (allocated
-  at compile time) and dynamic data (allocated at run time).
+\item 程序相关的数据, 包括静态数据(编译时分配)和动态数据(运行时分配).
 
-\item The state of any pending input/output operations.  For example,
-  if the process is waiting for data to be read from disk or for a
-  packet to arrive on a network, the status of these operations is
-  part of the process.
+\item 任何未完成的输入/输出操作的状态. 比如, 
+  如果进程正在等待从磁盘读取数据, 或者等待网络数据到达, 
+  这些操作的状态便是进程的一部分.
 
-\item The hardware state of the program, which includes data stored
-  in registers, status information, and the program counter, which
-  indicates which instruction is currently executing.
+\item 程序的硬件状态, 包括寄存器中的数据, 状态信息以及程序计数器.
+  程序计数器用来标识当前正在执行哪个指令.
 
 \end{itemize}
 
-Usually one process runs one program, but it is also possible for
-a process to load and run a new program.
+通常一个进程运行一个程序, 但也可能会加载并运行新的程序.
 
-It is also possible, and common, to run the same program in more than one
-process.  In that case, the processes share the same program text
-but generally have different data and hardware states.
+还有可能, 也是很常见的情况是, 
+多个进程中运行同一个程序. 在这种情况下, 这些进程会共享相同的程序代码,
+但通常数据和硬件状态不同.
 
-Most operating systems provide a fundamental set of capabilities
-to isolate processes from each other:
+多数操作系统会提供一组基础功能, 以使进程之间相互隔离:
 
 \begin{itemize}
 
-\item Multitasking: Most operating systems have the ability to
-  interrupt a running process at almost any time, save its hardware
-  state, and then resume the process later.  In general, programmers
-  don't have to think about these interruptions.  The program behaves
-  as if it is running continuously on a dedicated processor, 
-  except that the time between instructions is unpredictable.
+\item 多任务: 多数操作系统都具有一种能力,
+  可以在任何时刻将运行中的进程中断, 并保存其硬件状态,
+  然后稍后恢复进程.
+  通常, 程序员不必考虑这些中断.
+  程序的行为就像在专用处理器上连续运行一样,
+  只是指令之间的时间是不可预测的.
 
-\item Virtual memory: Most operating systems create the
-  illusion that each process has its own chunk of memory, isolated
-  from all other processes.  Again, programmers generally don't
-  have to think about how virtual memory works; they can proceed
-  as if every program has a dedicated chunk of memory.
+\item 虚拟内存: 多数操作系统都会创建这样的假象, 
+  即每个进程都有自己的一段空间, 与其他进程都隔离开来.
+  同样地, 程序员一般无需关注虚拟内存如何工作; 
+  他们可以按照每个程序都有一段专门的内存来进行操作.
 
-\item Device abstraction: Processes running on the same computer share
-  the disk drive, the network interface, the graphics card, and other
-  hardware.  If processes interacted with this hardware directly,
-  without coordination, chaos would ensue.  For example, network data
-  intended for one process might be read by another.  Or multiple
-  processes might try to store data in the same location on a hard
-  drive.  It is up to the operating system to maintain order by
-  providing appropriate abstractions.
+\item 设备抽象: 运行在同一个计算机上的进程, 共享磁盘驱动器, 网络接口, 
+  图形卡, 以及其他硬件. 如果进程不经协商便直接和硬件交互, 便会引发混乱.
+  例如, 本来要传递给某个进程的网络数据, 可能被其他进程读取, 
+  或多个进程向硬盘上同一个位置存储数据.
+  这便有赖于操作系统提供适当的抽象, 以维护秩序.
 
 \end{itemize}
 
-As a programmer, you don't need to know much about how these
-capabilities are implemented.  But if you are
-curious, you will find a lot of interesting things
-going on under the metaphorical hood.  And if you know what's
-going on, it can make you a better programmer.
+作为程序员, 你并不需要知道这些功能实现的详情.
+但如果你有兴趣, 你会发现在各种隐喻之下, 
+有很多有趣的事情正在发生.
+如果你知晓发生的细节, 那你将成为更好的程序员.
 
 
-\section{UNIX processes}
+\section{UNIX 进程}
 \label{unixps}
 
-While I write this book, the process I
-am most aware of is my text editor, emacs.  Every once in a while
-I switch to a terminal window, which is a window running a UNIX shell
-that provides a command-line interface.
+当写这本书时, 我最关注的进程是我的文本编辑器, emacs.
+每隔一段时间, 我会切换到终端窗口.
+这是一个运行 UNIX shell 的窗口, 它提供了命令行界面.
 
-When I move the mouse, the window manager wakes up, sees that the
-mouse is over the terminal window, and wakes up the terminal.
-The terminal wakes up the shell.
-If I type {\tt make} in the shell, it creates a
-new process to run Make, which creates another process to run LaTeX
-and then another process to display the results.
+当我移动鼠标, 窗口管理器便会被唤醒, 查看鼠标是否在终端窗口上,
+然后又会唤醒终端. 终端唤醒shell. 
+如果我在shell中输入{\tt make}, 
+它会创建一个新的进程来执行 Make, 创建另一个进程运行 LaTeX,
+然后再创建一个进程来显示结果.
 
-If I need to look something up, I might switch to another desktop,
-which wakes up the window manager again.  If I click on the icon for a
-web browser, the window manager creates a process to run the web
-browser.  Some browsers, like Chrome, create a new process for each
-window and each tab.
+如果我需要查找一些东西, 我可能会切换到另一个桌面,
+这也会再次唤醒窗口管理器.
+如果我点击网络浏览器的图标, 窗口管理器会创建一个进程, 运行网络浏览器.
+有些浏览器, 比如 Chrome, 会为每个窗口和每个标签页都创建新的进程.
 
-And those are just the processes I am aware of.  At the same time
-there are many other processes running in the {\bf background}.
-Many of them are performing operations related to the operating
-system.
+这些还只是我知道的进程.
+同时, 还有很多其他进程在{\bf 后台} 运行.
+其中很多进程正在执行与操作系统相关的操作.
 
-The UNIX command {\tt ps} prints information about running processes.
-If you run it in a terminal, you might see something like this:
+UNIX 命令 {\tt ps} 可以打印正在运行的进程的信息.
+如果你在终端执行它, 你可能会看到像这样的东西:
 
 \begin{verbatim}
   PID TTY          TIME CMD
@@ -868,25 +848,20 @@ If you run it in a terminal, you might see something like this:
 24762 pts/1    00:00:00 ps
 \end{verbatim}
 
-The first column is the unique numerical process ID.  The second
-column is the terminal that created the process; 
-``TTY'' stands for teletypewriter, which was the original
-mechanical terminal.
+第一列是唯一的数字格式进程ID.
+第二列是创建进程的终端; 
+``TTY''代表电传打印机, 这是最早的机械终端.
 
-The third column is the total processor time used by the process,
-in hours, minutes, and seconds.
-The last column is the name of the running program.  In
-this example, {\tt bash} is the name of the shell that interprets
-the commands I type in the terminal, emacs is my text editor, and
-ps is the program generating this output.
+第三列是进程使用的处理器总时间, 以小时、分钟和秒为单位.
+在这个例子中, {\tt bash} 是解释输入命令的 shell 的名称,
+emacs 是我的文本编辑器, ps 是生成此输出的程序.
 
-By default, {\tt ps} lists only the processes associated with
-the current terminal.  If you use the {\tt -e} flag, you get every
-process (including processes belonging to other users, which is
-a security flaw, in my opinion).
+默认情况下, {\tt ps} 仅列出和当前终端相关的进程.
+如果你使用{\tt -e} 标志, 你便能获取每个进程(包括属于其他用户的进程,
+就我看来, 这是一个安全漏洞).
 
-On my system there are currently 233 processes.
-Here are some of them:
+在我的系统上, 目前有233个进程.
+下面是其中一些:
 
 \begin{verbatim}
   PID TTY          TIME CMD
@@ -910,40 +885,34 @@ Here are some of them:
    57 ?        00:00:00 devfreq_wq
 \end{verbatim}
 
-{\tt init} is the first process created when the operating system
-starts.  It creates many of the other processes, and then sits idle
-until the processes it created are done.
+{\tt init} 是操作系统启动时创建的第一个进程.
+它会创建许多其他进程, 然后闲置, 
+直到它创建的进程都结束.
 
-{\tt kthreadd} is a process the operating system uses to create new
-{\bf threads}.  We'll talk more about threads later, but for now you can
-think of a thread as kind of a process.  The {\tt k} at the beginning
-stands for {\bf kernel}, which is the part of the operating system
-responsible for core capabilities like creating threads.  The extra
-{\tt d} at the end stands for {\bf daemon}, which is another name for
-processes like this that run in the background and provide operating
-system services.  In this context, ``daemon'' is used in the
-sense of a helpful spirit, with no connotation of evil.
+{\tt kthreadd} 是操作系统用来创建 {\bf 线程} 的进程.
+后续我们将更详细地讨论线程， 当前你可以将线程看作是一种进程.
+开头的{\tt k} 代表 {\bf 内核(kernel)},
+这是操作系统符合核心功能(比如创建线程)的部分.
+结尾的 {\tt d} 代表 {\bf 守护程序(daemon)},
+这是运行在后台, 并提供操作系统服务的进程的另一个名称.
+在此, ``daemon'' 是指一种乐于助人的精神, 没有任何邪恶的意思.
+ 
+根据名称, 你可以推断出{\tt ksoftirqd} 也是一个内核守护程序;
+具体来说, 它处理软件中断请求, 即 ``软中断(soft IRQ)''
 
-Based on the name, you can infer that {\tt ksoftirqd} is also a kernel
-daemon; specifically, it handles software interrupt requests, or
-``soft IRQ''.
+{\tt kworker} 是一个内核创建的工作进程, 用来为内核处理一些任务.
 
-{\tt kworker} is a worker process created by the kernel to do some
-kind of processing for the kernel.
+通常有多个进程运行着内核服务.
+在我的系统上, 现在有8个{\tt ksoftirqd} 进程和35个{\tt kworker} 进程.
 
-There are often multiple processes running these kernel services.
-On my system at the moment, there are 8 {\tt ksoftirqd} processes
-and 35 {\tt kworker} processes.
-
-I won't go into more details about the other processes, but if you
-are interested you can search for more information about them.
-You should run {\tt ps} on your system and compare your results
-to mine.
+我不会详细讨论其他进程, 但如果你感兴趣, 
+你可以搜索更多关于它们的信息.
+你应该在你的系统上运行 {\tt ps}, 并将结果和我的进行对比.
 
 %TODO: using gdb here?
 
 
-\chapter{Virtual memory}
+\chapter{虚拟内存}
 
 \section{A bit of information theory}
 
