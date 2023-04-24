@@ -14,7 +14,7 @@ Think OS[中文译本]
 
 :white_check_mark: 第二章: 解释了操作系统如何使用进程隔离程序运行.
 
-:white_medium_square: 第三章: 解释了虚拟内存和地址转. 推荐阅读: 《Head First C》 第2章.
+:writing_hand: 第三章: 解释了虚拟内存和地址转. 推荐阅读: 《Head First C》 第2章.
 
 :white_medium_square: 第四章: 介绍了文件系统和数据流. 推荐阅读: 《Head First C》 第3章.
 
