@@ -973,53 +973,40 @@ TB 表示 ``terabyte,'' 也就是 $10^{12}$ 字节.
 
 \section{地址空间}
 
-Each byte in main memory is specified by an integer {\bf physical
-address}.  The set of valid physical addresses is called the
-physical {\bf address space}.  It
-usually runs from 0 to $N-1$, where $N$ is
-the size of main memory.  On a system with 1 GiB of physical memory,
-the highest valid address is $2^{30}-1$, which is 1,073,741,823 in
-decimal, or 0x3fff ffff in hexadecimal (the prefix 0x indicates a
-hexadecimal number).
+主内存中的每个字节都由一个整数{\bf 物理地址}指定.
+有效的物理地址集被称为物理{\bf 地址空间}.
+通常从0 到 $N-1$, 其中$N$ 是内存的大小.
+在1 GiB 物理内存的系统上, 最高的有效地址是$2^{30}-1$, 
+即十进制下的1,073,741,823 , 或者十六进制下的0x3fff ffff(前缀的 0x 表示十六进制数).
 
-However, most operating systems provide {\bf virtual memory}, which
-means that programs never deal with physical addresses, and don't 
-have to know how much physical memory is available.
+然而, 大部分的操作系统会提供{\bf 虚拟内存}, 这意味着程序永远不必处理
+物理地址, 也不必知道由多少物理地址可用.
 
-Instead, programs work with {\bf virtual addresses}, which are numbered
-from 0 to $M-1$, where $M$ is the number of valid virtual addresses.
-The size of the virtual address space is determined by the operating
-system and the hardware it runs on.
+相反, 程序会使用从 0 到 $M-1$ 编号的{\bf 虚拟地址}, 其中$M$ 是有效
+虚拟地址的数量. 虚拟地址空间的大小是由操作系统和其运行的硬件共同决定的.
 
-You have probably heard people talk about 32-bit and 64-bit systems.
-These terms indicate the size of the registers, which is usually also
-the size of a virtual address.  On a 32-bit system, virtual addresses
-are 32 bits, which means that the virtual address space runs from 0 to
-0xffff ffff.  The size of this address space is $2^{32}$ bytes, or 4
-GiB.
+你可能听锅别人谈论32位系统和64位系统.
+这些术语表示的是寄存器的大小, 通常也是虚拟地址的大小.
+在32位系统上, 虚拟地址为32位, 也就是虚拟地址空间从0到0xffff ffff.
+所以地址空间的大小为$2^{32}$字节, 或 4 GiB.
 
-On a 64-bit system, the size of the virtual address space is $2^{64}$
-bytes, or $2^4 \cdot 1024^6$ bytes.  That's 16 exbibytes, which is
-about a billion times bigger than current physical memories.  It might
-seem strange that a virtual address space can be so much bigger
-than physical memory, but we will see soon how that works.
+而在64位系统上, 虚拟地址空间是$2^{64}$字节, 或$2^4 \cdot 1024^6$ 字节.
+这是16 exbibytes, 约为当前物理内存的十亿倍.
+虚拟地址空间比物理内存大这么多, 这看起来很奇怪, 但是我们稍后就会看到它是
+如何工作的.
 
-When a program reads and writes values in memory, it generates virtual
-addresses.  The hardware, with help from the operating system,
-translates to physical addresses before accessing main memory.  This
-translation is done on a per-process basis, so even if two processes
-generate the same virtual address, they would map to different
-locations in physical memory.
+当程序从内存读取或者向内存写入值时, 它会生成虚拟地址.
+在操作系统的帮助下, 访问内存之前, 硬件会被转换成物理地址.
+这种转换是基于每个进程进行的, 所以即使两个进程生成同样的虚拟地址,
+它们也会映射到物理内存的不同位置.
 
-Thus, virtual memory is one important way the operating system
-isolates processes from each other.  In general, a process cannot
-access data belonging to another process, because there is no
-virtual address it can generate that maps to physical memory
-allocated to another process.
+最后, 虚拟内存是操作系统隔离进程的一种重要手段.
+通常, 一个进程是无法访问另一个进程拥有的数据的, 
+因为如果某块物理内存已经被分配给了其他进程,
+那么该进程便无法生成映射到这块物理内存的虚拟地址.
 
 
-
-\section{Memory segments}
+\section{内存段}
 
 The data of a running process is organized into five segments:
 
