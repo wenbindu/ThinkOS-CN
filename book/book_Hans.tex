@@ -1008,61 +1008,51 @@ TB 表示 ``terabyte,'' 也就是 $10^{12}$ 字节.
 
 \section{内存段}
 
-The data of a running process is organized into five segments:
+运行中得进程的数据会被组织成五个段:
 
 \begin{itemize}
 
-\item The {\bf code segment} contains the program text; that is, the
-  machine language instructions that make up the program.
+\item {\bf 代码段} 包含程序文本; 也就是构成程序的机器语言指令.
 
-\item The {\bf static segment} contains immutable values, like string
-literals.  For example, if your program contains the string
-{\tt "Hello, World"}, those characters will be stored in the
-static segment.
+\item {\bf 静态段} 包含不可变的值, 像字符串常量. 比如, 如果你的程序包含
+字符串{\tt "Hello, World"}, 那这些字符会被保存在静态段.
 
-\item The {\bf global segment} contains global variables and local variables that are declared {\tt static}.
+\item {\bf 全局段} 包含全局变量和被声明为{\bf static(静态类型)}的
+局部变量.
 
-\item The {\bf heap segment} contains chunks of memory allocated
-  at run time, most often by calling the C library function
-  {\tt malloc}.
+\item {\bf 堆段} 包含运行时被分配的内存块, 通常是通过调用C库函数
+{\bf malloc}所分配.
 
-\item The {\bf stack segment} contains the call stack, which is a
-  sequence of stack frames.  Each time a function is called, a stack
-  frame is allocated to contain the 
-  parameters and local variables of the function.  When the function
-  completes, its stack frame is removed from the stack.
+\item {\bf 栈段} 包含调用栈, 也就是一系列的堆栈帧.
+每次函数被调用, 都会为其分配一个包含函数的参数和局部变量的堆栈帧.
+当函数运行结束, 其堆栈帧会从栈中移除. 
 
 \end{itemize}
 
-The arrangement of these segments is determined partly by the 
-compiler and partly by the operating system.  The details vary
-from one system to another, but in the most common arrangement:
+段的排序部分由编译器决定, 部分由操作系统决定.
+具体细节取决于操作系统, 但常见的排列方式包括::
 
 \begin{itemize}
 
-\item The text segment is near the ``bottom'' of memory, that is,
-  at addresses near 0.
+\item 文本段位于内存接近``底部''的位置, 也就是靠近地址0的地方.
 
-\item The static segment is often just above the text segment, that is,
-at higher addresses.
+\item 静态段通常在文本段上方, 也就是高地址位置.
 
-\item The global segment is often just above the static segment.
+\item 全局段通常位于静态段上方.
 
-\item The heap is often above the global segment.  As it expands,
-  it grows up toward larger addresses.
+\item 堆通常在全局段上方. 随着堆的扩张, 它会向更大地址增长.
   
-\item The stack is near the top of memory; that is, near the
-  highest addresses in the virtual address space.  As the
-  stack expands, it grows down toward smaller addresses.
+\item 栈靠近内存的顶部; 也就是虚拟地址空间中最高地址附近.
+栈扩展时, 会朝着更小地址方向增长.
 
 \end{itemize}
 
 %TODO: Figure out how to handle the code that is in both ExercisesInC
 % and the repo for the book.
 
-To determine the layout of these segments on your system, try running
-this program, which is in {\tt aspace.c} in the repository for this
-book (see Section~\ref{code}).
+若要确定你系统上这些段的布局, 尝试运行这个程序,在本书仓库
+中的 {\tt aspace.c} 文件中(详见第~\ref{code}节). 
+
 
 \begin{verbatim}
 #include <stdio.h>
@@ -1084,28 +1074,25 @@ int main ()
 }
 \end{verbatim}
 
-{\tt main} is the name of a function; when it is used as a variable,
-it refers to the address of the first machine language instruction
-in {\tt main}, which we expect to be in the text segment.
+{\tt main}是这个函数的名称; 当作为变量使用时, 
+它指的是{\tt main}中的第一条机器语言指令的地址, 
+同时我们希望它在文本段中.
 
-{\tt global} is a global variable, so we expect it to be in the
-global segment.  {\tt local} is a local variable, so we expect it
-to be on the stack.
+{\tt global} 是全局变量, 所以我们希望它在全局段中. 
+{\tt local} 是局部变量, 我们期望它存在于栈中.
 
-{\tt s} refers to a ``string literal", which is a string that appears
-as part of the program (as opposed to a string that is read from a file,
-input by a user, etc.).  We expect the location of the string to be
-in the static segment (as opposed to the pointer, {\tt s}, which is
-a local variable).
+{\tt s} 指向``字符串文本'', 它是程序的一部分(与从文件读取, 
+或用户输入的字符串等不同). 我们希望字符串的位置在静态段中(与指针
+{\tt s}不同, 它是局部变量).
 
-{\tt p} contains an address returned by {\tt malloc}, which allocates
-space in the heap.  ``malloc'' stands for ``memory allocate.''
+{\tt p} 包含{\tt malloc}返回的地址, 
+这个函数会在堆中分配空间. ``malloc'' 表示 ``memory allocate(内存分配)''.
 
-The format sequence \verb"%p" tells {\tt printf} to format each
-address as a ``pointer'', so it displays the results in hexadecimal.
+格式序列\verb"%p" 会告诉{\tt printf}将每个地址格式化为``指针'',
+因此它会以十六进制显示结果.
 
-When I run this program, the output looks like this (I added spaces
-to make it easier to read):
+当我运行这个程序, 输出如下(我增加了些空格,以便于阅读):
+
 
 \begin{verbatim}
 Address of main is   0x      40057d
@@ -1116,35 +1103,27 @@ s points to          0x      4006a4
 
 \end{verbatim}
 
-As expected, the address of {\tt main} is the lowest, followed by
-the location of the string literal.  The location of
-{\tt global} is next, then the address {\tt p} points to.
-The address of {\tt local} is much bigger.
+和预计的一样, {\tt main} 的地址是最低的, 然后是字符串文本的位置.
+接着是{\tt global}的位置, 再然后是{\tt p}指向的地址.
+{\tt local}的地址要大得多.
 
-The largest address has 12 hexadecimal digits.  Each hex digit
-corresponds to 4 bits, so it is a 48-bit address.  That suggests
-that the usable part of the virtual address space is $2^{48}$ bytes.
+最大的地址有12位十六进制数. 每个十六进制数对应4个比特,
+所以一共是48比特地址. 这便表示可用虚拟地址空间的大小为$2^{48}$字节.
 
-As an exercise, run this program on your computer and compare your
-results to mine.  Add a second call to {\tt malloc} and check whether
-the heap on your system grows up (toward larger addresses).  Add a
-function that prints the address of a local variable, and check
-whether the stack grows down.
+做个练习, 在你电脑上运行这个程序, 并和我的结果进行比较.
+再添加一个 {\tt malloc}, 检查你系统上的堆是否向上增长了(向更大地址方向).
+再添加一个输出局部变量地址的函数, 并检查栈是否向下变化了.
 
 
-\section{Static local variables}
+\section{静态局部变量}
 
-Local variables on the stack are sometimes called {\bf automatic},
-because they are allocated automatically when a function is called,
-and freed automatically when the function returns.
+栈上的局部变量有时被称为{\bf 自动变量},
+因为它们会在函数调用时, 自动分配, 在函数返回时, 自动释放.
 
-In C there is another kind of local variable, called {\bf static},
-which is allocated in the global segment.  It is initialized when
-the program starts and keeps its value from one function call to
-the next.
+在C语言中, 存在另一种局部变量, 会在全局段中进行分配, 称为{\bf 静态变量},
+它会在程序启动时被初始化, 同时在函数调用之间保持其值不变.
 
-For example, the following function keeps track of how many times
-it has been called.
+例如, 下面的函数会跟踪其被调用的次数.
 
 \begin{verbatim}
 int times_called()
@@ -1155,121 +1134,110 @@ int times_called()
 }
 \end{verbatim}
 
-The keyword {\tt static} indicates that {\tt counter} is a static
-local variable.  The initialization happens only once, when the program
-starts.
+关键字{\tt static}表示 {\tt counter} 是一个静态局部变量.
+初始化仅会在程序启动时, 发生一次.
 
-If you add this function to {\tt aspace.c} you can confirm that
-{\tt counter} is allocated in the global segment along with global
-variables, not in the stack.
+如果你将此函数添加到{\tt aspace.c}中, 你便可以确认{\tt counter}是在全局段中
+与全局变量一起分配的, 而不是在栈中分配的.
+% If you add this function to {\tt aspace.c} you can confirm that
+% need a full point. 需要一个句号
 
 
-\section{Address translation}
+
+\section{地址转换}
 \label{address_translation}
 
-How does a virtual address (VA) get translated to a physical address (PA)?
-The basic mechanism is simple, but a simple
-implementation would be too slow and take too much space.  So actual
-implementations are a bit more complicated.
+虚拟地址(VA) 如何能转换成物理地址(PA)?
+基本机制很简单, 但简单的实现会太慢, 并消耗太多空间.
+所以实际的实现有点复杂.
 
 \begin{figure}
 \centerline{\includegraphics[width=3in]{figs/address_translation.pdf}}
-\caption{Diagram of the address translation process.}
+\caption{地址转换过程示意图.}
 \label{addtrans}
 \end{figure}
 
-Most processors provide a memory management unit (MMU) that sits between the CPU and main memory.  The MMU performs fast translation between VAs and PAs.
+大部分处理器会提供位于CPU和主存之间的内存管理单元(MMU).
+MMU 会执行VA和PA之间的快速转换.
 
 \begin{enumerate}
 
-\item When a program reads or writes a variable, the CPU generates a
-VA.  
+\item 当程序读取或写入一个变量时, CPU会生成一个VA.
 
-\item The MMU splits the VA into two parts, called the page number and
-the offset.  A ``page'' is a chunk of memory; the size of a page
-depends on the operating system and the hardware, but common sizes
-are 1--4 KiB.
+\item MMU 将VA 分成两部分, 分别是页号和偏移量.
+``页''是内存的一个块, 页的大小取决于操作系统和硬件, 常见大小一般是 1--4 KiB.
 
-\item The MMU looks up the page number in the translation lookaside buffer (TLB) and gets the corresponding physical page number.  Then it combines
-the physical page number with the offset to produce a PA.
+\item MMU会从页表缓存 (TLB) 查找页号, 并获得相应的物理地址页号.
+然后, 它将物理页号和偏移量结合起来, 构成PA.
 
-\item The PA is passed to main memory, which reads or writes the given
-location.
+\item PA 会传递给主存, 主存基于给定位置进行读写.
 
 \end{enumerate}
 
-The TLB contains cached copies of data from the page table (which is stored in kernel memory).  The page table contains the mapping from virtual page numbers to physical page numbers.  Since each process has its own page table, the TLB has to make sure it only uses entries from the page table of the process that's running.
+TLB 包含来自页表(存储在内核内存中)数据的缓存副本.
+页表包含虚拟页号到物理页号的映射. 
+由于每个进程都有自己的页表, 因此TLB必需确保它只使用正在运行的进程的页表中的条目.
 
-Figure~\ref{addtrans} shows a diagram of this process.
-To see how it all works, suppose that the VA is 32 bits and the physical memory is 1 GiB, divided into 1 KiB pages.
+图~\ref{addtrans} 是这个过程的示意图.
+若要明了其工作原理, 假设VA是32位, 物理内存是 1 GiB, 并划分为了 1 KiB 的页.
 
 \begin{itemize}
 
-\item Since 1 GiB is $2^{30}$ bytes and 1 KiB is $2^{10}$ bytes, there
-  are $2^{20}$ physical pages, sometimes called ``frames.''
+\item 因为 1 GiB 是 $2^{30}$ 字节, 1 KiB 是 $2^{10}$ 字节, 
+  所以有 $2^{20}$ 个物理页, 有时也称为 ``帧''.
 
-\item The size of the virtual address space is $2^{32}$ B and the size
-  of a page is $2^{10}$ B, so there are $2^{22}$ virtual pages.
+\item 虚拟地址空间大小是 $2^{32}$ B, 单个页的大小是 $2^{10}$ B, 
+  所以有 $2^{22}$ 个虚拟页.
 
-\item The size of the offset is determined by the page size.  In this
-  example the page size is $2^{10}$ B, so it takes 10 bits to specify
-  a byte on a page.
+\item 偏移量的大小由页面大小决定.  这个例子中, 页面大小是 $2^{10}$ B, 
+  所以需要10位来定位页面上的字节.
 
-\item If a VA is 32 bits and the offset is 10 bits, the remaining
-  22 bits make up the virtual page number.
+\item 如果 VA 是 32 位, 同时偏移量是 10 位, 剩下的22位便构成了虚拟页号.
 
-\item Since there are $2^{20}$ physical pages, each physical page
-  number is 20 bits.  Adding in the 10 bit offset, the resulting
-  PAs are 30 bits.
+\item 由于有 $2^{20}$ 个物理页, 每个物理页号是20位. 
+  加上10位的偏移量, 得到的 PA 便是 30 位.
 
 \end{itemize}
 
-So far this all seems feasible.  But let's think about how big a page
-table might have to be.  The simplest implementation of a page
-table is an array with one entry for each virtual page.
-Each entry would contain a physical page number, which is 20 bits
-in this example, plus some additional information about each
-frame.  So we expect 3--4 bytes per entry.  But with $2^{22}$ virtual pages,
-the page table would require $2^{24}$ bytes, or 16 MiB.
+至此, 一切似乎看起来可行. 但让我们想一下, 页表可能有多大.
+页表的最简单实现是一个数组, 其中每个条目对应一个虚拟页.
+每个条目包含物理页号, 本例中是20位, 以及关于每帧的附加信息.
+所以我们预计每个条目需要3--4字节的空间.
+由于存在$2^{22}$个虚拟页, 
+页表将需要$2^{24}$字节, 即 16 MiB.
 
-And since we need a page table for each process, a system running
-256 processes would need $2^{32}$ bytes, or 4 GiB, just for page tables!
-And that's just with 32-bit virtual addresses.  With 48- or 64-bit
-VAs, the numbers are ridiculous.
+由于每个进程都需要一个页表, 
+那么运行256个进程的系统, 便需要$2^{32}$字节, 即 4GiB, 还只是页表空间!
+而这仅仅是针对32位虚拟地址的情况.
+对于48-或64-位的虚拟地址来说, 这个数字就太吓人了.
 
-Fortunately, we don't actually need that much space, because
-most processes don't use even a small fraction of their
-virtual address space.  And if a process doesn't use a virtual
-page, we don't need an entry in the page table for it.
+幸运的是, 我们实际上并不需要这么多空间,
+因为多数进程甚至用不到虚拟地址空间的一小部分.
+而且, 如果一个进程不使用虚拟页, 我们便不需要在页面中为其分配条目.
 
-Another way to say the same thing is that page tables are ``sparse'',
-which implies that the simple implementation, an array of page
-table entries, is a bad idea.  Fortunately, there are several
-good implementations for sparse arrays.
+另一种表达同样观点的方式是页表是``稀疏的'',
+而这最简单的实现方式, 即一个页表条目数组, 但这是一个糟糕的注意.
+幸运的是, 对于稀疏数组, 有其他高效的实现方案.
 
-One option is a multilevel page table, which is what many operating
-systems, including Linux, use.  Another option is an associative table, where each entry includes both the virtual page number and the physical page number.  Searching an associative table can be slow in software, but in hardware we
-can search the entire table in parallel, so associative arrays are
-often used to represent the page table entries in the TLB.
+一种选择是多级页表, 这是许多操作系统(包括Linux)使用的方案.
+另一种选择是关联表, 其中每个条目包括虚拟页号和物理页号.
+在软件中检索关联表很慢, 但在硬件中, 我们可以并行检索整个表,
+所以其通常用于表示TLB中的页表条目.
 
-You can read more about these implementations at
-\url{http://en.wikipedia.org/wiki/Page_table}; you might find the
-details interesting.  But the fundamental idea is that page tables are
-sparse, so we have to choose a good implementation for sparse arrays.
+你也可以从\url{http://en.wikipedia.org/wiki/Page_table}了解更多关于这些实现的信息;
+你可能对这些细节感兴趣.
+但核心思想为页表是稀疏的, 所以我们需要为稀疏数组选择一个好的实现方案.
 
-I mentioned earlier that the operating system can interrupt a running
-process, save its state, and then run another process.  This mechanism
-is called a {\bf context switch}.  Since each process has its own
-page table, the operating system has to work with the MMU to make
-sure each process gets the right page table.  In older machines,
-the page table information in the MMU had to be replaced during every
-context switch, which was expensive.  In newer systems, each page
-table entry in the MMU includes the process ID, so page tables from
-multiple processes can be in the MMU at the same time.
+前面我提到操作系统可以中断运行中的进程, 保存其状态, 然后运行另一个进程.
+这个机制叫做{\bf 上下文切换}. 因为每个进程都有自己的页表, 操作系统需要和MMU协作,
+从而确保每个进程都能获得正确的页表.
+在老的机器上, MMU中的页表信息需要在每次上下文切换时进行替换, 
+而这是很昂贵的.
+在新的系统中, MMU 中的每个页表条目都包含进程ID, 因此多个进程的页表可以同时存在于MMU中.
 
 
 
-\chapter{Files and file systems}
+\chapter{文件和文件系统}
 
 When a process completes (or crashes), any data stored in main
 memory is lost.  But data stored on a hard disk drive (HDD) or
