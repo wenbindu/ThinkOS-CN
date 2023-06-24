@@ -1238,48 +1238,42 @@ TLB 包含来自页表(存储在内核内存中)数据的缓存副本.
 
 \chapter{文件和文件系统}
 
-When a process completes (or crashes), any data stored in main
-memory is lost.  But data stored on a hard disk drive (HDD) or
-solid state drive (SSD) is ``persistent;'' that is, it survives
-after the process completes, even if the computer shuts down.
+当进程结束(或崩溃), 存储在主内存中的任何数据都会丢失.
+但存储在硬盘驱动器(HDD)或者固态硬盘驱动器上的数据是``持久的'';
+也就是说进程结束, 甚至计算机关闭, 也会存在.
 
-Hard disk drives are complicated.  Data is stored in blocks, which
-are laid out in sectors, which make up tracks, which are arranged
-in concentric circles on platters.
+硬盘驱动器是复杂的, 数据以块的形式存储, 
+这些块存在于扇区上, 扇区构成磁道, 
+磁道则排列在盘片的同心圆上.
 
-Solid state drives are simpler in one sense, because blocks are
-numbered sequentially, but they raise a different complication: each
-block can be written a limited number of times before it becomes
-unreliable.
+固态硬盘在某种意义上相对简单, 
+因为块会按照顺序编号, 但它们也因此引入了一个不一样的复杂性:
+每个块只能写入有限的次数, 然后就会变得不可靠.
 
-As a programmer, you don't want to deal with these complications.
-What you want is an appropriate abstraction of persistent storage
-hardware.  The most common abstraction is called a ``file system.''
+作为个程序员, 你不会想要处理这些复杂性.
+你想要的是对持久存储硬件的合理抽象.
+而最常见的抽象就是``文件系统''.
 
-Abstractly:
+抽象地说:
 
 \begin{itemize}
 
-\item A ``file system'' is a mapping from each file's name to its contents.
-If you think of the names as keys, and the contents as values,
-a file system is a kind of key-value database
-(see \url{https://en.wikipedia.org/wiki/Key-value_database}).
+\item ``文件系统''是将每个文件名称映射到其内容的一种方式.
+如果你将名称视为键, 内容当作值, 文件系统便是一种键-值数据库.
+(参见 \url{https://en.wikipedia.org/wiki/Key-value_database}).
 
-\item A ``file'' is a sequence of bytes.
+\item  一个``文件'' 便是一个字节序列.
 
 \end{itemize}
 
-File names are usually strings, and they are usually ``hierarchical'';
-that is, the string specifies a path from a top-level directory (or
-folder), through a series of subdirectories, to a specific file.
+文件名通常为字符串, 而且一般是``分层次的'';
+也就是说, 该字符串指定了一个从顶级目录(或文件夹)到特定文件的一系列子目录的路径.
 
-The primary difference between the abstraction and the underlying
-mechanism is that files are byte-based and persistent storage is
-block-based.  The operating system translates byte-based file operations 
-in the C library into block-based operations on storage devices.
-Typical block sizes are 1--8 KiB.
+抽象层以及底层机制之间最主要的区别是, 文件是基于字节的, 而持久层存储是基于块的.
+操作系统将C库中基于字节的文件操作转换为对存储设备上基于块的操作.
+典型的块大小一般为1--8 KiB.
 
-For example, the following code opens a file and reads the first byte:
+例如, 下面代码会打开文件并读取第一个字节:
 
 \begin{verbatim}
     FILE *fp = fopen("/home/downey/file.txt", "r");
@@ -1287,48 +1281,38 @@ For example, the following code opens a file and reads the first byte:
     fclose(fp);
 \end{verbatim}
 
-When this code runs:
+上述代码运行时:
 
 \begin{enumerate}
 
-\item {\tt fopen} uses the filename to find the top-level directory,
-  called \verb"/", the subdirectory {\tt home}, and the
-  sub-subdirectory {\tt downey}.
+\item {\tt fopen} 会使用文件名中的\verb"/" 确定顶级目录, 
+  以及子目录{\tt home}, 以及下一级子目录 {\tt downey}.
 
-\item It finds the file named {\tt file.txt} and ``opens'' it for
-  reading, which means it creates a data structure that represents the
-  file being read.  Among other things, this data structure
-  keeps track of how much of the file has been read, called the ``file
-  position''.
+\item 它会找到名为{\tt file.txt}的文件, 然后``打开(opens)''文件以进行读取,
+  也就表示, 这会创建一个表示正在被读取的文件的数据结构.
+  这个数据结构除了其他事情, 还会跟踪文件已读取了多少, 也就是``文件位置''.
+  
+  在DOS中, 这个数据结构叫做文件控制块(FCB), 但我希望尽量避免使用这个术语,
+  因为在UNIX中, 它有其他含义. 在UNIX中, 似乎没有一个相应的好名称. 它是
+  打开文件表中的一个条目, 所以我称其为打开文件表条目.
 
-  In DOS, this data structure is called a File Control Block, but I
-  want to avoid that term because in UNIX it means something else.  In
-  UNIX, there seems to be no good name for it.  It is an entry in the
-  open file table, so I will call it an OpenFileTableEntry.
+\item 当我调用{\tt fgetc}时, 操作系统会检查文件的下一个字符是否已经存在于
+  内存中. 如果已存在, 则会读取下一个字符, 更新文件位置, 并返回结果.
 
-\item When we call {\tt fgetc}, the operating system checks whether
-  the next character of the file is already in memory.  If so, it
-  reads the next character, advances the file position, and returns
-  the result.
+\item 如果下一个字符不在内存中, 操作系统会发出一个 I/O 请求, 获取下一个块.
+  磁盘驱动器速度较慢, 所以一个等待从磁盘获取块的进程通常会被中断, 以便另一个进程运行,
+  直到数据返回, 再回到等待的进程.
 
-\item If the next character is not in memory, the operating
-  system issues an I/O request to get the next block.  Disk drives are
-  slow, so a process waiting for a block from disk is usually
-  interrupted so another process can run until the data arrives.
+\item 当 I/O 操作结束, 新的数据块会被存储到内存, 同时进程继续运行. 读取第一个字符,
+  并将其存储为局部变量.
 
-\item When the I/O operation is complete, the new block of data is
-  stored in memory, and the process resumes.  It reads the first
-  character and stores it as a local variable.
-
-\item When the process closes the file, the operating system completes
-  or cancels any pending operations, removes data stored in
-  memory, and frees the OpenFileTableEntry.
+\item 当进程关闭文件, 操作系统会完成或者取消所有挂起的操作, 移除存储在内存中的数据,
+  并释放打开文件表条目(OpenFileTableEntry).
 
 \end{enumerate}
 
-The process for writing a file is similar, but there are some
-additional steps.  Here is an example that opens a file for
-writing and changes the first character.
+写文件的过程类似, 只是会多一些额外步骤. 
+下面是一个打开文件进行写入并修改第一个字符的示例.
 
 \begin{verbatim}
     FILE *fp = fopen("/home/downey/file.txt", "w");
@@ -1336,113 +1320,89 @@ writing and changes the first character.
     fclose(fp);
 \end{verbatim}
 
-When this code runs:
+当代码运行时:
 
 \begin{enumerate}
 
-\item Again, {\tt fopen} uses the filename to find the file.  If it
-  does not already exist, it creates a new file and adds an entry in
-  the parent directory, {\tt /home/downey}.
+\item 再次, {\tt fopen} 使用文件名定位文件. 如果文件不存在, 则会创建
+  一个新文件, 并在父目录{\tt /home/downey}中添加一个条目.
 
-\item The operating system creates an OpenFileTableEntry that
-  indicates that the file is open for writing, and sets the file
-  position to 0.
+\item 操作系统会创建一个打开文件表条目, 以标明此文件以写入方式打开, 
+  同时设置文件位置为 0.
 
-\item {\tt fputc} attempts to write (or re-write) the first byte of
-  the file.  If the file already exists, the operating system has to
-  load the first block into memory.  Otherwise it allocates a new
-  block in memory and requests a new block on disk.
+\item {\tt fputc} 会尝试写入(或重写)文件的第一个字节. 如果文件已经存在,
+  操作系统需要将第一个块加载入内存. 否则, 它会在内存中分配一个新块, 同时
+  在磁盘上申请一个新块.
 
-\item After the block in memory is modified, it might not be copied
-  back to the disk right away.  In general, data written to a file is
-  ``buffered'', which means it is stored in memory and only written to
-  disk when there is at least one block to write.
+\item 内存中的块被修改后不会立刻被复制回磁盘. 通常, 写入文件的数据是``缓冲的'',
+  意味着它会保存在内存, 直到至少有一个块需要写入, 才会写入磁盘.
 
-\item When the file is closed, any buffered data is written to disk
-  and the OpenFileTableEntry is freed.
+\item 当文件关闭, 任何缓冲区的数据都会被写入磁盘, 同时释放打开文件表条目.
 
 \end{enumerate}
 
-To summarize, the C library provides the abstraction of a file
-system that maps from file names to streams of bytes.  This abstraction
-is built on top of storage devices that are actually organized
-in blocks.
+综上所述, C 库提供了一个从文件名映射到字节流的文件系统的抽象. 
+这个抽象建立在实际以块进行组织的存储设备之上.
 
 
-\section{Disk performance}
+\section{磁盘性能}
 
 \newcommand{\mus}{$\mu$s~}
 
-I mentioned earlier that disk drives are slow.  On current HDDs, the
-average time to read a block from disk to memory might be 5--25 ms
-(see \url{https://en.wikipedia.org/wiki/Hard_disk_drive_performance_characteristics}).
-SSDs are faster, taking 25 \mus to read a 4 KiB block and 250 \mus to
-write one (see \url{http://en.wikipedia.org/wiki/Ssd#Controller}).
+我之前提过磁盘驱动器很慢. 对于当前的HDD来说, 
+从磁盘读取一个块到内存的平均时间大约5--25毫秒
+(参见 \url{https://en.wikipedia.org/wiki/Hard_disk_drive_performance_characteristics}).
+而SSD则快很多, 读一个 4 KiB的块, 只需要25 \mus, 写一个块需要250 \mus
+(参见 \url{http://en.wikipedia.org/wiki/Ssd#Controller}).
 
-To put these numbers in perspective, let's compare them to the clock
-cycle of the CPU.  A processor with clock rate 2 GHz completes one
-clock cycle every 0.5 ns.  The time to get a byte from memory to
-the CPU is typically around 100 ns.  If the processor completes one
-instruction per clock cycle, it would complete 200 instructions
-while waiting for a byte from memory.
+为了更好地理解这些数字, 我们将其和CPU的时钟周期进行比较.
+时钟频率为 2GHz的处理器每0.5 ns完成一个时钟周期.
+从内存获取一个字节到CPU的时间通常约为100 ns. 
+如果处理器每个时钟周期完成一条指令, 那么在等待从内存获取一个字节的时间可以
+完成200条指令.
 
-In one microsecond, it would complete 2000 instructions,
-so while waiting 25 \mus for a byte from an SSD, it would complete 50,000.
+在1微秒内, 处理器可以完成2000条指令, 
+所以等待从SSD获取一字节的25 \mus 内, 可以完成 50,000 条指令.
 
-In one millisecond, it would complete 2,000,000 instructions,
-so while waiting 20 ms for a byte from a HDD, it might complete
-40 million.  If there's nothing for the CPU to do while it waits,
-it would be idle.  That's why the operating system generally
-switches to another process while it is waiting for data from disk.
+在1毫秒内, 处理器可以完成 2,000,000 条指令,
+所以等待从HDD获取一字节的20 ms内, 处理器可以完成4 千万条指令. 
+如果在等待期间, CPU 没有其他任务执行, 则它会处于空闲状态.
+这也是为什么操作系统通常在等待磁盘数据时切换到另一个进程的原因.
 
-The gap in performance between main memory and persistent storage is
-one of the major challenges of computer system design.  Operating
-systems and hardware provide several features intended to ``fill in''
-this gap:
+主存和持久化存储之间的性能差距是计算机系统设计的主要挑战之一.
+操作系统和硬件提供了几种特性, 以 ``填补''这个差距:
 
 \begin{itemize}
 
-\item Block transfers: The time it takes to load a single byte from
-  disk is 5--25 ms.  By comparison, the additional time to load an 8
-  KiB block is negligible.  So systems generally try to read large
-  blocks each time they access the disk.
+\item 块传输: 从磁盘加载单个字节的时间是5--25 ms.
+  相比之下, 加载 8 KiB 块的额外时间可以忽略不急.
+  所以系统通常每次访问磁盘时, 尽量读取大块数据.
 
-\item Prefetching: Sometimes the operating system can predict that a
-  process will read a block and start loading it before it is
-  requested.  For example, if you open a file and read the first
-  block, there is a good chance you will go on to read the second
-  block.  The operating system might start loading additional blocks
-  before they are requested.
+\item 预取: 有时候操作系统可以预测一个进程将会读取的块, 从而在请求之前便进行加载.
+  比如, 如果你打开一个文件并读取第一个块, 那么你很可能会继续读取第二个块.
+  操作系统可能会在被请求之前, 先加载其他块.
 
-\item Buffering: As I mentioned, when you write a file, the operating
-  system stores the data in memory and only writes it to disk later.
-  If you modify the block several times while it is in memory, the
-  system only has to write it to disk once.
+\item 缓冲区: 正如我之前提到的, 当你写入一个文件, 操作系统会将数据存储在内存中,
+  稍后再将其写入磁盘. 如果当其在内存中时, 你多次修改了块, 系统只需要往磁盘写入一次.
 
-\item Caching: If a process has used a block recently, it is likely to
-  use it again soon.  If the operating system keeps a copy of the
-  block in memory, it can handle future requests at memory speed.
+\item 缓存: 如果进程最近使用了某个块, 很可能再次使用它.
+  如果操作系统在内存中保留了该块的副本, 那便可以以内存速度处理将来的请求.
 
 \end{itemize}
 
-Some of these features are also implemented in hardware.  For example,
-some disk drives provide a cache that stores recently-used blocks,
-and many disk drives read more than one block at a time, even if only
-one is requested.
+这些功能的有些实现是在硬件中. 比如, 有些磁盘驱动器会提供一个缓存, 来存储最近使用过
+的块, 同时很多磁盘驱动器即使只被请求了一个块, 也会一次夺取多个块.
 
-These mechanisms generally improve the performance of
-programs, but they don't change the behavior.  Usually programmers
-don't have to think about them, with two exceptions: (1) if the
-performance of a program is unexpectedly bad, you might have to know
-something about these mechanisms to diagnose the problem, and (2)
-when data is buffered, it can be harder to debug a program.  For
-example, if a program prints a value and then crashes, the value
-might not appear, because it might be in a buffer.  Similarly, if a
-program writes data to disk and then the computer loses power, the
-data might be lost if it is in a cache and not yet on disk.
+这些机制通常会提高程序的性能, 但不会改变其行为.
+通常程序员不需要考虑它们, 除非出现以下两种情况: 
+(1)如果程序性能很糟糕, 你可能需要了解这些机制以便诊断问题, 以及
+(2)当数据被缓冲存储了, 程序调试会变得困难. 
+例如, 如果一个程序打印一个值, 然后崩溃. 该值可能不会出现, 因为它可能在缓冲区.
+同样, 如果一个程序往磁盘写数据, 然后计算机断电了, 如果数据还在缓存中, 尚未
+写入磁盘, 那么数据很可能会丢失.
 
 
-\section{Disk metadata}
+\section{磁盘元数据}
 
 The blocks that make up a file might be arranged contiguously on
 disk, and file system performance is generally better if they are,
