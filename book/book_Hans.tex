@@ -1404,58 +1404,43 @@ TLB 包含来自页表(存储在内核内存中)数据的缓存副本.
 
 \section{磁盘元数据}
 
-The blocks that make up a file might be arranged contiguously on
-disk, and file system performance is generally better if they are,
-but most operating systems don't require contiguous allocation.
-They are free to place a block anywhere on disk, and they use
-various data structures to keep track of them.
+构成文件的块在磁盘上可能是连续排列, 如此的话, 文件系统的性能一般会更好,
+但多数操作系统不强求连续分配.
+它们可以在磁盘的任意位置自由放置数据块, 并使用各种数据结构对其进行跟踪.
 
-In many UNIX file systems, that data structure is called an ``inode,''
-which stands for ``index node''.  More generally, information about
-files, including the location of their blocks, is called ``metadata''.
-(The content of the file is data, so information about the file is
-data about data, hence ``meta''.)
+在很多UNIX文件系统中, 该数据结构被称为``inode'', 即``index node(索引节点)''.
+通常, 关于文件的信息, 包括其数据块的位置, 被称为``元数据''.
+(文件的内容是数据, 所以关于文件的信息便是关于数据的数据, 因此称为``元数据''.)
 
-Since inodes reside on disk along with the rest of the data, they are
-designed to fit neatly into disk blocks.  A UNIX inode contains
-information about a file, including the user ID of the file owner;
-permission flags indicating who is allowed to read, write, or execute
-it; and timestamps that indicate when it was last modified and
-accessed.  In addition, it contains block numbers for the first 12
-blocks that make up the file.
+由于inode一般与其他数据一起存储在磁盘上, 它们被设计成了完美适应磁盘块.
+UNIX的inode包含文件的信息, 包括文件所有者的用户ID; 
+表示谁可以读写或执行该文件的权限标注; 以及指示文件上次修改和访问的时间戳.
+此外, 它还包含组成文件的前12个数据块编号.
 
-If the block size is 8 KiB, the first 12 blocks make up 96 KiB.
-On most systems, that's big enough for a large majority of files,
-but it's definitely not big enough for all of them.  That's
-why the inode also contains a pointer to an ``indirection block'',
-which contains nothing but pointers to other blocks.
+如果块大小是8 KiB, 那么前12个块总共占用96 KiB空间.
+多数系统中, 这对于绝大多数文件来说已经足够大,
+但仍不够容纳所有文件.
+这也是为何inode会包含指向``间接块''的指针的原因,
+该间接块仅包含指向其他块的指针.
 
-The number of pointers in an indirection block depends on the sizes of
-the blocks and the block numbers, but it is often 1024.  With 1024
-block numbers and 8 KiB blocks, an indirection block can address 8
-MiB.  That's big enough for all but the largest files, but still not
-big enough for all.
+间接块中的指针数量取决于块大小和块编号, 但通常是1024.
+对于具有1024个块编号, 并且块大小为8 KiB时, 那么一个间接块可以寻址
+8 MiB的空间. 这对于大多数大文件来说, 已经足够大, 但仍然不够容纳所有文件.
 
-That's why the inode also contains a pointer to a ``double indirection
-block'', which contains pointers to indirection blocks.  With
-1024 indirection blocks, we can address 8 GiB.
+这也是为何inode也包含指向``双重间接块''的指针的缘由.
+双重间接块包含指向间接块的指针. 通过1024个间接块, 我们便能寻址 8GiB空间.
 
-And if that's not big enough, there is (finally) a triple indirection
-block, which contains pointers to double indirection blocks, yielding
-a maximum file size of 8 TiB.  When UNIX inodes were designed, that
-seemed big enough to serve for a long time.  But that was a long time
-ago.
+同时如果还是不够大, (最后)还有三重间接块, 也就是包含指向双重间接块指针的块,
+从而使文件大小达到8 TiB. 当UNIX的inode设计时, 这似乎在很长时间内都足够大了.
+但那是很久之前了.
 
-As an alternative to indirection blocks, some files systems, like FAT,
-use a File Allocation Table that contains one entry for each block,
-called a ``cluster'' in this context.  A root directory contains a
-pointer to the first cluster in each file.  The FAT entry for each
-cluster points to the next cluster in the file, similar to a linked
-list.  For more details, see
+有些文件系统, 比如FAT, 会使用一个被称为``簇''的文件分配表作为间接块的替代方案, 
+这个表包含每个块的一个条目. 根目录包含每个文件中第一个簇的指针. 
+每个簇的 FAT 条目都会指向文件中的下一个簇, 和链表类似. 更多详细信息, 请参考
 \url{http://en.wikipedia.org/wiki/File_Allocation_Table}.
 
 
-\section{Block allocation}
+\section{块分配}
 
 File systems have to keep track of which blocks belong to each file;
 they also have to keep track of which blocks are available for use.
