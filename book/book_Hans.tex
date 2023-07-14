@@ -39,7 +39,7 @@
 % https://tex.stackexchange.com/questions/44088/when-do-i-need-to-invoke-phantomsection
 \providecommand\phantomsection{}
 
-
+%\title{Think OS}
 \title{操作系统沉思录}
 \author{Allen B. Downey}
 
@@ -123,7 +123,7 @@ numbers=left, numberstyle=\tiny, numbersep=10pt}
 {\Large
 	Allen Downey(著)\\
 }
-{\small 杜文斌(譯)}
+{\small 杜文斌(译)}
 
 
 \vfill
@@ -228,74 +228,132 @@ Unported License, which is available at
 
 \end{htmlonly}
 
-
+%\chapter{Preface}
 \chapter{序}
 \label{preface}
 
+%In many computer science programs, Operating Systems is an advanced
+%topic.  By the time students take it, they know how to program
+%in C, and they have probably taken a class in Computer Architecture.
+%Usually the goal of the class is to expose students to the design
+%and implementation of operating systems, with the implied assumption
+%that some of them will do research in this area, or write part of
+%an OS.
 在很多计算机科学课程中, 操作系统始终是一个高级话题.
 学生在学习它之前, 可能已经学习了如何用C编程, 甚至很可能已经学过
 计算机体系架构的课程. 通常本课程的目标是让学生了解操作系统的设计和实现,
 同时期待其中一些学生在这个领域持续研究, 或者编写部分操作系统.
 
+%This book is intended for a different audience, and it has different
+%goals.  I developed it for a class at Olin College called Software
+%Systems.
 这本书希望可以满足不同人群的不同目标, 
 我编写此书是为了讲授欧林学院的软件系统的课程.
 
+%Most students taking this class learned to program in Python,
+%so one of the goals is to help them learn C.
+%For that part of the class, I use Griffiths and Griffiths, {\it Head
+%	First C}, from O'Reilly Media.  This book is meant to complement
+%that one.
 多数来上课的学生已经学过了如何用Python编程.
 所以一个目标是能够帮助他们学习C语言.
 对于这部分内容, 我使用O'Reilly Media出版社出版, 
 Griffiths 和 Griffiths编写的{\it Head First C}一书,
 来充实本书的内容.
 
+%Few of my students will ever write an operating system, but many of
+%them will write low-level applications in C or work on embedded
+%systems.  My class includes material from operating systems, networks,
+%databases, and embedded systems, but it emphasizes the topics
+%programmers need to know.
 我的学生中很少会从事编写操作系统, 但是很多人将用C来编写底层应用, 
 以及进入嵌入式领域工作. 本课程包括操作系统, 网络, 数据库, 以及嵌入式系统,
 但同时着重强调了程序员需要了解的主题.
 
+%This book does not assume that you have studied Computer Architecture.
+%As we go along, I will explain what we need.
 本书不会假设你学过计算机架构.
 随着课程学习, 我将会解释我们所需要了解的内容.
 
+%If this book is successful, it should give you a better understanding
+%of what is happening when programs run, and what you can do to make
+%them run better and faster.
 如果这本书是成功的, 那么它应该能够让你更好地理解程序运行时
 发生了什么, 以及做什么可以令程序运行更加高效.
 
-
+%Chapter 1 explains some of the differences between compiled and
+%interpreted languages, with some insight into how compilers work.
+%Recommended reading: {\it Head First C} Chapter 1.
 第一章介绍了编译语言和解释语言的差异, 以及编译器工作原理.
 推荐阅读: {\it Head First C}第1章.
 
+%Chapter 2 explains how the operating system uses processes to
+%protect running programs from interfering with each other.
 第二章解释了操作系统如何使用进程隔离程序运行.
 
+%Chapter 3 explains virtual memory and address translation.
+%Recommended reading: {\it Head First C} Chapter 2.
 第三章解释了虚拟内存和地址转换.
 推荐阅读: {\it Head First C}第2章.
 
+%Chapter 4 is about file systems and data streams.
+%Recommended reading: {\it Head First C} Chapter 3.
 第四章介绍了文件系统和数据流.
 推荐阅读: {\it Head First C}第3章.
 
+%Chapter 5 describes how numbers, letters, and other values are
+%encoded, and presents the bitwise operators.
 第五章讲述了数字、字母和其他值如何编码, 并介绍了位运算符.
 
+%Chapter 6 explains how to use dynamic memory management, and how
+%it works.
+%Recommended reading: {\it Head First C} Chapter 6.
 第六章介绍了动态内存管理的使用及其工作原理.
 推荐阅读: {\it Head First C}第6章.
 
+%Chapter 7 is about caching and the memory hierarchy.
 第七章介绍了缓存和内存层次结构.
 
+%Chapter 8 is about multitasking and scheduling.
 第八章介绍了多任务和调度.
 
+%Chapter 9 is about POSIX threads and mutexes.
+%Recommended reading: {\it Head First C} Chapter 12 and
+%{\it Little Book of Semaphores} Chapters 1 and 2.
 第九章介绍了POSIX线程和互斥锁.
 推荐阅读: {\it Head First C}第12章
 以及{\it Little Book of Semaphores}第1和2章.
 
+%Chapter 10 is about POSIX condition variables and the producer/consumer
+%problem. Recommended reading: {\it Little Book of Semaphores} Chapters 3
+%and 4.
 第十章介绍了POSIX条件变量和生产者/消费者问题.
 
+%Chapter 11 is about using POSIX semaphores and implementing semaphores in C.
 第十一章介绍了POSIX信号量的使用以及在C语言中的实现.
 
 
+%\section*{A note on this draft}
 \section*{补充}
 
+%The current version of this book is an early draft.  While I am
+%working on the text, I have not yet included the figures.  So
+%there are a few places where, I'm sure, the explanation will be
+%greatly improved when the figures are ready.
 本书目前还是早期草稿版本. 
 我还在努力撰写文本, 但尚缺乏一些配图.
 所以某些地方, 如果配图完备了, 我确信相关解释会得到改善.
 
-
+%\section{Using the code}
 \section{代码使用}
 \label{code}
 
+%Example code for this book is available from
+%\url{https://github.com/AllenDowney/ThinkOS}.  Git is a version
+%control system that allows you to keep track of the files that
+%make up a project.  A collection of files under Git's control is
+%called a {\bf repository}.  GitHub is a hosting service that provides
+%storage for Git repositories and a convenient web interface.
 本书的代码示例可以从
 \url{https://github.com/AllenDowney/ThinkOS}下载.  
 Git 是个版本管理系统, 可以让你跟踪项目文件. 
@@ -305,36 +363,57 @@ GitHub 是一个提供Git仓库存储和方便的web界面的托管服务.
 \index{Git}
 \index{GitHub}
 
+%The GitHub homepage for my repository provides several ways to
+%work with the code:
 我的仓库的GitHub主页提供了多种使用代码的方法:
 
 \begin{itemize}
-
+%\item You can create a copy of my repository
+%on GitHub by pressing the {\sf Fork} button.  If you don't already
+%have a GitHub account, you'll need to create one.  After forking, you'll
+%have your own repository on GitHub that you can use to keep track
+%of code you write while working on this book.  Then you can
+%clone the repo, which means that you copy the files
+%to your computer.
 \item 你可以点击{\sf Fork}按钮, 在GitHub基于我的仓库创建一个副本.
 如果你还没有GitHub账户, 你需要创建一个.
 创建副本后, 你便拥有了自己的仓库, 便可以跟踪学习本书时所编写的代码了.
 然后, 你可以克隆这个仓库, 这意味着文件会被复制到你的计算机上.
 \index{fork}
 
+%\item Or you could clone
+%my repository.  You don't need a GitHub account to do this, but you
+%won't be able to write your changes back to GitHub.
 \item 或者你也可以克隆我的仓库. 这样便无需GitHub账号,
 但你便不能将你的变更写回GitHub了.
 \index{clone}
 
+%\item If you don't want to use Git at all, you can download the files
+%in a Zip file using the button in the lower-right corner of the
+%GitHub page.
 \item 如果你一点都不想用Git, 你可以使用GitHub
 页面的按钮
 下载Zip 文件.
 
 \end{itemize}
 
-
+%\section*{Contributor List}
 \section*{贡献者清单}
 
-
+%If you have a suggestion or correction, please send email to 
+%{\tt downey@allendowney.com}.  If I make a change based on your
+%feedback, I will add you to the contributor list
+%(unless you ask to be omitted).
 如果你有建议或更正, 请发送邮件至 
 {\tt downey@allendowney.com}.  
 如果我根据你的反馈进行更正,
 我将把您添加到贡献者清单(除非你要求省略).
 \index{contributors}
 
+%If you include at least part of the sentence the
+%error appears in, that makes it easy for me to search.  Page and
+%section numbers are fine, too, but not quite as easy to work with.
+%Thanks!
 如果您在反馈时包含了出现错误的部分语句,
 那么我便可以快速定位.
 提供页码或者章节编号也可以, 只是不太容易处理.
@@ -343,22 +422,29 @@ GitHub 是一个提供Git仓库存储和方便的web界面的托管服务.
 \small
 
 \begin{itemize}
-
+%\item I am grateful to the students in Software Systems at Olin
+%College, who tested an early draft of this book in Spring 2014.
+%They corrected many errors and made many helpful suggestions.
+%I appreciate their pioneering spirit!
 \item 感谢参加Olin学院2014年春季软件系统课程的学生们,
 他们在本书的早期草稿阶段, 进行了大量测试.
 同时纠正了很多错误, 并提出相当多的建议. 
 我非常感激他们的开创精神!
 
+%\item James P Giannoules spotted a copy-and-paste error.
 \item James P Giannoules 指出了一处复制粘贴错误.
 
+%\item Andy Engle knows the difference between GB and GiB.
 \item Andy Engle 指出了GB和GiB之间的区别.
 
+%\item Aashish Karki noted some broken syntax.
 \item Aashish Karki 指出了一些语法问题.
 
 % ENDCONTRIB
 
 \end{itemize}
-
+%Other people who found typos and errors include
+%Jim Tyson, Donald Robertson, Jeremy Vermast, Yuzhong Huang, Ian Hill.
 其他发现错别字和其他错误的人包括
 Jim Tyson, Donald Robertson, Jeremy Vermast, Yuzhong Huang 和 Ian Hill.
 
@@ -378,18 +464,32 @@ Jim Tyson, Donald Robertson, Jeremy Vermast, Yuzhong Huang 和 Ian Hill.
 % START THE BOOK
 \mainmatter
 
-
+%\chapter{Compilation}
 \chapter{编译}
 
-
+%\section{Compiled and interpreted languages}
 \section{编译语言和解释语言}
-
+%People often describe programming languages as either compiled or interpreted.
+%``Compiled'' means that programs are translated into machine language and
+%then executed by hardware; ``interpreted'' means that programs
+%are read and executed by a software interpreter.
+%Usually C is considered a compiled language and Python is
+%considered an interpreted language.  But the distinction is not always
+%clear-cut.
 人们通常将编程语言分为编译型或解释型.
 ``编译''意味着程序被翻译为机器语言, 然后硬件执行;
 ``解释''则意味着程序由软件解释器读取并执行.
 通常认为C是编译型语言, 而Python是解释型语言.
 但是两者差异并非泾渭分明.
 
+%First, many languages can be either compiled or interpreted.  For
+%example, there are C interpreters and Python compilers.
+%Second, there are languages like Java that use a hybrid
+%approach, compiling programs into an intermediate language and then
+%running the translated program in an interpreter.  Java uses an
+%intermediate language called Java bytecode, which is similar to
+%machine language, but it is executed by a software interpreter, the
+%Java virtual machine (JVM).
 首先, 很多语言是既可以被编译也可以被解释的.
 例如, 也有C解释器和Python编译器.
 其次, 像Java一样, 有些语言会使用混合方法,
@@ -397,31 +497,47 @@ Jim Tyson, Donald Robertson, Jeremy Vermast, Yuzhong Huang 和 Ian Hill.
 Java使用了一种叫做Java字节码的中间语言, 和机器语言类似,
 但它需要由软件解释器执行, 也就是Java虚拟机(JVM).
 
+%So being compiled or interpreted is not an intrinsic
+%characteristic of a language; nevertheless, there are some general
+%differences between compiled and interpreted languages.
 所以被编译还是被解释, 并不是一个语言的内在特征;
 然而无论如何, 编译语言和解释语言之间确实会存在一些普遍的差异.
 
-
+%\section{Static types}
 \section{静态类型}
-
+%Many interpreted languages support dynamic types, but compiled
+%languages are usually limited to static types.  In a statically-typed
+%language, you can tell by looking at the program what type each
+%variable refers to.  In a dynamically-typed language,
+%you don't always know the type of a variable until the
+%program is running.  In general, {\bf static} refers to things that
+%happen at compile time (while a program is being compiled), and {\bf dynamic} refers to things that happen
+%at run time (while a program is running).
 多数解释语言支持的是动态类型, 但是编译语言通常受限于静态类型.
 在静态类型语言中, 你可以通过查看程序便能区分变量引用的类型.
 而在动态类型语言中, 直到程序运行, 你才能确切知道变量类型.
 通常, {\bf 静态} 是指在编译时发生的事情, 
 而{\bf 动态} 是指运行时发生的事情.
 
+%For example, in Python you can write a function like this:
 例如, 可以用Python编写如下函数:
 
 \begin{verbatim}
 def add(x, y):
     return x + y
 \end{verbatim}
-
+%Looking at this code, you can't tell what type {\tt x} and {\tt y}
+%will refer to at run time.  This function might be called several
+%times, each time with values with different types.  Any values that
+%support the addition operator will work; any other types will cause an
+%exception or {\bf runtime error}.
 看这个代码, 你很难在运行时% 此处是否存在歧义, email author. 
 确定{\tt x} 和 {\tt y} 所引用的类型.
 这个函数可能被调用多次, 每次都可能是不同类型的值.
 任何支持加法运算的值都可以运行; 
 其他类型则会引发异常或{\bf 运行时错误}.
 
+%In C you would write the same function like this:
 而在C中, 同样函数编写如下::
 
 \begin{verbatim}
@@ -430,21 +546,40 @@ int add(int x, int y) {
 }
 \end{verbatim}
 
+%The first line of the function includes {\bf type declarations} for the
+%parameters and the return value: {\tt x} and {\tt y} are declared to
+%be integers, which means that we can check at compile time
+%whether the addition operator is legal for this type (it is).  The
+%return value is also declared to be an integer.
 函数第一行包括对参数和返回值的{\bf 类型声明}:
 {\tt x} 和 {\tt y} 被声明为了整数, 
 这就意味着在编译时, 我们可以检查这种类型是否支持加法运算(此处支持).
 返回值也同样被声明为了整数.
 
+%Because of these declarations, when this function is called elsewhere
+%in the program, the compiler can check whether the arguments provided
+%have the right type, and whether the return value is used correctly.
 因为这些声明的存在, 在程序其他位置调用这个函数时, 
 编译器便可以检查提供的参数是否具有正确的类型, 
 以及返回值是否使用正确.
 
+%These checks happen before the program starts executing, so errors can
+%be found earlier.  More importantly, errors can be found in parts
+%of the program that have never run.  Furthermore, these checks don't
+%have to happen at run time, which is one of the reasons compiled
+%languages generally run faster than interpreted languages.
 这些检查发生在程序运行之前, 
 所以错误可以被提前发现.
 更重要的, 可以在未执行的程序部分发现错误.
 此外, 这些检查在运行时便无需发生, 这也是编译语言比解释语言
 运行更快的一个原因.
 
+%Declaring types at compile time also saves space.  In dynamic
+%languages, variable names are stored in memory while the program runs,
+%and they are often accessible by the program.  For example, in Python
+%the built-in function {\tt locals} returns a dictionary that contains
+%variable names and their values.  Here's an example in a Python
+%interpreter:
 编译时声明类型还能节省空间.
 在动态语言中, 程序运行时, 变量名称需要保存在内存中,
 同时它们会被程序频繁访问.
@@ -457,10 +592,20 @@ int add(int x, int y) {
 {'x': 5, '__builtins__': <module '__builtin__' (built-in)>,
 '__name__': '__main__', '__doc__': None, '__package__': None}
 \end{verbatim}
-
+%This shows that the name of the variable is stored in memory while
+%the program is running (along with some other values that are part
+%of the default runtime environment).
 这说明在程序运行时, 变量名是存储在内存中的(以及一些作为默认
 运行环境一部分的其他值).
 
+%In compiled languages, variable names exist at compile-time but not at
+%run time.  The compiler chooses a location for each variable and
+%records these locations as part of the compiled program.\footnote{This
+%	is a simplification; we will go into more detail later.}  The
+%location of a variable is called its {\bf address}.  At run time, the
+%value of each variable is stored at its address, but the names of the
+%variables are not stored at all (unless they are added by the compiler
+%for purposes of debugging).
 编译语言中, 变量名存在于编译时, 而不是运行时.
 编译器会为每个变量选择一个位置,
 同时将这些位置记录为编译后的程序的一部分.\footnote{
@@ -485,41 +630,68 @@ int add(int x, int y) {
 %\end{figure}
 
 
-
+%\section{The compilation process}
 \section{编译流程}
-
+%As a programmer, you should have a mental model of what happens
+%during compilation.  If you understand the process, it will help
+%you interpret error messages, debug your code, and avoid
+%common pitfalls.
 作为程序员, 你应该对编译期间发生了什么有个大致脉络.
 如果你熟悉这个过程, 便可以帮你了解错误信息, 调试代码, 
 以及避免常见的陷阱.
 
-
+%The steps of compilation are:
 编译步骤如下:
 
 \begin{enumerate}
-
+%\item Preprocessing: C is one of several languages that include
+%{\bf preprocessing directives} that take effect before the program is
+%compiled.  For example, the \verb"#include" directive causes the
+%source code from another file to be inserted at the location of the
+%directive.
 \item 预处理: C 是一种包括 {\bf 预处理指令} 的语言, 
   这些指令是在编译之前起效的. 比如, \verb"#include" 指令会
   将另一个文件的源代码插入到指令的位置.
 
+%\item Parsing: During parsing, the compiler reads the source code and
+%builds an internal representation of the program, called an
+%{\bf abstract syntax tree}.  Errors
+%detected during this step are generally syntax errors.
 \item 解析: 解析期间, 编译器会读取源码并构建程序的内在结构, 也
   就是{\bf 抽象语法树}. 在此期间检查出来的错误, 通常是语法错误.
 
+%\item Static checking: The compiler checks whether variables and
+%values have the right type, whether functions are called with the
+%right number and type of arguments, etc.  Errors detected during
+%this step are sometimes called {\bf static semantic} errors.
 \item 静态检查: 编译器会检查变量和值的类型是否正确, 
   调用函数是否使用了正确数量和类型的参数, 等等.
   此阶段侦测到的错误通常是 {\bf 静态语义} 错误.
 
+%\item Code generation: The compiler reads the internal representation
+%of the program and generates machine code or byte code.
 \item 代码生成: 编译器会读取程序的内在结构, 
   并生成机器码或字节码.
 
+%\item Linking: If the program uses values and functions defined in a
+%library, the compiler has to find the appropriate library and
+%include the required code.
 \item 链接: 如果程序使用了库中定义的值和函数, 
   编译器需要找到合适的库, 并囊括所需的代码.
 
+%\item Optimization: At several points in the process, the compiler
+%can transform the program to generate code that runs faster or
+%uses less space.  Most optimizations are simple changes that eliminate
+%obvious waste, but some compilers perform sophisticated analyses and
+%transformations.
 \item 优化: 在整个流程的各个阶段, 编译器可以转换程序, 生成
   运行更快, 或更加节约空间的代码. 大部分的优化是一些简单的修改, 可以消除
   明显的耗费, 但有些编译器可以执行更复杂的分析和代码转换.
 
 \end{enumerate}
-
+%Normally when you run {\tt gcc}, it runs all of these steps and
+%generates an executable file.  For example, here is a minimal C
+%program:
 通常运行{\tt gcc}时, 它会执行所有这些步骤, 生成一个可执行文件.
 比如, 下面是一个极简的C程序代码:
 
@@ -530,7 +702,8 @@ int main()
     printf("Hello World\n");
 }
 \end{verbatim}
-
+%If you save this code in a file called
+%{\tt hello.c}, you can compile and run it like this:
 如果你将上述代码保存为一个名为{\tt hello.c}的文件, 
 你便能像这样对其进行编译和执行:
 
@@ -539,11 +712,17 @@ $ gcc hello.c
 $ ./a.out
 \end{verbatim}
 
+%By default, {\tt gcc} stores the executable code in a file
+%called {\tt a.out} (which originally stood for ``assembler output'').
+%The second line runs the executable.  The prefix \verb"./" tells
+%the shell to look for it in the current directory.
 默认情况下, {\tt gcc} 将可执行代码存储在名为 {\tt a.out}
 (起初表示``assembler output'')的文件中.
 第二行会运行可执行文件. 
 前缀 \verb"./"是告诉shell在当前目录中查找.
 
+%It is usually a good idea to use the {\tt -o} flag to provide a
+%better name for the executable:
 通常最好使用{\tt -o} 标识为可执行文件提供一个合适的名称:
 
 \begin{verbatim}
@@ -551,8 +730,10 @@ $ gcc hello.c -o hello
 $ ./hello
 \end{verbatim}
 
-
+%\section{Object code}
 \section{目标码}
+%The {\tt -c} flag tells {\tt gcc} to compile the program and
+%generate machine code, but not to link it or generate an executable:
 
 使用{\tt -c}标识, 可以令{\tt gcc}编译程序并生成机器码, 但并不会链接库中函数, 也就不会生成可执行文件:
 
@@ -560,10 +741,15 @@ $ ./hello
 $ gcc hello.c -c
 \end{verbatim}
 
+%The result is a file named {\tt hello.o}, where the {\tt o} stands for
+%{\bf object code}, which is the compiled program.  Object code is not
+%executable, but it can be linked into an executable.
 结果是一个名为{\tt hello.o}的文件, 其中{\tt o}表示
 {\bf 目标码}, 也就是编译后的程序. 
 目标码不可执行, 但可以链接到可执行文件中.
 
+%The UNIX command {\tt nm} reads an object file and generates
+%information about the names it defines and uses.  For example:
 UNIX 命令{\tt nm} 可以读取目标文件, 并生成涉及其所定义和应用的
 名称的信息. 例如:
 
@@ -572,25 +758,46 @@ $ nm hello.o
 0000000000000000 T main
                  U puts
 \end{verbatim}
-
+%This output indicates that {\tt hello.o} defines the name {\tt main}
+%and uses a function named {\tt puts}, which stands for ``put string''.
+%In this example, {\tt gcc} performs an optimization by replacing
+%{\tt printf}, which is a large and complicated function, with
+%{\tt puts}, which is relatively simple.
 输出结果表明{\tt hello.o}定义了名称{\tt main}, 以及名
 为{\tt puts}的函数, 这个名字表示``put string''.
 在这个例子中, {\tt gcc} 通过将庞大复杂的{\tt printf}函数,
 替换为相对简单的{\tt puts}, 以进行优化.
 
+
+%You can control how much optimization {\tt gcc} does with
+%the {\tt -O} flag.  By default, it does very little optimization, which
+%can make debugging easier.  The option {\tt -O1} turns on the most
+%common and safe optimizations.  Higher numbers turn on additional
+%optimizations that require longer compilation time.
 你可以使用{\tt -O}标识来控制{\tt gcc}进行多大程度的优化.
 默认情况下, 它优化得很少, 这会令调试相对简单.
 而选项{\tt -O1}会开启常用且安全得优化.
 更高得数字会开启更多得优化, 而这也就会需要更长得编译时间.
 
+
+%In theory, optimization should not change the behavior of the program,
+%other than to speed it up.  But if your program has a subtle bug,
+%you might find that optimization makes the bug appear or disappear.
+%It is usually a good idea to turn off optimization while you are developing
+%new code.  Once the program is working and passing appropriate tests,
+%you can turn on optimization and confirm that the tests still pass.
 理论上, 优化除了加速程序之外, 不应该改变程序的行为. 
 但如果你的程序存在微妙的错误, 那你可能会发现, 优化会令错误暴露
 或消失. 通常在开发新代码时, 最好关闭优化.
 一旦程序正常运行, 并能通过适当的测试, 你便可以
 开启优化, 并确认测试仍然通过.
 
-
+%\section{Assembly code}
 \section{汇编码}
+
+%Similar to the {\tt -c} flag, the {\tt -S} flag tells {\tt gcc}
+%to compile the program and generate assembly code, which is basically
+%a human-readable form of machine code.
 
 类似于{\tt -c}标识, {\tt -S} 标识会令{\tt gcc}编译程序并生成
 汇编码, 而这基本上是一种人可读的机器码形式.
@@ -598,7 +805,8 @@ $ nm hello.o
 \begin{verbatim}
 $ gcc hello.c -S
 \end{verbatim}
-
+%The result is a file named {\tt hello.s}, which might look something like
+%this:
 结果是一个名为{\tt hello.s}的文件, 看起来像这样:
 
 \begin{verbatim}
@@ -629,22 +837,35 @@ main:
         .ident       "GCC: (Ubuntu/Linaro 4.7.3-1ubuntu1) 4.7.3"
         .section     .note.GNU-stack,"",@progbits
 \end{verbatim}
+%{\tt gcc} is usually configured to generate code for the machine you
+%are running on, so for me it generates x86 assembly language,
+%which runs on a wide variety of processors from Intel, AMD, and
+%others.  If you are running on a different architecture, you might
+%see different code.
 
 {\tt gcc} 通常会被设置, 为你运行的机器生成相应的代码,
 所以对我来说, 它会生成x86汇编语言,
 这可以在Intel, AMD 和其他厂商的多种处理器上运行.
 如果你在不同架构上运行, 你可能会得到不同的代码.
 
-
+%\section{Preprocessing}
 \section{预处理}
-
+%Taking another step backward through the compilation process, you
+%can use the {\tt -E} flag to run the preprocessor only:
 现在我们在编译过程中向后再走一步.
 你可以用{\tt -E}标识, 仅仅只运行预处理器:
 
 \begin{verbatim}
 $ gcc hello.c -E
 \end{verbatim}
-
+%The result is the output from the preprocessor.  In this example,
+%it contains the included code from {\tt stdio.h}, and all the files
+%included from {\tt stdio.h}, and all the files included from those
+%files, and so on.  On my machine, the total is more than 800 lines
+%of code.  Since almost every C program includes {\tt stdio.h}, those
+%800 lines of code get compiled a lot.  If, like many C programs,
+%you also include {\tt stdlib.h}, the result is more than 1800 lines
+%of code.
 结果是预处理器的输出.
 这个例子中, 它包含了{\tt stdio.h}中包含的代码, 
 以及{\tt stdio.h}中包含的所有文件, 依此类推.
@@ -653,9 +874,13 @@ $ gcc hello.c -E
 如果像很多C程序一样, 你也包含了{\tt stdlib.h},
 那么结果要超过1800行代码了.
 
-
+%\section{Understanding errors}
 \section{理解错误}
 
+%Now that we know the steps in the compilation process, it is easier
+%to understand error messages.  For example, if there is an error
+%in a \verb"#include" directive, you'll get a message from the
+%preprocessor:
 现在我们知道了编译过程的各个步骤, 
 便更容易理解错误信息了.
 比如, 如果\verb"#include" 指令中存在错误, 
@@ -666,6 +891,7 @@ hello.c:1:20: fatal error: stdioo.h: No such file or directory
 compilation terminated.
 \end{verbatim}
 
+%If there's a syntax error, you get a message from the compiler:
 如果存在语法错误, 你会从编译器得到下面信息:
 
 \begin{verbatim}
@@ -673,6 +899,8 @@ hello.c: In function 'main':
 hello.c:6:1: error: expected ';' before '}' token
 \end{verbatim}
 
+%If you use a function that's not defined in any of the standard
+%libraries, you get a message from the linker:
 如果使用了任何标准库都没有定义的函数,
 你会从链接器得到下面错误信息:
 
@@ -681,10 +909,19 @@ hello.c:6:1: error: expected ';' before '}' token
 hello.c:(.text+0xf): undefined reference to `printff'
 collect2: error: ld returned 1 exit status
 \end{verbatim}
-
+%{\tt ld} is the name of the UNIX linker, so named because ``loading''
+%is another step in the compilation process that is closely related
+%to linking.
 {\tt ld}是UNIX链接器的名称, 
 如此命名是因为``loading'' 是编译过程中和链接关系密切的另一步骤.
 
+
+%Once the program starts, C does very little runtime checking,
+%so there are only a few runtime errors you are likely to see.  If you
+%divide by zero, or perform another illegal floating-point operation, you
+%will get a ``Floating point exception.''  And if you try to read or
+%write an incorrect location in memory, you will get a ``Segmentation
+%fault.''
 一旦程序运行, C 便几乎不会进行运行时检查,
 所以你可能只会看到极少的运行时错误.
 如果你除以零, 或者执行了其他非法的浮点操作, 
@@ -694,15 +931,27 @@ collect2: error: ld returned 1 exit status
 
 % TODO: -Wall and lint
 
-
+%\chapter{Processes}
+%
+%\section{Abstraction and virtualization}
 \chapter{进程}
 
 \section{抽象和虚拟化}
-
+%Before we talk about processes, I want to define a few words:
 在我们谈论进程之前, 我想先定义几个词汇:
 
 \begin{itemize}
 
+%\item Abstraction: An abstraction is a simplified representation
+%of something complicated.  For example, if you drive a car, you
+%understand that when you turn the wheel left, the car goes left,
+%and vice versa.  Of course, the steering wheel is connected to
+%a sequence of mechanical and (often) hydraulic systems that turn
+%the wheels, and the wheels interact with the road in ways that
+%can be complex, but as a driver, you normally don't have to think
+%about any of those details.  You can get along very well with
+%a simple mental model of steering.  Your mental model is an
+%abstraction.
 \item 抽象: 抽象是某个复杂事物的简化表达.
 例如, 当你开车时, 你知道当你左转方向盘时, 车会左转,
 反之亦然. 当然, 方向盘连接着一系列机械和(通常是)液压系统, 
@@ -710,17 +959,39 @@ collect2: error: ld returned 1 exit status
 作为一个司机, 你通常无需考虑这些细节. 你只需要一个
 简单的逻辑模型来进行驾驶. 你的这个逻辑模型便是一种抽象.
 
+
+%Similarly, when you use a web browser, you understand that when
+%you click on a link, the browser displays the page the link refers
+%to.  The software and network communication that make that possible
+%are complex, but as a user, you don't have to know the
+%details.
 同样地, 当你使用网络浏览器时, 你知道当你点击链接时,
 浏览器会显示该链接所指的页面.
 使这一切成为可能的软件和网络通信是复杂的.
 但作为一个用户, 你不必了解其细节.
 
+%A large part of software engineering is designing abstractions like
+%these that allow users and other programmers to use powerful
+%and complicated systems without having to know about the details
+%of their implementation.
 软件工程中一个重要部分就是设计想这样的抽象,
 这些抽象可以使用户和其他程序员能够使用强大而复杂的系统,
 而无需了解其实现的细节.
 
+%\item Virtualization: An important kind of abstraction is
+%virtualization, which is the process of creating a desirable
+%illusion.
 \item 虚拟化: 一种重要的抽象便是虚拟化, 这是创建一个令人满意的幻觉的过程.
 
+
+%For example, many public libraries participate in inter-library
+%collaborations that allow them to borrow books from each other.
+%When I request a book, sometimes the book is on the shelf at my
+%local library, but other times it has to be transferred from another
+%collection.  Either way, I get a notification when it is available
+%for pickup.  I don't need to know where it came from, and I don't
+%need to know which books my library has.  As a whole, the system
+%creates the illusion that my library has every book in the world.
 例如, 很多公共图书馆会参与图书馆之间的协作, 允许其相互借书.
 当我请求一本图书时, 有时这本书是在我当地的图书馆的书架上,
 但其他时候, 它需要从另外的地方转移过来.
@@ -728,9 +999,21 @@ collect2: error: ld returned 1 exit status
 我不必知道它来自哪里, 我也不需要知道我的图书馆里有哪些书.
 整个系统创建了一个假象, 让我相信我的图书馆拥有世界上的任意一本图书.
 
+
+%The collection physically located at my local library might be small,
+%but the collection available to me virtually includes every book
+%in the inter-library collaboration.
 我当地的图书馆里实际可用的书可能很少,
 但对我来说, 可用的虚拟书籍包括合作的图书馆中的每一本书.
 
+%As another example, most computers are only connected to one
+%network, but that network is connected to others, and so on.  What
+%we call the Internet is a collection of networks and a set of
+%protocols that forward packets from one network to the next.
+%From the point of view of a user or programmer, the system behaves
+%as if every computer on the Internet is connected to every other
+%computer.  The number of physical connections is small, but the
+%number of virtual connections is very large.
 再举个例子, 大多数计算机只连接到一个网络, 
 但该网络会连接到其他网络, 依此类推.
 我们所称的互联网是一组网络和协议, 
@@ -741,25 +1024,46 @@ collect2: error: ld returned 1 exit status
 
 \end{itemize}
 
+%The word ``virtual'' is often used in the context of a virtual
+%machine, which is software that creates the illusion of a dedicated
+%computer running a particular operating system, when in reality
+%the virtual machine might be running, along with many other virtual
+%machines, on a computer running a different operating system.
 ``虚拟''一词通常在虚拟机的上下文中使用, 虚拟机是一种软件, 会给你一种假象,
 彷佛你运行在一个运行着特定操作系统的专有机器上.
 而实际上, 虚拟机可能和很多其他虚拟机一起运行在同一台计算机上, 这些虚拟机可能运行着
 不同的操作系统.
 
+%In the context of virtualization, we sometimes call what is
+%really happening ``physical'', and what is virtually happening
+%either ``logical'' or ``abstract.''
 在虚拟化的上下文中, 我们有时称真实发生的事情为``物理事件'', 
 而虚拟发生的事情为``逻辑事件''或者``抽象事件''.
 
-
+%\section{Isolation}
 \section{隔离}
 
+%One of the most important principles of engineering is isolation:
+%when you are designing a system with multiple components, it is usually
+%a good idea to isolate them from each other so that a change in one
+%component doesn't have undesired effects on other components.
 工程学最重要的一个原则便是隔离:
 当你设计一个包括多个部件的系统时, 最好将其相互之间进行隔离,
 如此一个部件的改变就不会给其他组件带来不良影响.
 
+%One of the most important goals of an operating system is to isolate
+%each running program from the others so that programmers don't have to
+%think about every possible interaction.  The software object that
+%provides this isolation is a {\bf process}.
 操作系统的一个重要目标便是将每个运行的程序和其他程序进行隔离,
 如此程序员便无需关注任何交互的可能.
 提供这种隔离性的软件对象叫做{\bf 进程}.
 
+%A process is a software object that represents a running program.
+%I mean ``software object'' in the sense of object-oriented programming;
+%in general, an object contains data and provides methods
+%that operate on the data.  A process is an object that contains the
+%following data:
 进程是一个表示当前运行程序的软件对象.
 我说的``软件对象''是指面向对象编程中的对象;
 通常, 对象包含数据以及操作数据的方法.
@@ -767,29 +1071,53 @@ collect2: error: ld returned 1 exit status
 
 \begin{itemize}
 
+%\item The text of the program, usually a sequence of
+%machine language instructions.
 \item 程序的文本, 通常是一系列机器语言指令.
 
+%\item Data associated with the program, including static data (allocated
+%at compile time) and dynamic data (allocated at run time).
 \item 程序相关的数据, 包括静态数据(编译时分配)和动态数据(运行时分配).
 
+%\item The state of any pending input/output operations.  For example,
+%if the process is waiting for data to be read from disk or for a
+%packet to arrive on a network, the status of these operations is
+%part of the process.
 \item 任何未完成的输入/输出操作的状态. 比如, 
   如果进程正在等待从磁盘读取数据, 或者等待网络数据到达, 
   这些操作的状态便是进程的一部分.
 
+%\item The hardware state of the program, which includes data stored
+%in registers, status information, and the program counter, which
+%indicates which instruction is currently executing.
 \item 程序的硬件状态, 包括寄存器中的数据, 状态信息以及程序计数器.
   程序计数器用来标识当前正在执行哪个指令.
 
 \end{itemize}
-
+%Usually one process runs one program, but it is also possible for
+%a process to load and run a new program.
 通常一个进程运行一个程序, 但也可能会加载并运行新的程序.
 
+
+%It is also possible, and common, to run the same program in more than one
+%process.  In that case, the processes share the same program text
+%but generally have different data and hardware states.
 还有可能, 也是很常见的情况是, 
 多个进程中运行同一个程序. 在这种情况下, 这些进程会共享相同的程序代码,
 但通常数据和硬件状态不同.
 
+%Most operating systems provide a fundamental set of capabilities
+%to isolate processes from each other:
 多数操作系统会提供一组基础功能, 以使进程之间相互隔离:
 
 \begin{itemize}
 
+%\item Multitasking: Most operating systems have the ability to
+%interrupt a running process at almost any time, save its hardware
+%state, and then resume the process later.  In general, programmers
+%don't have to think about these interruptions.  The program behaves
+%as if it is running continuously on a dedicated processor, 
+%except that the time between instructions is unpredictable.
 \item 多任务: 多数操作系统都具有一种能力,
   可以在任何时刻将运行中的进程中断, 并保存其硬件状态,
   然后稍后恢复进程.
@@ -797,11 +1125,26 @@ collect2: error: ld returned 1 exit status
   程序的行为就像在专用处理器上连续运行一样,
   只是指令之间的时间是不可预测的.
 
+
+%\item Virtual memory: Most operating systems create the
+%illusion that each process has its own chunk of memory, isolated
+%from all other processes.  Again, programmers generally don't
+%have to think about how virtual memory works; they can proceed
+%as if every program has a dedicated chunk of memory.
 \item 虚拟内存: 多数操作系统都会创建这样的假象, 
   即每个进程都有自己的一段空间, 与其他进程都隔离开来.
   同样地, 程序员一般无需关注虚拟内存如何工作; 
   他们可以按照每个程序都有一段专门的内存来进行操作.
 
+
+%\item Device abstraction: Processes running on the same computer share
+%the disk drive, the network interface, the graphics card, and other
+%hardware.  If processes interacted with this hardware directly,
+%without coordination, chaos would ensue.  For example, network data
+%intended for one process might be read by another.  Or multiple
+%processes might try to store data in the same location on a hard
+%drive.  It is up to the operating system to maintain order by
+%providing appropriate abstractions.
 \item 设备抽象: 运行在同一个计算机上的进程, 共享磁盘驱动器, 网络接口, 
   图形卡, 以及其他硬件. 如果进程不经协商便直接和硬件交互, 便会引发混乱.
   例如, 本来要传递给某个进程的网络数据, 可能被其他进程读取, 
@@ -809,35 +1152,59 @@ collect2: error: ld returned 1 exit status
   这便有赖于操作系统提供适当的抽象, 以维护秩序.
 
 \end{itemize}
-
+%As a programmer, you don't need to know much about how these
+%capabilities are implemented.  But if you are
+%curious, you will find a lot of interesting things
+%going on under the metaphorical hood.  And if you know what's
+%going on, it can make you a better programmer.
 作为程序员, 你并不需要知道这些功能实现的详情.
 但如果你有兴趣, 你会发现在各种隐喻之下, 
 有很多有趣的事情正在发生.
 如果你知晓发生的细节, 那你将成为更好的程序员.
 
-
+%\section{UNIX processes}
 \section{UNIX 进程}
 \label{unixps}
-
+%While I write this book, the process I
+%am most aware of is my text editor, emacs.  Every once in a while
+%I switch to a terminal window, which is a window running a UNIX shell
+%that provides a command-line interface.
 当写这本书时, 我最关注的进程是我的文本编辑器, emacs.
 每隔一段时间, 我会切换到终端窗口.
 这是一个运行 UNIX shell 的窗口, 它提供了命令行界面.
 
+%When I move the mouse, the window manager wakes up, sees that the
+%mouse is over the terminal window, and wakes up the terminal.
+%The terminal wakes up the shell.
+%If I type {\tt make} in the shell, it creates a
+%new process to run Make, which creates another process to run LaTeX
+%and then another process to display the results.
 当我移动鼠标, 窗口管理器便会被唤醒, 查看鼠标是否在终端窗口上,
 然后又会唤醒终端. 终端唤醒shell. 
 如果我在shell中输入{\tt make}, 
 它会创建一个新的进程来执行 Make, 创建另一个进程运行 LaTeX,
 然后再创建一个进程来显示结果.
 
+%If I need to look something up, I might switch to another desktop,
+%which wakes up the window manager again.  If I click on the icon for a
+%web browser, the window manager creates a process to run the web
+%browser.  Some browsers, like Chrome, create a new process for each
+%window and each tab.
 如果我需要查找一些东西, 我可能会切换到另一个桌面,
 这也会再次唤醒窗口管理器.
 如果我点击网络浏览器的图标, 窗口管理器会创建一个进程, 运行网络浏览器.
 有些浏览器, 比如 Chrome, 会为每个窗口和每个标签页都创建新的进程.
 
+%And those are just the processes I am aware of.  At the same time
+%there are many other processes running in the {\bf background}.
+%Many of them are performing operations related to the operating
+%system.
 这些还只是我知道的进程.
 同时, 还有很多其他进程在{\bf 后台} 运行.
 其中很多进程正在执行与操作系统相关的操作.
 
+%The UNIX command {\tt ps} prints information about running processes.
+%If you run it in a terminal, you might see something like this:
 UNIX 命令 {\tt ps} 可以打印正在运行的进程的信息.
 如果你在终端执行它, 你可能会看到像这样的东西:
 
@@ -847,6 +1214,17 @@ UNIX 命令 {\tt ps} 可以打印正在运行的进程的信息.
  2801 pts/1    00:01:24 emacs
 24762 pts/1    00:00:00 ps
 \end{verbatim}
+%The first column is the unique numerical process ID.  The second
+%column is the terminal that created the process; 
+%``TTY'' stands for teletypewriter, which was the original
+%mechanical terminal.
+%
+%The third column is the total processor time used by the process,
+%in hours, minutes, and seconds.
+%The last column is the name of the running program.  In
+%this example, {\tt bash} is the name of the shell that interprets
+%the commands I type in the terminal, emacs is my text editor, and
+%ps is the program generating this output.
 
 第一列是唯一的数字格式进程ID.
 第二列是创建进程的终端; 
@@ -856,6 +1234,13 @@ UNIX 命令 {\tt ps} 可以打印正在运行的进程的信息.
 在这个例子中, {\tt bash} 是解释输入命令的 shell 的名称,
 emacs 是我的文本编辑器, ps 是生成此输出的程序.
 
+%By default, {\tt ps} lists only the processes associated with
+%the current terminal.  If you use the {\tt -e} flag, you get every
+%process (including processes belonging to other users, which is
+%a security flaw, in my opinion).
+%
+%On my system there are currently 233 processes.
+%Here are some of them:
 默认情况下, {\tt ps} 仅列出和当前终端相关的进程.
 如果你使用{\tt -e} 标志, 你便能获取每个进程(包括属于其他用户的进程,
 就我看来, 这是一个安全漏洞).
@@ -885,10 +1270,23 @@ emacs 是我的文本编辑器, ps 是生成此输出的程序.
    57 ?        00:00:00 devfreq_wq
 \end{verbatim}
 
+%{\tt init} is the first process created when the operating system
+%starts.  It creates many of the other processes, and then sits idle
+%until the processes it created are done.
 {\tt init} 是操作系统启动时创建的第一个进程.
 它会创建许多其他进程, 然后闲置, 
 直到它创建的进程都结束.
 
+
+%{\tt kthreadd} is a process the operating system uses to create new
+%{\bf threads}.  We'll talk more about threads later, but for now you can
+%think of a thread as kind of a process.  The {\tt k} at the beginning
+%stands for {\bf kernel}, which is the part of the operating system
+%responsible for core capabilities like creating threads.  The extra
+%{\tt d} at the end stands for {\bf daemon}, which is another name for
+%processes like this that run in the background and provide operating
+%system services.  In this context, ``daemon'' is used in the
+%sense of a helpful spirit, with no connotation of evil.
 {\tt kthreadd} 是操作系统用来创建 {\bf 线程} 的进程.
 后续我们将更详细地讨论线程， 当前你可以将线程看作是一种进程.
 开头的{\tt k} 代表 {\bf 内核(kernel)},
@@ -897,24 +1295,51 @@ emacs 是我的文本编辑器, ps 是生成此输出的程序.
 这是运行在后台, 并提供操作系统服务的进程的另一个名称.
 在此, ``daemon'' 是指一种乐于助人的精神, 没有任何邪恶的意思.
  
+% Based on the name, you can infer that {\tt ksoftirqd} is also a kernel
+% daemon; specifically, it handles software interrupt requests, or
+% ``soft IRQ''.
 根据名称, 你可以推断出{\tt ksoftirqd} 也是一个内核守护程序;
 具体来说, 它处理软件中断请求, 即 ``软中断(soft IRQ)''
 
+%{\tt kworker} is a worker process created by the kernel to do some
+%kind of processing for the kernel.
 {\tt kworker} 是一个内核创建的工作进程, 用来为内核处理一些任务.
 
+%There are often multiple processes running these kernel services.
+%On my system at the moment, there are 8 {\tt ksoftirqd} processes
+%and 35 {\tt kworker} processes.
 通常有多个进程运行着内核服务.
 在我的系统上, 现在有8个{\tt ksoftirqd} 进程和35个{\tt kworker} 进程.
 
+%I won't go into more details about the other processes, but if you
+%are interested you can search for more information about them.
+%You should run {\tt ps} on your system and compare your results
+%to mine.
 我不会详细讨论其他进程, 但如果你感兴趣, 
 你可以搜索更多关于它们的信息.
 你应该在你的系统上运行 {\tt ps}, 并将结果和我的进行对比.
 
 %TODO: using gdb here?
 
-
+%\chapter{Virtual memory}
+%
+%\section{A bit of information theory}
 \chapter{虚拟内存}
 
 \section{一点信息论知识}
+
+%A {\bf bit} is a binary digit; it is also a unit of information.  If you
+%have one bit, you can specify one of two possibilities, usually
+%written 0 and 1.  If you have two bits, there are 4 possible
+%combinations, 00, 01, 10, and 11.  In general, if you have $b$ bits, you
+%can indicate one of $2^b$ values.  A {\bf byte} is 8 bits, so it can
+%hold one of 256 values.
+%
+%Going in the other direction, suppose you want to store a letter
+%of the alphabet.  There are 26 letters, so how many bits do you
+%need?  With 4 bits, you can specify one of 16 values, so that's
+%not enough.  With 5 bits, you can specify up to 32 values, so
+%that's enough for all the letters, with a few values left over.
 
 {\bf 比特(bit)} 是一个二进制的数位, 也是一个信息单元.
 如果你有一比特, 便可以表示两种可能性中的一种, 通常写作 0 和 1.
@@ -926,6 +1351,16 @@ emacs 是我的文本编辑器, ps 是生成此输出的程序.
 那么你需要几个比特呢? 如果用4个比特, 你可以表示16个值, 数量不够.
 如果用5个比特, 你可以表示多达32个值, 这足够表示所有字母了, 而且还有剩余.
 
+%In general, if you want to specify one of $N$ values, you should
+%choose the smallest value of $b$ so that $2^b \ge N$.  Taking the
+%log base 2 of both sides yields $b \ge log_2 N$.
+%
+%Suppose I flip a coin and tell you the outcome.  I have given
+%you one bit of information.  If I roll a six-sided die and tell
+%you the outcome, I have given you $log_2 6$ bits of information.
+%And in general, if the probability of the outcome is 1 in $N$,
+%then the outcome contains $log_2 N$ bits of information.
+
 通常, 如果你想表示$N$个值, 你应该选择满足 $2^b \ge N$ 的最小 $b$ 值.
 两侧以2为底取对数, 便可以得到 $b \ge log_2 N$.
 
@@ -933,6 +1368,22 @@ emacs 是我的文本编辑器, ps 是生成此输出的程序.
 如果我掷一个六面骰子, 并告诉你结果, 那我便是给了你 $log_2 6$ 个比特的信息.
 通常, 如果发生的概率是$N$中的1个, 那么结果便包含 $log_2 N$ 个比特信息.
 
+%Equivalently, if the probability of the outcome is $p$, then
+%the information content is $-log_2 p$.  This quantity is called
+%the {\bf self-information} of the outcome.  It measures
+%how surprising the outcome is, which is why it is also called
+%{\bf surprisal}.  If your horse has only one chance in 16 of winning,
+%and he wins, you get 4 bits of information (along with the
+%payout).  But if the favorite wins 75\% of the time, the news
+%of the win contains only 0.42 bits.
+%
+%Intuitively, unexpected news carries a lot of
+%information; conversely, if there is something you were already confident
+%of, confirming it contributes only a small amount of information.
+%
+%For several topics in this book, we will need to be comfortable
+%converting back and forth between the number of bits, $b$, and the
+%number of values they can encode, $N = 2^b$.
 同样的, 如果结果出现的概率是 $p$, 那么信息量便是 $-log_2 p$.
 这个数量也被称为结果的{\bf 自信息}, 它是用来衡量结果的惊奇程度, 
 所以也被称为{\bf 惊奇度}. 如果你的马仅有$1/16$的概率获胜,
@@ -945,8 +1396,21 @@ emacs 是我的文本编辑器, ps 是生成此输出的程序.
 在本书的诸多主题中, 我们需要在比特数, $b$, 和其能编码的值的数量 $N = 2^b$ 之间
 熟练转换.
 
-
+%\section{Memory and storage}
 \section{内存和存储}
+%While a process is running, most of its data is held in {\bf main
+%	memory}, which is usually some kind of random access memory (RAM).
+%On most current computers, main memory is {\bf volatile}, which means that
+%when the computer shuts down, the contents of main memory are lost.
+%A typical desktop computer has 2--8 GiB of
+%memory.  GiB stands for ``gibibyte,'' which is $2^{30}$ bytes.  
+%
+%If the process reads and writes files, those files are usually stored
+%on a hard disk drive (HDD) or solid state drive (SSD).  These storage
+%devices are {\bf non-volatile}, so they are used for long-term storage.
+%Currently a typical desktop computer has a HDD with a capacity of 500
+%GB to 2 TB.  GB stands for ``gigabyte,'' which is $10^9$ bytes.  TB
+%stands for ``terabyte,'' which is $10^{12}$ bytes.
 
 进程运行时, 其大部分数据存储在{\bf 主内存}, 这通常是一种随机访问存储(RAM).
 当前多数计算机上, 主存储都是{\bf 易失的}, 也就意味着一旦计算机关机, 
@@ -959,19 +1423,43 @@ GiB 表示``gibibyte,'' 也就是 $2^{30}$ 字节.
 其中GB表示``gigabyte,'' 也就是 $10^9$ 字节.
 TB 表示 ``terabyte,'' 也就是 $10^{12}$ 字节.
 
+%You might have noticed that I used the binary unit
+%GiB for the size of main memory and the decimal units GB and TB for
+%the size of the HDD.  For historical and technical reasons, memory is
+%measured in binary units, and disk drives are measured in decimal
+%units.  In this book I will be careful to distinguish binary and
+%decimal units, but you should be aware that the word ``gigabyte'' and the
+%abbreviation GB are often used ambiguously.
+%
+%In casual use, the term ``memory'' is sometimes used for HDDs and SSDs
+%as well as RAM, but the properties of these devices are very
+%different, so we will need to distinguish them.  I will use
+%{\bf storage} to refer to HDDs and SSDs.
 你可能已经注意到, 我描述主内存大小时, 用二进制单位GiB,
 描述硬盘大小时, 用十进制单位GB和TB.
 由于一些历史和科技的原因, 内存通常用二进制单位衡量, 而硬盘则用十进制单位.
 在本书中, 我将谨慎区分二进制和十进制单位,
 但你也应该注意到, ``gigabyte''和缩写GB通常是混用的.
-% gibabyte 不是等于GB吗，还是想表达 gibibyte 和GB?
+%TODO:gibabyte 不是等于GB吗，还是想表达 gibibyte 和GB?
 
 在非正式的使用中, ``内存''一词有时候会指 HDD和SSD, 以及 RAM. 但
 这些设备的属性是不同的, 所以我们需要仔细区分它们. 我将使用
 {\bf 存储} 来指代 HDD和SSD.
 
-
+%\section{Address spaces}
 \section{地址空间}
+%Each byte in main memory is specified by an integer {\bf physical
+%	address}.  The set of valid physical addresses is called the
+%physical {\bf address space}.  It
+%usually runs from 0 to $N-1$, where $N$ is
+%the size of main memory.  On a system with 1 GiB of physical memory,
+%the highest valid address is $2^{30}-1$, which is 1,073,741,823 in
+%decimal, or 0x3fff ffff in hexadecimal (the prefix 0x indicates a
+%hexadecimal number).
+%
+%However, most operating systems provide {\bf virtual memory}, which
+%means that programs never deal with physical addresses, and don't 
+%have to know how much physical memory is available.
 
 主内存中的每个字节都由一个整数{\bf 物理地址}指定.
 有效的物理地址集被称为物理{\bf 地址空间}.
@@ -982,6 +1470,18 @@ TB 表示 ``terabyte,'' 也就是 $10^{12}$ 字节.
 然而, 大部分的操作系统会提供{\bf 虚拟内存}, 这意味着程序永远不必处理
 物理地址, 也不必知道由多少物理地址可用.
 
+%Instead, programs work with {\bf virtual addresses}, which are numbered
+%from 0 to $M-1$, where $M$ is the number of valid virtual addresses.
+%The size of the virtual address space is determined by the operating
+%system and the hardware it runs on.
+%
+%You have probably heard people talk about 32-bit and 64-bit systems.
+%These terms indicate the size of the registers, which is usually also
+%the size of a virtual address.  On a 32-bit system, virtual addresses
+%are 32 bits, which means that the virtual address space runs from 0 to
+%0xffff ffff.  The size of this address space is $2^{32}$ bytes, or 4
+%GiB.
+
 相反, 程序会使用从 0 到 $M-1$ 编号的{\bf 虚拟地址}, 其中$M$ 是有效
 虚拟地址的数量. 虚拟地址空间的大小是由操作系统和其运行的硬件共同决定的.
 
@@ -990,6 +1490,24 @@ TB 表示 ``terabyte,'' 也就是 $10^{12}$ 字节.
 在32位系统上, 虚拟地址为32位, 也就是虚拟地址空间从0到0xffff ffff.
 所以地址空间的大小为$2^{32}$字节, 或 4 GiB.
 
+%On a 64-bit system, the size of the virtual address space is $2^{64}$
+%bytes, or $2^4 \cdot 1024^6$ bytes.  That's 16 exbibytes, which is
+%about a billion times bigger than current physical memories.  It might
+%seem strange that a virtual address space can be so much bigger
+%than physical memory, but we will see soon how that works.
+%
+%When a program reads and writes values in memory, it generates virtual
+%addresses.  The hardware, with help from the operating system,
+%translates to physical addresses before accessing main memory.  This
+%translation is done on a per-process basis, so even if two processes
+%generate the same virtual address, they would map to different
+%locations in physical memory.
+%
+%Thus, virtual memory is one important way the operating system
+%isolates processes from each other.  In general, a process cannot
+%access data belonging to another process, because there is no
+%virtual address it can generate that maps to physical memory
+%allocated to another process.
 而在64位系统上, 虚拟地址空间是$2^{64}$字节, 或$2^4 \cdot 1024^6$ 字节.
 这是16 exbibytes, 约为当前物理内存的十亿倍.
 虚拟地址空间比物理内存大这么多, 这看起来很奇怪, 但是我们稍后就会看到它是
@@ -1005,35 +1523,68 @@ TB 表示 ``terabyte,'' 也就是 $10^{12}$ 字节.
 因为如果某块物理内存已经被分配给了其他进程,
 那么该进程便无法生成映射到这块物理内存的虚拟地址.
 
-
+%\section{Memory segments}
 \section{内存段}
 
+%The data of a running process is organized into five segments:
 运行中得进程的数据会被组织成五个段:
 
 \begin{itemize}
 
+%\item The {\bf code segment} contains the program text; that is, the
+%machine language instructions that make up the program.
 \item {\bf 代码段} 包含程序文本; 也就是构成程序的机器语言指令.
 
+%\item The {\bf static segment} contains immutable values, like string
+%literals.  For example, if your program contains the string
+%{\tt "Hello, World"}, those characters will be stored in the
+%static segment.
 \item {\bf 静态段} 包含不可变的值, 像字符串常量. 比如, 如果你的程序包含
 字符串{\tt "Hello, World"}, 那这些字符会被保存在静态段.
 
+
+%\item The {\bf global segment} contains global variables and local variables that are declared {\tt static}.
 \item {\bf 全局段} 包含全局变量和被声明为{\bf static(静态类型)}的
 局部变量.
 
+%\item The {\bf heap segment} contains chunks of memory allocated
+%at run time, most often by calling the C library function
+%{\tt malloc}.
 \item {\bf 堆段} 包含运行时被分配的内存块, 通常是通过调用C库函数
 {\bf malloc}所分配.
 
+%\item The {\bf stack segment} contains the call stack, which is a
+%sequence of stack frames.  Each time a function is called, a stack
+%frame is allocated to contain the 
+%parameters and local variables of the function.  When the function
+%completes, its stack frame is removed from the stack.
 \item {\bf 栈段} 包含调用栈, 也就是一系列的堆栈帧.
 每次函数被调用, 都会为其分配一个包含函数的参数和局部变量的堆栈帧.
 当函数运行结束, 其堆栈帧会从栈中移除. 
 
 \end{itemize}
 
+%The arrangement of these segments is determined partly by the 
+%compiler and partly by the operating system.  The details vary
+%from one system to another, but in the most common arrangement:
 段的排序部分由编译器决定, 部分由操作系统决定.
 具体细节取决于操作系统, 但常见的排列方式包括::
 
 \begin{itemize}
-
+%\item The text segment is near the ``bottom'' of memory, that is,
+%at addresses near 0.
+%
+%\item The static segment is often just above the text segment, that is,
+%at higher addresses.
+%
+%\item The global segment is often just above the static segment.
+%
+%\item The heap is often above the global segment.  As it expands,
+%it grows up toward larger addresses.
+%
+%\item The stack is near the top of memory; that is, near the
+%highest addresses in the virtual address space.  As the
+%stack expands, it grows down toward smaller addresses.
 \item 文本段位于内存接近``底部''的位置, 也就是靠近地址0的地方.
 
 \item 静态段通常在文本段上方, 也就是高地址位置.
@@ -1050,6 +1601,9 @@ TB 表示 ``terabyte,'' 也就是 $10^{12}$ 字节.
 %TODO: Figure out how to handle the code that is in both ExercisesInC
 % and the repo for the book.
 
+%To determine the layout of these segments on your system, try running
+%this program, which is in {\tt aspace.c} in the repository for this
+%book (see Section~\ref{code}).
 若要确定你系统上这些段的布局, 尝试运行这个程序,在本书仓库
 中的 {\tt aspace.c} 文件中(详见第~\ref{code}节). 
 
@@ -1074,6 +1628,28 @@ int main ()
 }
 \end{verbatim}
 
+%{\tt main} is the name of a function; when it is used as a variable,
+%it refers to the address of the first machine language instruction
+%in {\tt main}, which we expect to be in the text segment.
+%
+%{\tt global} is a global variable, so we expect it to be in the
+%global segment.  {\tt local} is a local variable, so we expect it
+%to be on the stack.
+%
+%{\tt s} refers to a ``string literal", which is a string that appears
+%as part of the program (as opposed to a string that is read from a file,
+%input by a user, etc.).  We expect the location of the string to be
+%in the static segment (as opposed to the pointer, {\tt s}, which is
+%a local variable).
+%
+%{\tt p} contains an address returned by {\tt malloc}, which allocates
+%space in the heap.  ``malloc'' stands for ``memory allocate.''
+%
+%The format sequence \verb"%p" tells {\tt printf} to format each
+%address as a ``pointer'', so it displays the results in hexadecimal.
+%
+%When I run this program, the output looks like this (I added spaces
+%to make it easier to read):
 {\tt main}是这个函数的名称; 当作为变量使用时, 
 它指的是{\tt main}中的第一条机器语言指令的地址, 
 同时我们希望它在文本段中.
@@ -1102,7 +1678,20 @@ p points to          0x     16c3010
 s points to          0x      4006a4
 
 \end{verbatim}
-
+%As expected, the address of {\tt main} is the lowest, followed by
+%the location of the string literal.  The location of
+%{\tt global} is next, then the address {\tt p} points to.
+%The address of {\tt local} is much bigger.
+%
+%The largest address has 12 hexadecimal digits.  Each hex digit
+%corresponds to 4 bits, so it is a 48-bit address.  That suggests
+%that the usable part of the virtual address space is $2^{48}$ bytes.
+%
+%As an exercise, run this program on your computer and compare your
+%results to mine.  Add a second call to {\tt malloc} and check whether
+%the heap on your system grows up (toward larger addresses).  Add a
+%function that prints the address of a local variable, and check
+%whether the stack grows down.
 和预计的一样, {\tt main} 的地址是最低的, 然后是字符串文本的位置.
 接着是{\tt global}的位置, 再然后是{\tt p}指向的地址.
 {\tt local}的地址要大得多.
@@ -1114,9 +1703,19 @@ s points to          0x      4006a4
 再添加一个 {\tt malloc}, 检查你系统上的堆是否向上增长了(向更大地址方向).
 再添加一个输出局部变量地址的函数, 并检查栈是否向下变化了.
 
-
+%\section{Static local variables}
 \section{静态局部变量}
-
+%Local variables on the stack are sometimes called {\bf automatic},
+%because they are allocated automatically when a function is called,
+%and freed automatically when the function returns.
+%
+%In C there is another kind of local variable, called {\bf static},
+%which is allocated in the global segment.  It is initialized when
+%the program starts and keeps its value from one function call to
+%the next.
+%
+%For example, the following function keeps track of how many times
+%it has been called.
 栈上的局部变量有时被称为{\bf 自动变量},
 因为它们会在函数调用时, 自动分配, 在函数返回时, 自动释放.
 
@@ -1133,7 +1732,13 @@ int times_called()
     return counter;
 }
 \end{verbatim}
-
+%The keyword {\tt static} indicates that {\tt counter} is a static
+%local variable.  The initialization happens only once, when the program
+%starts.
+%
+%If you add this function to {\tt aspace.c} you can confirm that
+%{\tt counter} is allocated in the global segment along with global
+%variables, not in the stack.
 关键字{\tt static}表示 {\tt counter} 是一个静态局部变量.
 初始化仅会在程序启动时, 发生一次.
 
@@ -1143,9 +1748,13 @@ int times_called()
 % need a full point. 需要一个句号
 
 
-
+%\section{Address translation}
 \section{地址转换}
 \label{address_translation}
+%How does a virtual address (VA) get translated to a physical address (PA)?
+%The basic mechanism is simple, but a simple
+%implementation would be too slow and take too much space.  So actual
+%implementations are a bit more complicated.
 
 虚拟地址(VA) 如何能转换成物理地址(PA)?
 基本机制很简单, 但简单的实现会太慢, 并消耗太多空间.
@@ -1154,14 +1763,28 @@ int times_called()
 \begin{figure}
 \centerline{\includegraphics[width=3in]{figs/address_translation.pdf}}
 \caption{地址转换过程示意图.}
+%\caption{Diagram of the address translation process.}
 \label{addtrans}
 \end{figure}
-
+%Most processors provide a memory management unit (MMU) that sits between the CPU and main memory.  The MMU performs fast translation between VAs and PAs.
 大部分处理器会提供位于CPU和主存之间的内存管理单元(MMU).
 MMU 会执行VA和PA之间的快速转换.
 
 \begin{enumerate}
 
+%\item When a program reads or writes a variable, the CPU generates a
+%VA.  
+%
+%\item The MMU splits the VA into two parts, called the page number and
+%the offset.  A ``page'' is a chunk of memory; the size of a page
+%depends on the operating system and the hardware, but common sizes
+%are 1--4 KiB.
+%
+%\item The MMU looks up the page number in the translation lookaside buffer (TLB) and gets the corresponding physical page number.  Then it combines
+%the physical page number with the offset to produce a PA.
+%
+%\item The PA is passed to main memory, which reads or writes the given
+%location.
 \item 当程序读取或写入一个变量时, CPU会生成一个VA.
 
 \item MMU 将VA 分成两部分, 分别是页号和偏移量.
@@ -1174,6 +1797,10 @@ MMU 会执行VA和PA之间的快速转换.
 
 \end{enumerate}
 
+%The TLB contains cached copies of data from the page table (which is stored in kernel memory).  The page table contains the mapping from virtual page numbers to physical page numbers.  Since each process has its own page table, the TLB has to make sure it only uses entries from the page table of the process that's running.
+%
+%Figure~\ref{addtrans} shows a diagram of this process.
+%To see how it all works, suppose that the VA is 32 bits and the physical memory is 1 GiB, divided into 1 KiB pages.
 TLB 包含来自页表(存储在内核内存中)数据的缓存副本.
 页表包含虚拟页号到物理页号的映射. 
 由于每个进程都有自己的页表, 因此TLB必需确保它只使用正在运行的进程的页表中的条目.
@@ -1183,6 +1810,22 @@ TLB 包含来自页表(存储在内核内存中)数据的缓存副本.
 
 \begin{itemize}
 
+%\item Since 1 GiB is $2^{30}$ bytes and 1 KiB is $2^{10}$ bytes, there
+%are $2^{20}$ physical pages, sometimes called ``frames.''
+%
+%\item The size of the virtual address space is $2^{32}$ B and the size
+%of a page is $2^{10}$ B, so there are $2^{22}$ virtual pages.
+%
+%\item The size of the offset is determined by the page size.  In this
+%example the page size is $2^{10}$ B, so it takes 10 bits to specify
+%a byte on a page.
+%
+%\item If a VA is 32 bits and the offset is 10 bits, the remaining
+%22 bits make up the virtual page number.
+%
+%\item Since there are $2^{20}$ physical pages, each physical page
+%number is 20 bits.  Adding in the 10 bit offset, the resulting
+%PAs are 30 bits.
 \item 因为 1 GiB 是 $2^{30}$ 字节, 1 KiB 是 $2^{10}$ 字节, 
   所以有 $2^{20}$ 个物理页, 有时也称为 ``帧''.
 
@@ -1198,7 +1841,18 @@ TLB 包含来自页表(存储在内核内存中)数据的缓存副本.
   加上10位的偏移量, 得到的 PA 便是 30 位.
 
 \end{itemize}
-
+%So far this all seems feasible.  But let's think about how big a page
+%table might have to be.  The simplest implementation of a page
+%table is an array with one entry for each virtual page.
+%Each entry would contain a physical page number, which is 20 bits
+%in this example, plus some additional information about each
+%frame.  So we expect 3--4 bytes per entry.  But with $2^{22}$ virtual pages,
+%the page table would require $2^{24}$ bytes, or 16 MiB.
+%
+%And since we need a page table for each process, a system running
+%256 processes would need $2^{32}$ bytes, or 4 GiB, just for page tables!
+%And that's just with 32-bit virtual addresses.  With 48- or 64-bit
+%VAs, the numbers are ridiculous.
 至此, 一切似乎看起来可行. 但让我们想一下, 页表可能有多大.
 页表的最简单实现是一个数组, 其中每个条目对应一个虚拟页.
 每个条目包含物理页号, 本例中是20位, 以及关于每帧的附加信息.
@@ -1211,6 +1865,21 @@ TLB 包含来自页表(存储在内核内存中)数据的缓存副本.
 而这仅仅是针对32位虚拟地址的情况.
 对于48-或64-位的虚拟地址来说, 这个数字就太吓人了.
 
+
+%Fortunately, we don't actually need that much space, because
+%most processes don't use even a small fraction of their
+%virtual address space.  And if a process doesn't use a virtual
+%page, we don't need an entry in the page table for it.
+%
+%Another way to say the same thing is that page tables are ``sparse'',
+%which implies that the simple implementation, an array of page
+%table entries, is a bad idea.  Fortunately, there are several
+%good implementations for sparse arrays.
+%
+%One option is a multilevel page table, which is what many operating
+%systems, including Linux, use.  Another option is an associative table, where each entry includes both the virtual page number and the physical page number.  Searching an associative table can be slow in software, but in hardware we
+%can search the entire table in parallel, so associative arrays are
+%often used to represent the page table entries in the TLB.
 幸运的是, 我们实际上并不需要这么多空间,
 因为多数进程甚至用不到虚拟地址空间的一小部分.
 而且, 如果一个进程不使用虚拟页, 我们便不需要在页面中为其分配条目.
@@ -1224,6 +1893,21 @@ TLB 包含来自页表(存储在内核内存中)数据的缓存副本.
 在软件中检索关联表很慢, 但在硬件中, 我们可以并行检索整个表,
 所以其通常用于表示TLB中的页表条目.
 
+
+%You can read more about these implementations at
+%\url{http://en.wikipedia.org/wiki/Page_table}; you might find the
+%details interesting.  But the fundamental idea is that page tables are
+%sparse, so we have to choose a good implementation for sparse arrays.
+%
+%I mentioned earlier that the operating system can interrupt a running
+%process, save its state, and then run another process.  This mechanism
+%is called a {\bf context switch}.  Since each process has its own
+%page table, the operating system has to work with the MMU to make
+%sure each process gets the right page table.  In older machines,
+%the page table information in the MMU had to be replaced during every
+%context switch, which was expensive.  In newer systems, each page
+%table entry in the MMU includes the process ID, so page tables from
+%multiple processes can be in the MMU at the same time.
 你也可以从\url{http://en.wikipedia.org/wiki/Page_table}了解更多关于这些实现的信息;
 你可能对这些细节感兴趣.
 但核心思想为页表是稀疏的, 所以我们需要为稀疏数组选择一个好的实现方案.
@@ -1235,9 +1919,21 @@ TLB 包含来自页表(存储在内核内存中)数据的缓存副本.
 而这是很昂贵的.
 在新的系统中, MMU 中的每个页表条目都包含进程ID, 因此多个进程的页表可以同时存在于MMU中.
 
-
+%\chapter{Files and file systems}
 \chapter{文件和文件系统}
-
+%When a process completes (or crashes), any data stored in main
+%memory is lost.  But data stored on a hard disk drive (HDD) or
+%solid state drive (SSD) is ``persistent;'' that is, it survives
+%after the process completes, even if the computer shuts down.
+%
+%Hard disk drives are complicated.  Data is stored in blocks, which
+%are laid out in sectors, which make up tracks, which are arranged
+%in concentric circles on platters.
+%
+%Solid state drives are simpler in one sense, because blocks are
+%numbered sequentially, but they raise a different complication: each
+%block can be written a limited number of times before it becomes
+%unreliable.
 当进程结束(或崩溃), 存储在主内存中的任何数据都会丢失.
 但存储在硬盘驱动器(HDD)或者固态硬盘驱动器上的数据是``持久的'';
 也就是说进程结束, 甚至计算机关闭, 也会存在.
@@ -1250,6 +1946,11 @@ TLB 包含来自页表(存储在内核内存中)数据的缓存副本.
 因为块会按照顺序编号, 但它们也因此引入了一个不一样的复杂性:
 每个块只能写入有限的次数, 然后就会变得不可靠.
 
+%As a programmer, you don't want to deal with these complications.
+%What you want is an appropriate abstraction of persistent storage
+%hardware.  The most common abstraction is called a ``file system.''
+%
+%Abstractly:
 作为个程序员, 你不会想要处理这些复杂性.
 你想要的是对持久存储硬件的合理抽象.
 而最常见的抽象就是``文件系统''.
@@ -1257,7 +1958,12 @@ TLB 包含来自页表(存储在内核内存中)数据的缓存副本.
 抽象地说:
 
 \begin{itemize}
-
+%\item A ``file system'' is a mapping from each file's name to its contents.
+%If you think of the names as keys, and the contents as values,
+%a file system is a kind of key-value database
+%(see \url{https://en.wikipedia.org/wiki/Key-value_database}).
+%
+%\item A ``file'' is a sequence of bytes.
 \item ``文件系统''是将每个文件名称映射到其内容的一种方式.
 如果你将名称视为键, 内容当作值, 文件系统便是一种键-值数据库.
 (参见 \url{https://en.wikipedia.org/wiki/Key-value_database}).
@@ -1265,7 +1971,17 @@ TLB 包含来自页表(存储在内核内存中)数据的缓存副本.
 \item  一个``文件'' 便是一个字节序列.
 
 \end{itemize}
-
+%File names are usually strings, and they are usually ``hierarchical'';
+%that is, the string specifies a path from a top-level directory (or
+%folder), through a series of subdirectories, to a specific file.
+%
+%The primary difference between the abstraction and the underlying
+%mechanism is that files are byte-based and persistent storage is
+%block-based.  The operating system translates byte-based file operations 
+%in the C library into block-based operations on storage devices.
+%Typical block sizes are 1--8 KiB.
+%
+%For example, the following code opens a file and reads the first byte:
 文件名通常为字符串, 而且一般是``分层次的'';
 也就是说, 该字符串指定了一个从顶级目录(或文件夹)到特定文件的一系列子目录的路径.
 
@@ -1281,10 +1997,25 @@ TLB 包含来自页表(存储在内核内存中)数据的缓存副本.
     fclose(fp);
 \end{verbatim}
 
+%When this code runs:
 上述代码运行时:
 
 \begin{enumerate}
 
+%\item {\tt fopen} uses the filename to find the top-level directory,
+%called \verb"/", the subdirectory {\tt home}, and the
+%sub-subdirectory {\tt downey}.
+%
+%\item It finds the file named {\tt file.txt} and ``opens'' it for
+%reading, which means it creates a data structure that represents the
+%file being read.  Among other things, this data structure
+%keeps track of how much of the file has been read, called the ``file
+%position''.
+%
+%In DOS, this data structure is called a File Control Block, but I
+%want to avoid that term because in UNIX it means something else.  In
+%UNIX, there seems to be no good name for it.  It is an entry in the
+%open file table, so I will call it an OpenFileTableEntry.
 \item {\tt fopen} 会使用文件名中的\verb"/" 确定顶级目录, 
   以及子目录{\tt home}, 以及下一级子目录 {\tt downey}.
 
@@ -1296,6 +2027,23 @@ TLB 包含来自页表(存储在内核内存中)数据的缓存副本.
   因为在UNIX中, 它有其他含义. 在UNIX中, 似乎没有一个相应的好名称. 它是
   打开文件表中的一个条目, 所以我称其为打开文件表条目.
 
+%\item When we call {\tt fgetc}, the operating system checks whether
+%the next character of the file is already in memory.  If so, it
+%reads the next character, advances the file position, and returns
+%the result.
+%
+%\item If the next character is not in memory, the operating
+%system issues an I/O request to get the next block.  Disk drives are
+%slow, so a process waiting for a block from disk is usually
+%interrupted so another process can run until the data arrives.
+%
+%\item When the I/O operation is complete, the new block of data is
+%stored in memory, and the process resumes.  It reads the first
+%character and stores it as a local variable.
+%
+%\item When the process closes the file, the operating system completes
+%or cancels any pending operations, removes data stored in
+%memory, and frees the OpenFileTableEntry.
 \item 当我调用{\tt fgetc}时, 操作系统会检查文件的下一个字符是否已经存在于
   内存中. 如果已存在, 则会读取下一个字符, 更新文件位置, 并返回结果.
 
@@ -1310,7 +2058,9 @@ TLB 包含来自页表(存储在内核内存中)数据的缓存副本.
   并释放打开文件表条目(OpenFileTableEntry).
 
 \end{enumerate}
-
+%The process for writing a file is similar, but there are some
+%additional steps.  Here is an example that opens a file for
+%writing and changes the first character.
 写文件的过程类似, 只是会多一些额外步骤. 
 下面是一个打开文件进行写入并修改第一个字符的示例.
 
@@ -1320,16 +2070,35 @@ TLB 包含来自页表(存储在内核内存中)数据的缓存副本.
     fclose(fp);
 \end{verbatim}
 
+%When this code runs:
 当代码运行时:
 
 \begin{enumerate}
-
+%\item Again, {\tt fopen} uses the filename to find the file.  If it
+%does not already exist, it creates a new file and adds an entry in
+%the parent directory, {\tt /home/downey}.
+%
+%\item The operating system creates an OpenFileTableEntry that
+%indicates that the file is open for writing, and sets the file
+%position to 0.
 \item 再次, {\tt fopen} 使用文件名定位文件. 如果文件不存在, 则会创建
   一个新文件, 并在父目录{\tt /home/downey}中添加一个条目.
 
 \item 操作系统会创建一个打开文件表条目, 以标明此文件以写入方式打开, 
   同时设置文件位置为 0.
 
+%\item {\tt fputc} attempts to write (or re-write) the first byte of
+%the file.  If the file already exists, the operating system has to
+%load the first block into memory.  Otherwise it allocates a new
+%block in memory and requests a new block on disk.
+%
+%\item After the block in memory is modified, it might not be copied
+%back to the disk right away.  In general, data written to a file is
+%``buffered'', which means it is stored in memory and only written to
+%disk when there is at least one block to write.
+%
+%\item When the file is closed, any buffered data is written to disk
+%and the OpenFileTableEntry is freed.
 \item {\tt fputc} 会尝试写入(或重写)文件的第一个字节. 如果文件已经存在,
   操作系统需要将第一个块加载入内存. 否则, 它会在内存中分配一个新块, 同时
   在磁盘上申请一个新块.
@@ -1340,15 +2109,30 @@ TLB 包含来自页表(存储在内核内存中)数据的缓存副本.
 \item 当文件关闭, 任何缓冲区的数据都会被写入磁盘, 同时释放打开文件表条目.
 
 \end{enumerate}
-
+%To summarize, the C library provides the abstraction of a file
+%system that maps from file names to streams of bytes.  This abstraction
+%is built on top of storage devices that are actually organized
+%in blocks.
 综上所述, C 库提供了一个从文件名映射到字节流的文件系统的抽象. 
 这个抽象建立在实际以块进行组织的存储设备之上.
 
-
+%\section{Disk performance}
 \section{磁盘性能}
 
 \newcommand{\mus}{$\mu$s~}
 
+%I mentioned earlier that disk drives are slow.  On current HDDs, the
+%average time to read a block from disk to memory might be 5--25 ms
+%(see \url{https://en.wikipedia.org/wiki/Hard_disk_drive_performance_characteristics}).
+%SSDs are faster, taking 25 \mus to read a 4 KiB block and 250 \mus to
+%write one (see \url{http://en.wikipedia.org/wiki/Ssd#Controller}).
+%
+%To put these numbers in perspective, let's compare them to the clock
+%cycle of the CPU.  A processor with clock rate 2 GHz completes one
+%clock cycle every 0.5 ns.  The time to get a byte from memory to
+%the CPU is typically around 100 ns.  If the processor completes one
+%instruction per clock cycle, it would complete 200 instructions
+%while waiting for a byte from memory.
 我之前提过磁盘驱动器很慢. 对于当前的HDD来说, 
 从磁盘读取一个块到内存的平均时间大约5--25毫秒
 (参见 \url{https://en.wikipedia.org/wiki/Hard_disk_drive_performance_characteristics}).
@@ -1361,6 +2145,19 @@ TLB 包含来自页表(存储在内核内存中)数据的缓存副本.
 如果处理器每个时钟周期完成一条指令, 那么在等待从内存获取一个字节的时间可以
 完成200条指令.
 
+%In one microsecond, it would complete 2000 instructions,
+%so while waiting 25 \mus for a byte from an SSD, it would complete 50,000.
+%
+%In one millisecond, it would complete 2,000,000 instructions,
+%so while waiting 20 ms for a byte from a HDD, it might complete
+%40 million.  If there's nothing for the CPU to do while it waits,
+%it would be idle.  That's why the operating system generally
+%switches to another process while it is waiting for data from disk.
+%
+%The gap in performance between main memory and persistent storage is
+%one of the major challenges of computer system design.  Operating
+%systems and hardware provide several features intended to ``fill in''
+%this gap:
 在1微秒内, 处理器可以完成2000条指令, 
 所以等待从SSD获取一字节的25 \mus 内, 可以完成 50,000 条指令.
 
@@ -1373,23 +2170,55 @@ TLB 包含来自页表(存储在内核内存中)数据的缓存副本.
 操作系统和硬件提供了几种特性, 以 ``填补''这个差距:
 
 \begin{itemize}
-
+%\item Block transfers: The time it takes to load a single byte from
+%disk is 5--25 ms.  By comparison, the additional time to load an 8
+%KiB block is negligible.  So systems generally try to read large
+%blocks each time they access the disk.
 \item 块传输: 从磁盘加载单个字节的时间是5--25 ms.
   相比之下, 加载 8 KiB 块的额外时间可以忽略不急.
   所以系统通常每次访问磁盘时, 尽量读取大块数据.
 
+
+%\item Prefetching: Sometimes the operating system can predict that a
+%process will read a block and start loading it before it is
+%requested.  For example, if you open a file and read the first
+%block, there is a good chance you will go on to read the second
+%block.  The operating system might start loading additional blocks
+%before they are requested.
 \item 预取: 有时候操作系统可以预测一个进程将会读取的块, 从而在请求之前便进行加载.
   比如, 如果你打开一个文件并读取第一个块, 那么你很可能会继续读取第二个块.
   操作系统可能会在被请求之前, 先加载其他块.
 
+%\item Buffering: As I mentioned, when you write a file, the operating
+%system stores the data in memory and only writes it to disk later.
+%If you modify the block several times while it is in memory, the
+%system only has to write it to disk once.
 \item 缓冲区: 正如我之前提到的, 当你写入一个文件, 操作系统会将数据存储在内存中,
   稍后再将其写入磁盘. 如果当其在内存中时, 你多次修改了块, 系统只需要往磁盘写入一次.
 
+%\item Caching: If a process has used a block recently, it is likely to
+%use it again soon.  If the operating system keeps a copy of the
+%block in memory, it can handle future requests at memory speed.
 \item 缓存: 如果进程最近使用了某个块, 很可能再次使用它.
   如果操作系统在内存中保留了该块的副本, 那便可以以内存速度处理将来的请求.
 
 \end{itemize}
 
+%Some of these features are also implemented in hardware.  For example,
+%some disk drives provide a cache that stores recently-used blocks,
+%and many disk drives read more than one block at a time, even if only
+%one is requested.
+%
+%These mechanisms generally improve the performance of
+%programs, but they don't change the behavior.  Usually programmers
+%don't have to think about them, with two exceptions: (1) if the
+%performance of a program is unexpectedly bad, you might have to know
+%something about these mechanisms to diagnose the problem, and (2)
+%when data is buffered, it can be harder to debug a program.  For
+%example, if a program prints a value and then crashes, the value
+%might not appear, because it might be in a buffer.  Similarly, if a
+%program writes data to disk and then the computer loses power, the
+%data might be lost if it is in a cache and not yet on disk.
 这些功能的有些实现是在硬件中. 比如, 有些磁盘驱动器会提供一个缓存, 来存储最近使用过
 的块, 同时很多磁盘驱动器即使只被请求了一个块, 也会一次夺取多个块.
 
@@ -1401,9 +2230,19 @@ TLB 包含来自页表(存储在内核内存中)数据的缓存副本.
 同样, 如果一个程序往磁盘写数据, 然后计算机断电了, 如果数据还在缓存中, 尚未
 写入磁盘, 那么数据很可能会丢失.
 
-
+%\section{Disk metadata}
 \section{磁盘元数据}
-
+%The blocks that make up a file might be arranged contiguously on
+%disk, and file system performance is generally better if they are,
+%but most operating systems don't require contiguous allocation.
+%They are free to place a block anywhere on disk, and they use
+%various data structures to keep track of them.
+%
+%In many UNIX file systems, that data structure is called an ``inode,''
+%which stands for ``index node''.  More generally, information about
+%files, including the location of their blocks, is called ``metadata''.
+%(The content of the file is data, so information about the file is
+%data about data, hence ``meta''.)
 构成文件的块在磁盘上可能是连续排列, 如此的话, 文件系统的性能一般会更好,
 但多数操作系统不强求连续分配.
 它们可以在磁盘的任意位置自由放置数据块, 并使用各种数据结构对其进行跟踪.
@@ -1412,6 +2251,19 @@ TLB 包含来自页表(存储在内核内存中)数据的缓存副本.
 通常, 关于文件的信息, 包括其数据块的位置, 被称为``元数据''.
 (文件的内容是数据, 所以关于文件的信息便是关于数据的数据, 因此称为``元数据''.)
 
+%Since inodes reside on disk along with the rest of the data, they are
+%designed to fit neatly into disk blocks.  A UNIX inode contains
+%information about a file, including the user ID of the file owner;
+%permission flags indicating who is allowed to read, write, or execute
+%it; and timestamps that indicate when it was last modified and
+%accessed.  In addition, it contains block numbers for the first 12
+%blocks that make up the file.
+%
+%If the block size is 8 KiB, the first 12 blocks make up 96 KiB.
+%On most systems, that's big enough for a large majority of files,
+%but it's definitely not big enough for all of them.  That's
+%why the inode also contains a pointer to an ``indirection block'',
+%which contains nothing but pointers to other blocks.
 由于inode一般与其他数据一起存储在磁盘上, 它们被设计成了完美适应磁盘块.
 UNIX的inode包含文件的信息, 包括文件所有者的用户ID; 
 表示谁可以读写或执行该文件的权限标注; 以及指示文件上次修改和访问的时间戳.
@@ -1423,6 +2275,16 @@ UNIX的inode包含文件的信息, 包括文件所有者的用户ID;
 这也是为何inode会包含指向``间接块''的指针的原因,
 该间接块仅包含指向其他块的指针.
 
+
+%The number of pointers in an indirection block depends on the sizes of
+%the blocks and the block numbers, but it is often 1024.  With 1024
+%block numbers and 8 KiB blocks, an indirection block can address 8
+%MiB.  That's big enough for all but the largest files, but still not
+%big enough for all.
+%
+%That's why the inode also contains a pointer to a ``double indirection
+%block'', which contains pointers to indirection blocks.  With
+%1024 indirection blocks, we can address 8 GiB.
 间接块中的指针数量取决于块大小和块编号, 但通常是1024.
 对于具有1024个块编号, 并且块大小为8 KiB时, 那么一个间接块可以寻址
 8 MiB的空间. 这对于大多数大文件来说, 已经足够大, 但仍然不够容纳所有文件.
@@ -1430,6 +2292,20 @@ UNIX的inode包含文件的信息, 包括文件所有者的用户ID;
 这也是为何inode也包含指向``双重间接块''的指针的缘由.
 双重间接块包含指向间接块的指针. 通过1024个间接块, 我们便能寻址 8GiB空间.
 
+
+%And if that's not big enough, there is (finally) a triple indirection
+%block, which contains pointers to double indirection blocks, yielding
+%a maximum file size of 8 TiB.  When UNIX inodes were designed, that
+%seemed big enough to serve for a long time.  But that was a long time
+%ago.
+%
+%As an alternative to indirection blocks, some files systems, like FAT,
+%use a File Allocation Table that contains one entry for each block,
+%called a ``cluster'' in this context.  A root directory contains a
+%pointer to the first cluster in each file.  The FAT entry for each
+%cluster points to the next cluster in the file, similar to a linked
+%list.  For more details, see
+%\url{http://en.wikipedia.org/wiki/File_Allocation_Table}.
 同时如果还是不够大, (最后)还有三重间接块, 也就是包含指向双重间接块指针的块,
 从而使文件大小达到8 TiB. 当UNIX的inode设计时, 这似乎在很长时间内都足够大了.
 但那是很久之前了.
@@ -1442,76 +2318,101 @@ UNIX的inode包含文件的信息, 包括文件所有者的用户ID;
 
 \section{块分配}
 
-File systems have to keep track of which blocks belong to each file;
-they also have to keep track of which blocks are available for use.
-When a new file is created, the file system finds an available
-block and allocates it.  When a file is deleted, the file system
-makes its blocks available for re-allocation.
+%File systems have to keep track of which blocks belong to each file;
+%they also have to keep track of which blocks are available for use.
+%When a new file is created, the file system finds an available
+%block and allocates it.  When a file is deleted, the file system
+%makes its blocks available for re-allocation.
+文件系统需要跟踪哪些块属于某个文件; 也需要跟踪哪些块可以被使用.
+当创建新文件时, 文件系统会找到一个可用的块并进行分配. 当删除了文件, 文件
+系统会将块标记为可用, 以重新分配.
 
-The goals of the block allocation system are:
+%The goals of the block allocation system are:
+块分配系统的目标是:
 
 \begin{itemize}
 
-\item Speed: Allocating and freeing blocks should be fast.
+%\item Speed: Allocating and freeing blocks should be fast.
+\item 速度: 分配和释放块要快速.
 
-\item Minimal space overhead: The data structures used by the allocator
-  should be small, leaving as much space as possible for data.
+%\item Minimal space overhead: The data structures used by the allocator
+%  should be small, leaving as much space as possible for data.
+\item 最小化空间开销: 分配器使用的数据结构要尽量小, 为数据保留尽量多的空间.
 
-\item Minimal fragmentation: If some blocks are left unused, or some
-  are only partially used, the unused space is called
-  ``fragmentation''.
+%\item Minimal fragmentation: If some blocks are left unused, or some
+%  are only partially used, the unused space is called
+%  ``fragmentation''.
+\item 最小化碎片: 如果有些块不再使用, 或者有些仅部分使用, 那么未使用的空间便是``碎片''.
 
-\item Maximum contiguity: Data that is likely to be used at the same
-  time should be physically contiguous, if possible, to improve
-  performance.
+%\item Maximum contiguity: Data that is likely to be used at the same
+%  time should be physically contiguous, if possible, to improve
+%  performance.
+\item 最大化连续性: 如果可以, 一起使用的数据最好在物理上是连续的, 以提高性能.
 
 \end{itemize}
 
-It is hard to design a file system that achieves all of these
-goals, especially since file system performance depends on
-``workload characteristics'' like file sizes, access
-patterns, etc.  A file system that is well tuned for one workload
-might not perform as well for another.
+%It is hard to design a file system that achieves all of these
+%goals, especially since file system performance depends on
+%``workload characteristics'' like file sizes, access
+%patterns, etc.  A file system that is well tuned for one workload
+%might not perform as well for another.
+很难设计出一个满足上述所有目标的文件系统, 特别是文件系统的吸能取决于诸如文件大小, 
+访问模式等的``负载特征''. 对于一个工作负载优化过的文件系统, 并不一定适用于另一个.
 
-For this reason, most operating systems support several kinds of file
-systems, and file system design is an active area of research and
-development.  In the last decade, Linux systems have migrated
-from ext2, which was a conventional UNIX file system, to ext3,
-a ``journaling'' file system intended to improve speed and
-contiguity, and more recently to ext4, which can handle larger files
-and file systems.  Within the next few years, there might be
-another migration to the B-tree file system, Btrfs.
+%For this reason, most operating systems support several kinds of file
+%systems, and file system design is an active area of research and
+%development.  In the last decade, Linux systems have migrated
+%from ext2, which was a conventional UNIX file system, to ext3,
+%a ``journaling'' file system intended to improve speed and
+%contiguity, and more recently to ext4, which can handle larger files
+%and file systems.  Within the next few years, there might be
+%another migration to the B-tree file system, Btrfs.
+因此, 大部分操作系统支持多种文件系统, 同时文件系统设计也是一个研究和开发的活跃领域.
+过去十年, Linux 系统已经从传统的UNIX文件系统 ext2, 迁移到了 ext3, 
+ext3是一个``日志''文件系统, 旨在提高速度和连续性, 最近又迁移到了 ext4, 这是一个可以处理更大的文件的文件系统.
+在可预计的将来, 可能又会迁移到B-树文件系统, Btrfs. 
 
+%\section{Everything is a file?}
+\section{一切皆文件?}
 
-\section{Everything is a file?}
+%The file abstraction is really a ``stream of bytes'' abstraction,
+%which turns out to be useful for many things, not just file systems.
+文件抽象实际是一个``字节流''抽象,
+这种抽象对于很多事情都有用, 而不仅仅是文件系统.
 
-The file abstraction is really a ``stream of bytes'' abstraction,
-which turns out to be useful for many things, not just file systems.
+%One example is the UNIX pipe, which is a simple form of inter-process
+%communication.  Processes can be set up so that output from one
+%process is taken as input into another process.  For the first
+%process, the pipe behaves like a file open for writing, so it
+%can use C library functions like {\tt fputs} and {\tt fprintf}.
+%For the second process, the pipe behaves like a file open for
+%reading, so it uses {\tt fgets} and {\tt fscanf}.
+一个例子便是UNIX管道, 这是一个简单的进程间通信方式.
+进程可以设置为将一个进程的输出作为另一个进程的输入. 对于第一个进程来说, 
+这个管道就像一个以写入方式打开的文件, 所以它可以使用C库函数, 如{\tt fputs}和{\tt fprintf}.
+对于第二个进程来说, 管道就像一个以读取方式打开的文件, 所以它可以使用{\tt fgets}和{\tt fscanf}.
 
-One example is the UNIX pipe, which is a simple form of inter-process
-communication.  Processes can be set up so that output from one
-process is taken as input into another process.  For the first
-process, the pipe behaves like a file open for writing, so it
-can use C library functions like {\tt fputs} and {\tt fprintf}.
-For the second process, the pipe behaves like a file open for
-reading, so it uses {\tt fgets} and {\tt fscanf}.
+%Network communication also uses the stream of bytes abstraction.
+%A UNIX socket is a data structure that represents a communication
+%channel between processes on different computers (usually).  Again,
+%processes can read data from and write data to a socket using
+%``file'' handling functions.
+网络通信也使用字节流抽象. UNIX 套接字便是一个表示不同计算机的进程间通信通道的数据结构.
+同样, 进程可以使用``文件''处理函数, 从套接字读取以及写入数据.
 
-Network communication also uses the stream of bytes abstraction.
-A UNIX socket is a data structure that represents a communication
-channel between processes on different computers (usually).  Again,
-processes can read data from and write data to a socket using
-``file'' handling functions.
-
-Reusing the file abstraction makes life easier for programmers, since
-they only have to learn one API (application program interface).
-It also makes programs more versatile, since a program intended to
-work with files can also work with data coming from pipes and other
-sources.
+%Reusing the file abstraction makes life easier for programmers, since
+%they only have to learn one API (application program interface).
+%It also makes programs more versatile, since a program intended to
+%work with files can also work with data coming from pipes and other
+%sources.
+复用文件抽象令程序员的工作变得简单, 因为他们只需要学习一个API(应用程序编程接口).
+同时也使程序更加灵活, 因为原本设计用于文件的程序, 也可以处理来自管道和其他来源的数据.
 
 % TODO: gprof here?
 
 
-\chapter{More bits and bytes}
+%\chapter{More bits and bytes}
+\chapter{位和字节}
 
 \section{Representing integers}
 
