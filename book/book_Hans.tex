@@ -2414,40 +2414,54 @@ ext3是一个``日志''文件系统, 旨在提高速度和连续性, 最近又�
 %\chapter{More bits and bytes}
 \chapter{位和字节}
 
-\section{Representing integers}
+%\section{Representing integers}
+\section{整数表示}
 
-You probably know that computers represent numbers in
-base 2, also known as binary.  For positive numbers, the binary
-representation is straightforward; for example, the representation
-for $5_{10}$ is $b101$.
+%You probably know that computers represent numbers in
+%base 2, also known as binary.  For positive numbers, the binary
+%representation is straightforward; for example, the representation
+%for $5_{10}$ is $b101$.
 
-For negative numbers, the most obvious representation uses
-a sign bit to indicate whether a number is positive or negative.
-But there is another representation, called ``two's complement''
-that is much more common because it is easier to work with
-in hardware.
+你可能知道计算机是用二进制表示数字. 对于正数来说, 二进制表示很简单; 
+例如, 十进制的 $5_{10}$ 可以用二进制表示为 $b101$.
 
-To find the two's complement of a negative number, $-x$, find
-the binary representation of $x$, flip all the bits, and add 1.
-For example, to represent $-5_{10}$, start with the representation
-of $5_{10}$, which is $b0000 0101$ if we write the 8-bit version.
-Flipping all the bits and adding 1 yields $b1111 1011$.
+%For negative numbers, the most obvious representation uses
+%a sign bit to indicate whether a number is positive or negative.
+%But there is another representation, called ``two's complement''
+%that is much more common because it is easier to work with
+%in hardware.
+对于负数来说, 最直观的表示是采用一个符号位来标识数字的正负. 但也有其他表示方法,
+称为``补码'', 因为其在硬件处理中更容易, 所以更加常用.
 
-In two's complement, the leftmost bit acts like a sign bit;
-it is 0 for positive numbers and 1 for negative numbers.
+%To find the two's complement of a negative number, $-x$, find
+%the binary representation of $x$, flip all the bits, and add 1.
+%For example, to represent $-5_{10}$, start with the representation
+%of $5_{10}$, which is $b0000 0101$ if we write the 8-bit version.
+%Flipping all the bits and adding 1 yields $b1111 1011$.
+若要找到一个负数 $-x$ 的补码, 需要先找到 $x$ 的二进制表示, 然后翻转所有未, 再加1.
+比如, 若要表示$-5_{10}$, 可以从表示$5_{10}$开始, 如果写成8位版本, 即$b0000 0101$.
+将所有位翻转并加1, 得到 $b1111 1011$.
 
-To convert from an 8-bit number to 16-bits, we have to add
-more 0's for a positive number and add 1's for a negative number.
-In effect, we have to copy the sign bit into the new bits.
-This process is called ``sign extension''.
+%In two's complement, the leftmost bit acts like a sign bit;
+%it is 0 for positive numbers and 1 for negative numbers.
+在二进制补码中, 最左侧的位充当符号位; 正数的符号位是0, 负数的符号位为1.
 
-In C all integer types are signed (able to represent positive and
-negative numbers) unless you declare them {\tt unsigned}.  The
-difference, and the reason this declaration is important, is that
-operations on unsigned integers don't use sign extension.
+%To convert from an 8-bit number to 16-bits, we have to add
+%more 0's for a positive number and add 1's for a negative number.
+%In effect, we have to copy the sign bit into the new bits.
+%This process is called ``sign extension''.
+若要将8位数字转为16位, 我们需要为正数添加更多的0, 为负数添加更多的1.
+实际上, 我们需要将符号位复制到新的位上. 这个过程叫做``符号扩展''.
 
+%In C all integer types are signed (able to represent positive and
+%negative numbers) unless you declare them {\tt unsigned}.  The
+%difference, and the reason this declaration is important, is that
+%operations on unsigned integers don't use sign extension.
+在C语言中, 所有的整数类型都是有符号位的(能够表示正数和负数), 除非声明
+其为{\tt 无符号位}. 这个声明的区别以及重要性在于, 无符号位的整数不需要符号扩展.
 
-\section{Bitwise operators}
+%\section{Bitwise operators}
+\section{位运算符}
 
 People learning C are sometimes confused
 about the bitwise operators \verb"&" and \verb"|".  These
