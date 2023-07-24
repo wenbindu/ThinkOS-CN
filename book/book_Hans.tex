@@ -2463,15 +2463,19 @@ ext3是一个``日志''文件系统, 旨在提高速度和连续性, 最近又�
 %\section{Bitwise operators}
 \section{位运算符}
 
-People learning C are sometimes confused
-about the bitwise operators \verb"&" and \verb"|".  These
-operators treat integers as bit vectors and compute logical
-operations on corresponding bits.
+%People learning C are sometimes confused
+%about the bitwise operators \verb"&" and \verb"|".  These
+%operators treat integers as bit vectors and compute logical
+%operations on corresponding bits.
+人们学习C时, 有时会对位运算符\verb"&" 和 \verb"|" 满腹疑惑. 
+这些运算符将整数视为位向量, 并对相应的位进行逻辑运算.
 
-For example, \verb"&" computes the AND operation, which yields
-1 if both operands are 1, and 0 otherwise.  Here is an example
-of \verb"&" applied to two 4-bit numbers:
-%
+%For example, \verb"&" computes the AND operation, which yields
+%1 if both operands are 1, and 0 otherwise.  Here is an example
+%of \verb"&" applied to two 4-bit numbers:
+比如,  \verb"&" 进行 AND(且) 运算, 这会在两个操作数都是1时, 结果为1, 否则为0.
+下面是对两个4-位数字应用\verb"&"运算的例子:
+
 \begin{verbatim}
   1100
 & 1010
@@ -2479,12 +2483,15 @@ of \verb"&" applied to two 4-bit numbers:
   1000
 \end{verbatim}
 %
-In C, this means that the expression \verb"12 & 10" has the
-value 8.
+%In C, this means that the expression \verb"12 & 10" has the
+%value 8.
+在C中, 这表示表达式 \verb"12 & 10" 的结果为8.
 
-Similarly, \verb"|" computes the OR operation, which yields
-1 if either operand is 1, and 0 otherwise.
-%
+%Similarly, \verb"|" computes the OR operation, which yields
+%1 if either operand is 1, and 0 otherwise.
+同样的, \verb"|" 会进行 OR(或) 运算, 
+在两个操作数的其中一个为1时, 结果为1, 否则为0.
+
 \begin{verbatim}
   1100
 | 1010
@@ -2492,11 +2499,14 @@ Similarly, \verb"|" computes the OR operation, which yields
   1110
 \end{verbatim}
 %
-So the expression \verb"12 | 10" has the value 14.
+%So the expression \verb"12 | 10" has the value 14.
+所以表达式 \verb"12 | 10" 的结果为14.
 
-Finally, \verb"^" computes the XOR operation, which yields
-1 if either operand is 1, but not both.
-%
+%Finally, \verb"^" computes the XOR operation, which yields
+%1 if either operand is 1, but not both.
+最后, 运算符 \verb"^" 表示 XOR(异或) 操作, 在两个操作数有且只有一个为1时, 
+结果为1.
+
 \begin{verbatim}
   1100
 ^ 1010
@@ -2504,16 +2514,22 @@ Finally, \verb"^" computes the XOR operation, which yields
   0110
 \end{verbatim}
 %
-So the expression \verb"12 ^ 10" has the value 6.
+%So the expression \verb"12 ^ 10" has the value 6.
+所以表达式 \verb"12 ^ 10" 的结果为6.
 
-Most commonly, \verb"&" is used to clear a set of bits from
-a bit vector, \verb"|" is used to set bits, and \verb"^"
-is used to flip, or ``toggle'' bits.  Here are the details:
+%Most commonly, \verb"&" is used to clear a set of bits from
+%a bit vector, \verb"|" is used to set bits, and \verb"^"
+%is used to flip, or ``toggle'' bits.  Here are the details:
+最常见的用法, \verb"&" 用来从位向量中清除一组位, \verb"|" 用来设置位,
+而 \verb"^" 用来翻转或 ``切换''位. 下面是详细信息:
 
-{\bf Clearing bits}: For any value $x$, $x \& 0$ is 0, and $x \& 1$ is $x$.
-So if you AND a vector with 3, it 
-selects only the two rightmost bits, and sets the rest to 0.
+%{\bf Clearing bits}: For any value $x$, $x \& 0$ is 0, and $x \& 1$ is $x$.
+%So if you AND a vector with 3, it 
+%selects only the two rightmost bits, and sets the rest to 0.
+{\bf 清除位}: 对于任意 $x$, $x \& 0$结果是 0, 而 $x \& 1$的结果是$x$.
+所以如果你用3对一个向量执行AND操作, 则只会选择最右边的两位, 并将其他位置设置为0.
 %
+
 \begin{verbatim}
   xxxx
 & 0011
@@ -2521,12 +2537,15 @@ selects only the two rightmost bits, and sets the rest to 0.
   00xx
 \end{verbatim}
 %
-In this context, the value 3 is called a ``mask'' because it
-selects some bits and masks the rest.
+%In this context, the value 3 is called a ``mask'' because it
+%selects some bits and masks the rest.
+在这里, 3 叫做``掩码'', 因为它选择一些位, 并掩盖其余的位.
 
-{\bf Setting bits}: Similarly, for any $x$, $x | 0$ is x, and $x | 1$ is $1$.
-So if you OR a vector with 3, it sets the rightmost
-bits, and leaves the rest alone:
+%{\bf Setting bits}: Similarly, for any $x$, $x | 0$ is x, and $x | 1$ is $1$.
+%So if you OR a vector with 3, it sets the rightmost
+%bits, and leaves the rest alone:
+{\bf 设置位}: 同样, 对于任意$x$, $x | 0$ 结果是 x, 而 $x | 1$ 结果是 $1$.
+所以如果你用3对一个向量执行OR运算, 则会设置最右边的位, 并保持其余位不变:
 %
 \begin{verbatim}
   xxxx
@@ -2535,36 +2554,50 @@ bits, and leaves the rest alone:
   xx11
 \end{verbatim}
 %
-{\bf Toggling bits}: Finally, if you XOR a vector with 3, it flips the
-rightmost bits and leaves the rest alone.  As an exercise, see if you
-can compute the two's complement of 12 using \verb"^".  Hint: what's
-the two's complement representation of -1?
+%{\bf Toggling bits}: Finally, if you XOR a vector with 3, it flips the
+%rightmost bits and leaves the rest alone.  As an exercise, see if you
+%can compute the two's complement of 12 using \verb"^".  Hint: what's
+%the two's complement representation of -1?
+{\bf 翻转位}: 最后, 如果你用3对一个向量执行XOR操作, 它会翻转最右边的位, 同时保持
+其余位不变. 作为练习, 看看你是否可以使用\verb"^"计算出12的二进制补码.
+提示: -1 的二进制补码表现形式是什么?
 
 % (12 ^ -1) + 1
 
-C also provides shift operators, {\tt <<} and {\tt >>}, which shift
-bits left and right.  Each left shift doubles a number, so
-{\tt 5 << 1} is 10, and {\tt 5 << 2} is 20.  Each right shift
-divides by two (rounding down), so {\tt 5 >> 1} is 2 and
-{\tt 2 >> 1} is 1.
+%C also provides shift operators, {\tt <<} and {\tt >>}, which shift
+%bits left and right.  Each left shift doubles a number, so
+%{\tt 5 << 1} is 10, and {\tt 5 << 2} is 20.  Each right shift
+%divides by two (rounding down), so {\tt 5 >> 1} is 2 and
+%{\tt 2 >> 1} is 1.
+C 语言也提供了移位操作{\tt <<} 和 {\tt >>}, 用于左移位和右移位.
+每次左移会将数字翻倍, 所以{\tt 5 << 1} 结果是 10, {\tt 5 << 2} 等于 20.
+每次右移将会令数字除2(向下取整), 所以{\tt 5 >> 1} 的结果为 2, 同时
+{\tt 2 >> 1} 结果为 1.
 
 
-\section{Representing floating-point numbers}
+%\section{Representing floating-point numbers}
+\section{浮点数表示}
 
-Floating-point numbers are represented using the binary
-version of scientific notation.  In decimal notation, large
-numbers are written as the product of a coefficient and 10 raised
-to an exponent.  For example, the speed of light in m/s is
-approximately $2.998 \cdot 10^8$.
+%Floating-point numbers are represented using the binary
+%version of scientific notation.  In decimal notation, large
+%numbers are written as the product of a coefficient and 10 raised
+%to an exponent.  For example, the speed of light in m/s is
+%approximately $2.998 \cdot 10^8$.
+浮点数使用二进制科学计数法表示. 在十进制表示法中, 大数字会被写成系数与10的指数幂
+相乘的形式. 例如, 光速用m/s表示, 大约为 $2.998 \cdot 10^8$.
 
-Most computers use the IEEE standard for floating-point
-arithmetic.  The C type {\tt float} usually corresponds
-to the 32-bit IEEE standard; {\tt double} usually corresponds
-to the 64-bit standard.
+%Most computers use the IEEE standard for floating-point
+%arithmetic.  The C type {\tt float} usually corresponds
+%to the 32-bit IEEE standard; {\tt double} usually corresponds
+%to the 64-bit standard.
+多数计算机使用IEEE标准进行浮点数运算. C语言中的{\tt float}类型通常对应32位的
+IEEE标准; {\tt double} 通常对应64位标准.
 
-In the 32-bit standard, the leftmost bit is the sign bit, $s$.
-The next 8 bits are the exponent, $q$, and the last 23 bits are
-the coefficient, $c$.  The value of a floating-point number is
+%In the 32-bit standard, the leftmost bit is the sign bit, $s$.
+%The next 8 bits are the exponent, $q$, and the last 23 bits are
+%the coefficient, $c$.  The value of a floating-point number is
+在32位标准中, 最左侧的位是符号位 $s$. 其后8位是指数 $q$, 最后的23位是
+系数 $c$. 那么一个浮点数的值便可以表示为:
 %
 \[ (-1)^s c \cdot 2^q \]
 %
