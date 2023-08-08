@@ -8,6 +8,7 @@
 
 \documentclass[12pt]{book}
 \usepackage[UTF8]{ctex}
+%\setCJKmainfont{Songti SC}
 \usepackage[width=5.5in,height=8.5in,
   hmarginratio=3:2,vmarginratio=1:1]{geometry}
 
@@ -2601,14 +2602,18 @@ IEEE标准; {\tt double} 通常对应64位标准.
 %
 \[ (-1)^s c \cdot 2^q \]
 %
-Well, that's almost correct, but there's one more wrinkle.
-Floating-point numbers are usually normalized so that there is
-one digit before the point.  For example, in base 10, we prefer
-$2.998 \cdot 10^8$ rather than $2998 \cdot 10^5$ or any other
-equivalent expression.  In base 2, a normalized number always
-has the digit 1 before the binary point.  Since the digit in
-this location is always 1, we can save space by leaving it
-out of the representation.
+%Well, that's almost correct, but there's one more wrinkle.
+%Floating-point numbers are usually normalized so that there is
+%one digit before the point.  For example, in base 10, we prefer
+%$2.998 \cdot 10^8$ rather than $2998 \cdot 10^5$ or any other
+%equivalent expression.  In base 2, a normalized number always
+%has the digit 1 before the binary point.  Since the digit in
+%this location is always 1, we can save space by leaving it
+%out of the representation.
+基本正确, 但是小有差异. 浮点数通常是规范化的, 以确保小数点
+前有一个数字. 例如, 在十进制中, 我们一般写成$2.998 \cdot 10^8$, 
+而不是$2998 \cdot 10^5$ , 或者其他等价表达式. 在二进制中, 规范的数字总是在二进制点前有一个数字. 由于该位置的数字始终是1, 我们便可以
+在表示中省略它, 从而节省空间.
 
 For example, the integer representation of $13_{10}$ is $b1101$.
 In floating point, that's $1.101 \cdot 2^3$, so the exponent
