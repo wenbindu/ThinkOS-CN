@@ -2615,17 +2615,26 @@ IEEE标准; {\tt double} 通常对应64位标准.
 而不是$2998 \cdot 10^5$ , 或者其他等价表达式. 在二进制中, 规范的数字总是在二进制点前有一个数字. 由于该位置的数字始终是1, 我们便可以
 在表示中省略它, 从而节省空间.
 
-For example, the integer representation of $13_{10}$ is $b1101$.
-In floating point, that's $1.101 \cdot 2^3$, so the exponent
-is 3 and the part of the coefficient that would be stored
-is 101 (followed by 20 zeros).
+%For example, the integer representation of $13_{10}$ is $b1101$.
+%In floating point, that's $1.101 \cdot 2^3$, so the exponent
+%is 3 and the part of the coefficient that would be stored
+%is 101 (followed by 20 zeros).
+比如, $13_{10}$ 的整数表示是$b1101$.
+浮点数表示便是$1.101 \cdot 2^3$, 指数是3, 
+系数部分存储为101(后跟20个零).
 
-Well, that's almost correct, but there's one more wrinkle.
-The exponent is stored with a ``bias''.  In the 32-bit standard,
-the bias is 127, so the exponent 3 would be stored as 130.
 
-To pack and unpack floating-point numbers in C, we can use a 
-union and bitwise operations.  Here's an example:
+%Well, that's almost correct, but there's one more wrinkle.
+%The exponent is stored with a ``bias''.  In the 32-bit standard,
+%the bias is 127, so the exponent 3 would be stored as 130.
+这基本正确, 但存在一个小细节.
+指数是用``偏移''存储的. 在32-位标准中, 偏移是127, 所以指数3会被
+存储为130. 
+
+%To pack and unpack floating-point numbers in C, we can use a 
+%union and bitwise operations.  Here's an example:
+在C中打包和解包浮点数, 我们可以用联合位运算操作. 
+这是一个例子:
 %
 \begin{verbatim}
     union {
