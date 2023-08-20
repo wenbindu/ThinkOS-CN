@@ -2654,26 +2654,39 @@ IEEE标准; {\tt double} 通常对应64位标准.
     printf("0x%x\n", coef);
 \end{verbatim}
 %
-This code is in {\tt float.c} in the repository for this
-book (see Section~\ref{code}).
+%This code is in {\tt float.c} in the repository for this
+%book (see Section~\ref{code}).
+此代码存在于本书配套仓库中的{\tt float.c} 文件中
+(见章节~\ref{code}).
 
-The union allows us to store a floating-point value using
-{\tt p.f} and then read it as an unsigned integer using
-{\tt p.u}.
+%The union allows us to store a floating-point value using
+%{\tt p.f} and then read it as an unsigned integer using
+%{\tt p.u}.
+联合运算符允许我们使用{\tt p.f} 存储浮点数, 然后用{\tt p.u}将其
+读取为无符号整数. 
 
-To get the sign bit, we shift the bits to the right 31
-places and then use a 1-bit mask to select only the
-rightmost bit.
 
-To get the exponent, we shift the bits 23 places, then select the
-rightmost 8 bits (the hexadecimal value {\tt 0xff} has eight 1's).
+%To get the sign bit, we shift the bits to the right 31
+%places and then use a 1-bit mask to select only the
+%rightmost bit.
+要获取符号位, 我们需要向右移31位, 然后用1位掩码
+来选择最右边的位.
 
-To get the coefficient, we need to extract the 23 rightmost bits
-and ignore the rest.  We do that by making a mask with 1s in the
-23 rightmost places and 0s on the left.  The easiest way to do that
-is by shifting 1 to the left by 23 places and then subtracting 1.  
+%To get the exponent, we shift the bits 23 places, then select the
+%rightmost 8 bits (the hexadecimal value {\tt 0xff} has eight 1's).
+若要获取指数, 我们右移23位, 然后选择最右侧的8位(十六进制
+ {\tt 0xff} 有8个1).
 
-The output of this program is:
+%To get the coefficient, we need to extract the 23 rightmost bits
+%and ignore the rest.  We do that by making a mask with 1s in the
+%23 rightmost places and 0s on the left.  The easiest way to do that
+%is by shifting 1 to the left by 23 places and then subtracting 1.  
+要获取系数, 我们需要提取最右侧23位并忽略其余位. 
+我们通过创建一个右侧23位均为1, 左侧为0的掩码来实现. 
+最容易的方法是将1左移23位, 然后减去1. 
+
+%The output of this program is:
+程序输出为:
 %
 \begin{verbatim}
 1
@@ -2681,16 +2694,20 @@ The output of this program is:
 0x500000
 \end{verbatim}
 %
-As expected, the sign bit for a negative number is 1.  The exponent 
-is 130, including the bias.  And the coefficient, which I printed in
-hexadecimal, is $101$ followed by 20 zeros.
+%As expected, the sign bit for a negative number is 1.  The exponent 
+%is 130, including the bias.  And the coefficient, which I printed in
+%hexadecimal, is $101$ followed by 20 zeros.
+如预期一样, 负数的符号位是1. 指数是130, 包括偏差. 
+系数用十六进制表示, 是$101$, 后跟20个零. 
 
-As an exercise, try assembling or disassembling a {\tt double}, which
-uses the 64-bit standard.  See
-\url{http://en.wikipedia.org/wiki/IEEE_floating_point}.
+%As an exercise, try assembling or disassembling a {\tt double}, which
+%uses the 64-bit standard.  See
+%\url{http://en.wikipedia.org/wiki/IEEE_floating_point}.
+做个练习, 尝试聚合或者拆散用64位表示的{\tt double}, 
+请参阅\url{http://en.wikipedia.org/wiki/IEEE_floating_point}.
 
-
-\section{Unions and memory errors}
+%\section{Unions and memory errors}
+\section{联合体和内存错误}
 
 There are two common uses of C unions.  One, which we saw in the
 previous section, is to access the binary representation of data.
