@@ -2709,23 +2709,33 @@ IEEE标准; {\tt double} 通常对应64位标准.
 %\section{Unions and memory errors}
 \section{联合体和内存错误}
 
-There are two common uses of C unions.  One, which we saw in the
-previous section, is to access the binary representation of data.
-Another is to store heterogeneous data.  For example, you could
-use a union to represent a number that might be an integer, float,
-complex, or rational number.
+%There are two common uses of C unions.  One, which we saw in the
+%previous section, is to access the binary representation of data.
+%Another is to store heterogeneous data.  For example, you could
+%use a union to represent a number that might be an integer, float,
+%complex, or rational number.
+C 联合体有两种常见用途. 一种是前面章节看到的, 用于访问数据的
+二进制表示. 另一种是用于存储异构数据. 比如, 你可以使用一个联合体
+来表示一个可能是整数, 浮点数, 复数或有理数的数字.
 
-However, unions are error-prone.  It is up to you, as the programmer,
-to keep track of what type of data is in the union; if you write
-a floating-point value and then interpret it as an integer, the result
-is usually nonsense.
+%However, unions are error-prone.  It is up to you, as the programmer,
+%to keep track of what type of data is in the union; if you write
+%a floating-point value and then interpret it as an integer, the result
+%is usually nonsense.
+然而, 联合体是存在错误风险的. 这往往取决于你, 作为程序员, 往往需要跟踪
+联合体中数据类型; 如果你写了一个浮点数, 然后将其解释为了整数, 
+得到的结果便毫无意义了.
 
-Actually, the same thing can happen if you read a location in memory
-incorrectly.  One way that can happen is if you read past the end of
-an array.
+%Actually, the same thing can happen if you read a location in memory
+%incorrectly.  One way that can happen is if you read past the end of
+%an array.
+实际上, 如果你错误读取了内存中的某个位置, 也会发生同样的事情. 
+导致这种问题发生的一种方式是你读取了超出数组末尾的位置.
 
-To see what happens, I'll start with a function that allocates an
-array on the stack and fills it with the numbers from 0 to 99.
+%To see what happens, I'll start with a function that allocates an
+%array on the stack and fills it with the numbers from 0 to 99.
+若要看到会发生什么, 我先创建一个在堆栈上分配数组, 并用0到99的数字
+进行填充的函数.
 
 \begin{verbatim}
 void f1() {
@@ -2738,10 +2748,12 @@ void f1() {
 }
 \end{verbatim}
 
-Next I'll define a function that creates a smaller array and
-deliberately accesses elements before the beginning and after
-the end:
-
+%Next I'll define a function that creates a smaller array and
+%deliberately accesses elements before the beginning and after
+%the end:
+下一步我会定义一个函数, 以创建一个更小的数组, 并
+有意访问开始之前和结束之后的元素.
+%todo: array[-1] 不应该是结束之前的倒数第一个元素吗?
 \begin{verbatim}
 void f2() {
     int x = 17;
@@ -2755,7 +2767,8 @@ void f2() {
 }
 \end{verbatim}
 
-If I call {\tt f1} and then {\tt f2}, I get these results:
+%If I call {\tt f1} and then {\tt f2}, I get these results:
+如果我先调用{\tt f1}, 然后调用{\tt f2}, 我会得到下面结果:
 
 \begin{verbatim}
 17
@@ -2764,18 +2777,25 @@ If I call {\tt f1} and then {\tt f2}, I get these results:
 99
 \end{verbatim}
 
-The details here depend on the compiler, which arranges variables
-on the stack.  From these results, we can infer that the
-compiler put {\tt x} and {\tt y} next to each other, ``below''
-the array (at a lower address).  And when we read past the
-array, it looks like we are getting values that were left on
-the stack by the previous function call.
+%The details here depend on the compiler, which arranges variables
+%on the stack.  From these results, we can infer that the
+%compiler put {\tt x} and {\tt y} next to each other, ``below''
+%the array (at a lower address).  And when we read past the
+%array, it looks like we are getting values that were left on
+%the stack by the previous function call.
+这里细节取决于编译器, 它会在堆栈安排变量的位置. 从这些结果, 
+我们可以推断出编译器将{\tt x} 和 {\tt y}放在了一起, 位于数组的``下方''
+(一个低地址的位置). 当我们读取超出数组的元素时, 似乎我们得到了前一个
+函数调用而留在堆栈上的值. 
 
-In this example, all of the variables are integers, so it is
-relatively easy to figure out what is going on.  But in general
-when you read beyond the bounds of an array, the values you
-read might have any type.  For example, if I change {\tt f1}
-to make an array of floats, the results are:
+%In this example, all of the variables are integers, so it is
+%relatively easy to figure out what is going on.  But in general
+%when you read beyond the bounds of an array, the values you
+%read might have any type.  For example, if I change {\tt f1}
+%to make an array of floats, the results are:
+在这个例子中, 所有的变量都是整数, 所以相对容易弄清楚发生了什么. 
+但是通常当你读取超出数组边界的位置时, 你读到的值可能是任何类型. 
+例如, 如果我修改{\tt f1}函数, 创建一个浮点数数组, 结果如下: 
 
 \begin{verbatim}
 17
@@ -2784,51 +2804,71 @@ to make an array of floats, the results are:
 1120272384
 \end{verbatim}
 
-The latter two values are what you get if you interpret a
-floating-point value as an integer.  If you encountered this output
-while debugging, you would have a hard time figuring out what's
-going on.
+%The latter two values are what you get if you interpret a
+%floating-point value as an integer.  If you encountered this output
+%while debugging, you would have a hard time figuring out what's
+%going on.
+后两个值是你将浮点数作为整数解释得到的值. 如果你调试时遇到这种
+输出, 你很难确定发生了什么.
 
 
-\section{Representing strings}
+%\section{Representing strings}
+\section{字符串表示}
 
-Related issues sometimes come up with strings.  First, remember
-that C strings are null-terminated.  When you allocate space
-for a string, don't forget the extra byte at the end.
+%Related issues sometimes come up with strings.  First, remember
+%that C strings are null-terminated.  When you allocate space
+%for a string, don't forget the extra byte at the end.
+有时和字符串相关的问题也会出现. 首先, 记住C语言中的字符串是以null
+结尾的. 当你为字符串分配空间时, 不要忘记在末尾多留一个字节.
 
-Also, the letters {\it and numbers} in C strings are
-encoded in ASCII.  The ASCII codes for the digits ``0'' through ``9''
-are 48 through 57, {\it not} 0 through 9.  The ASCII code 0 is the NUL
-character that marks the end of a string.  And the ASCII codes 1
-through 9 are special characters used in some communication protocols.
-ASCII code 7 is a bell; on some terminals, printing it makes a sound.
+%Also, the letters {\it and numbers} in C strings are
+%encoded in ASCII.  The ASCII codes for the digits ``0'' through ``9''
+%are 48 through 57, {\it not} 0 through 9.  The ASCII code 0 is the NUL
+%character that marks the end of a string.  And the ASCII codes 1
+%through 9 are special characters used in some communication protocols.
+%ASCII code 7 is a bell; on some terminals, printing it makes a sound.
+另外, C语言中字符串内的字母{\it 以及数字}是用ASCII编码的. 
+数字 ``0''到``9''的ASCII 编码是48到57, {\it 而不是}0到9. ASCII码中的0是
+NULL字符, 用来标识字符串的结束. ASCII码中的1到9是用于某些通讯协议
+的特殊字符. ASCII 码中的7是一个响铃符; 在某些终端上, 打印它会发出声音. 
 
-The ASCII code for the letter ``A'' is 65; the code for
-``a'' is 97.  Here are those codes in binary:
+%The ASCII code for the letter ``A'' is 65; the code for
+%``a'' is 97.  Here are those codes in binary:
+字母``'A'' 的ASCII码是65; ``a''的编码是97. 下面是这些编码的二进制表示:
 
 \begin{verbatim}
 65 = b0100 0001
 97 = b0110 0001
 \end{verbatim}
 
-A careful observer will notice that they differ by a single
-bit.  And this pattern holds for the rest of the letters; the
-sixth bit (counting from the right) acts as a ``case bit'', 0 for
-upper-case letters and 1 for lower case letters.
+%A careful observer will notice that they differ by a single
+%bit.  And this pattern holds for the rest of the letters; the
+%sixth bit (counting from the right) acts as a ``case bit'', 0 for
+%upper-case letters and 1 for lower case letters.
+仔细观察者会注意到他们只有一个位存在差异. 其他字母也是这种模式;
+第六位(从右边数)充当的是``大小写位'', 大写字母是0, 小写字母是1. 
 
-As an exercise, write a function that takes a string and converts
-from lower-case to upper-case by flipping the sixth bit.  As a challenge,
-you can make a faster version by reading the string 32 or 64 bits
-at a time, rather than one character at a time.  This optimization
-is made easier if the length of the string is a multiple of 4 or
-8 bytes.
+%As an exercise, write a function that takes a string and converts
+%from lower-case to upper-case by flipping the sixth bit.  As a challenge,
+%you can make a faster version by reading the string 32 or 64 bits
+%at a time, rather than one character at a time.  This optimization
+%is made easier if the length of the string is a multiple of 4 or
+%8 bytes.
+做个练习, 写个函数, 使其接收一个字符串, 通过反转第六位, 
+将其从小写转成大写. 作为挑战, 你可以通过一次性读取32位或64位的
+字符串, 而不是逐个字符读取, 来创建更快的版本. 
+如果字符串长度是4或8字节的倍数, 优化过程会更容易实现.
 
-If you read past the end of a string, you are likely to see
-strange characters.  Conversely, if you write a string and
-then accidentally read it as an int or float, the results
-will be hard to interpret.
+%If you read past the end of a string, you are likely to see
+%strange characters.  Conversely, if you write a string and
+%then accidentally read it as an int or float, the results
+%will be hard to interpret.
+如果你读取超出了字符串的末尾, 你很可能会看到奇怪的字符. 
+相反, 如果你写入一个字符串, 然后意外将其当作整数或者浮点数读取, 
+结果会很难解释.
 
-For example, if you run:
+%For example, if you run:
+例如, 如果你运行:
 
 \begin{verbatim}
     char array[] = "allen";
@@ -2836,14 +2876,17 @@ For example, if you run:
     printf("%f\n", *p);
 \end{verbatim}
 
-You will find that the ASCII representation of the first 8 characters
-of my name, interpreted as a double-precision floating point number,
-is 69779713878800585457664.
+%You will find that the ASCII representation of the first 8 characters
+%of my name, interpreted as a double-precision floating point number,
+%is 69779713878800585457664.
+你会发现将我名字的前8个字符的ASCII表示, 解释为双精度的浮点数字, 
+结果是69779713878800585457664.
 
 % TODO: assert here?
 
 
-\chapter{Memory management}
+%\chapter{Memory management}
+\chapter{内存管理}
 
 C provides 4 functions for dynamic memory allocation:
 
