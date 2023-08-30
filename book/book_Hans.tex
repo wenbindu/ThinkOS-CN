@@ -2888,14 +2888,17 @@ NULL字符, 用来标识字符串的结束. ASCII码中的1到9是用于某些�
 %\chapter{Memory management}
 \chapter{内存管理}
 
-C provides 4 functions for dynamic memory allocation:
+%C provides 4 functions for dynamic memory allocation:
+C 语言为动态内存分配提供了4个函数:
 
 \begin{itemize}
 
-\item {\tt malloc}, which takes an integer size, in bytes, and returns
-a pointer to a newly-allocated chunk of memory with (at least) the
-given size.  If it can't satisfy the request, it returns
-the special pointer value NULL.
+%\item {\tt malloc}, which takes an integer size, in bytes, and returns
+%a pointer to a newly-allocated chunk of memory with (at least) the
+%given size.  If it can't satisfy the request, it returns
+%the special pointer value NULL.
+\item {\tt malloc}, 接收一个以字节为单位的整数, 返回一个(至少)指定大小的
+新分配内存块. 如果无法满足此条件, 则返回特殊指针NULL.
 
 \item {\tt calloc}, which is the same as {\tt malloc} except that
 it also clears the newly allocated chunk; that
