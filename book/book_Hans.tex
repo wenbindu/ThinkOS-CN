@@ -2897,53 +2897,73 @@ C 语言为动态内存分配提供了4个函数:
 %a pointer to a newly-allocated chunk of memory with (at least) the
 %given size.  If it can't satisfy the request, it returns
 %the special pointer value NULL.
-\item {\tt malloc}, 接收一个以字节为单位的整数, 返回一个(至少)指定大小的
+\item {\tt malloc} 接收一个以字节为单位的整数, 返回一个(至少)指定大小的
 新分配内存块. 如果无法满足此条件, 则返回特殊指针NULL.
 
-\item {\tt calloc}, which is the same as {\tt malloc} except that
-it also clears the newly allocated chunk; that
-is, it sets all bytes in the chunk to 0.
+%\item {\tt calloc}, which is the same as {\tt malloc} except that
+%it also clears the newly allocated chunk; that
+%is, it sets all bytes in the chunk to 0.
+\item {\tt calloc} 和{\tt malloc}一样, 不同之处在于它会清除新分配的块,
+也就是说, 它会将块中的所有字节设置为0. 
 
-\item {\tt free}, which takes a pointer to a previously allocated
-chunk and deallocates it; that is, it makes the space available for
-future allocation.
+%\item {\tt free}, which takes a pointer to a previously allocated
+%chunk and deallocates it; that is, it makes the space available for
+%future allocation.
+\item {\tt free} 会接受先前分配块的指针, 并释放它; 也就是说, 它可以将
+空间用于未来分配. 
 
-\item {\tt realloc}, which takes a pointer to a previously allocated
-chunk and a new size.  It allocates a chunk of memory with the new
-size, copies data from the old chunk to the new, frees the old chunk,
-and returns a pointer to the new chunk.
+%\item {\tt realloc}, which takes a pointer to a previously allocated
+%chunk and a new size.  It allocates a chunk of memory with the new
+%size, copies data from the old chunk to the new, frees the old chunk,
+%and returns a pointer to the new chunk.
+\item {\tt realloc}会接收一个之前分配块的指针和一个新的大小. 它会根据新的
+大小分配内存块, 并将数据从旧的块拷贝到新的块, 释放旧的块, 返回新的块
+的指针.
 
 \end{itemize}
 
-This API is notoriously error-prone and unforgiving.  Memory management
-is one of the most challenging parts of designing large software systems,
-which is why most modern languages provide higher-level memory
-management features like garbage collection.
+%This API is notoriously error-prone and unforgiving.  Memory management
+%is one of the most challenging parts of designing large software systems,
+%which is why most modern languages provide higher-level memory
+%management features like garbage collection.
+这个API是出了名的容易出错且无法容忍. 内存管理一直是设计大型软件系统
+所面临的最大挑战之一, 而这也是为什么大多数现代语言提供类似垃圾回收
+的高级内存管理的特性的原因. 
 
 
-\section{Memory errors}
+%\section{Memory errors}
+\section{内存错误}
 
-The C memory management API is a bit like Jasper Beardly, a minor
-character on the animated television program {\it The Simpsons}; 
-in a few episodes, he appears as a strict substitute teacher who imposes corporal punishment --- a ``paddlin''' --- for all infractions.
+%The C memory management API is a bit like Jasper Beardly, a minor
+%character on the animated television program {\it The Simpsons}; 
+%in a few episodes, he appears as a strict substitute teacher who imposes corporal punishment --- a ``paddlin''' --- for all infractions.
+C语言的内存管理API和动画节目{\it The Simpsons}中的一个小人物
+Jasper Beardly有点像; 在少数的几集中, 他作为一个严厉的代课老师
+而出现, 对所有的违规行为都施加体罚---``打屁股'''. 
 
-Here are some of things a program can do that deserve a paddling:
+%Here are some of things a program can do that deserve a paddling:
+下面是程序会做的一些需要被打屁股的事情:
 
 \begin{itemize}
 
-\item If you access (read or write) any chunk that has not been
-allocated, that's a paddling.
+%\item If you access (read or write) any chunk that has not been
+%allocated, that's a paddling.
+\item 访问(读写)任意未分配的块.
 
-\item If you free an allocated chunk and then access it, that's
-a paddling.
+%\item If you free an allocated chunk and then access it, that's
+%a paddling.
+\item 访问已释放的分配内存. 
 
-\item If you try to free a chunk that has not been allocated,
-that's a paddling.
+%\item If you try to free a chunk that has not been allocated,
+%that's a paddling.
+\item 尝试释放未分配的内存. 
 
-\item If you free the same chunk more than once, that's a paddling.
+%\item If you free the same chunk more than once, that's a paddling.
+\item 重复释放同一块内存.
 
-\item If you call {\tt realloc} with a chunk that was not allocated,
-or was allocated and then freed, that's a paddling.
+%\item If you call {\tt realloc} with a chunk that was not allocated,
+%or was allocated and then freed, that's a paddling.
+\item 对未分配的内存, 或者分配后已释放的内存调用{\tt realloc}函数. 
 
 \end{itemize}
 
@@ -3007,7 +3027,8 @@ array-like structures usually perform bounds checking.  But C arrays
 and most low-level libraries do not.
 
 
-\section{Memory leaks}
+%\section{Memory leaks}
+\section{内存泄漏}
 \label{leak}
 
 There is one more memory error that may or may not deserve a paddling.
