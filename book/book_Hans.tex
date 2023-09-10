@@ -2967,26 +2967,37 @@ Jasper Beardly有点像; 在少数的几集中, 他作为一个严厉的代课�
 
 \end{itemize}
 
-It might not sound difficult to follow these rules, but in a large
-program a chunk of memory might be allocated in one part of the
-program, used in several other parts, and freed in yet another
-part.  So changes in one part of the program can require changes
-in many other parts.
+%It might not sound difficult to follow these rules, but in a large
+%program a chunk of memory might be allocated in one part of the
+%program, used in several other parts, and freed in yet another
+%part.  So changes in one part of the program can require changes
+%in many other parts.
+遵循这些规则看起来不难, 但在大型程序中, 内存块会被某段程序
+分配, 又被不同部分代码使用, 再被其他部分释放. 所以, 程序中一部分的
+修改, 往往涉及其他很多地方.  
 
-Also, there might be many aliases, or references to the same allocated
-chunk, in different parts of the program.  The chunk should not be
-freed until all references to the chunk are no longer in use.  
-Getting this right often requires careful analysis across all parts
-of the program, which is difficult and contrary to fundamental
-principles of good software engineering.
+%Also, there might be many aliases, or references to the same allocated
+%chunk, in different parts of the program.  The chunk should not be
+%freed until all references to the chunk are no longer in use.  
+%Getting this right often requires careful analysis across all parts
+%of the program, which is difficult and contrary to fundamental
+%principles of good software engineering.
+同时, 程序的不同部分可能有很多对同一块内存的别称, 或者引用. 
+直到所有对某个内存块的引用都不再使用, 内存才能释放. 
+正确处理这点, 往往需要在程序所有地方都仔细分析, 这很困难, 
+而这也违反了良好软件工程的基本原则.
 
-Ideally, every function that allocates memory should include, as part
-of the documented interface, information about how that memory is supposed
-to be freed.  Mature libraries often do this well, but in the real world,
-software engineering practice often falls short of this ideal.
+%Ideally, every function that allocates memory should include, as part
+%of the documented interface, information about how that memory is supposed
+%to be freed.  Mature libraries often do this well, but in the real world,
+%software engineering practice often falls short of this ideal.
+理想情况是, 每个分配内存的函数, 都应该在文档化的接口中包含如何释放该
+内存的信息. 成熟的库通常在这点做的很好, 但现实世界中, 软件工程实践往往
+和理想状态差之甚远. 
 
-To make matters worse, memory errors can be difficult
-to find because the symptoms are unpredictable.  For example:
+%To make matters worse, memory errors can be difficult
+%to find because the symptoms are unpredictable.  For example:
+更糟糕的是, 内存错误因为各种状况难以预测, 往往很难定位. 比如:
 
 \begin{itemize}
 
