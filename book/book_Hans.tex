@@ -3001,67 +3001,99 @@ Jasper Beardly有点像; 在少数的几集中, 他作为一个严厉的代课�
 
 \begin{itemize}
 
-\item If you read a value from an unallocated chunk, the system {\em might} detect the error, trigger a runtime error called a ``segmentation fault'', and stop the program.  Or, the program might read unallocated memory without detecting the error; in that case, the value it gets is whatever happened to be stored at the accessed location, which is unpredictable, and might be different each time the program runs.
+%\item If you read a value from an unallocated chunk, the system {\em might} detect the error, trigger a runtime error called a ``segmentation fault'', and stop the program.  Or, the program might read unallocated memory without detecting the error; in that case, the value it gets is whatever happened to be stored at the accessed location, which is unpredictable, and might be different each time the program runs.
+\item 如果你从一个未分配的内存块中读取值, 系统{\em 可能}会检测到错误, 
+触发一个叫``分段错误''的运行时错误, 并终止程序. 或者, 程序也可能并不会
+报错, 直接读取未分配的内存; 这种情况下, 获取的值是访问位置存储的值, 
+而这是无法预测的, 程序每次执行结果可能都不同.
 
-\item If you write a value to an unallocated chunk, and don't get a segmentation fault, things are even worse.  After you write a value to an invalid location, a long time might pass before it is read and causes problems.  At that point it will be very difficult to find the source of the problem.
+%\item If you write a value to an unallocated chunk, and don't get a segmentation fault, things are even worse.  After you write a value to an invalid location, a long time might pass before it is read and causes problems.  At that point it will be very difficult to find the source of the problem.
+\item 如果你向一个未分配内存块写入值, 也没有遇到分段错误, 事情可能更糟糕.  你向一个无效的位置写入一个值, 可能经过很长时间才会读取, 并
+引发问题. 而这时很难发现问题的源头. 
 
 \end{itemize} 
 
-And things can be even worse than that!  One of the most common
-problems with C-style memory management is that the data structures
-used to implement {\tt malloc} and {\tt free} (which we will see soon)
-are often stored along with the allocated chunks.  So if you
-accidentally write past the end of a dynamically-allocated chunk, you
-are likely to mangle these data structures.  The system usually won't
-detect the problem until later, when you call {\tt malloc} or
-{\tt free}, and those functions fail in some inscrutable way.
+%And things can be even worse than that!  One of the most common
+%problems with C-style memory management is that the data structures
+%used to implement {\tt malloc} and {\tt free} (which we will see soon)
+%are often stored along with the allocated chunks.  So if you
+%accidentally write past the end of a dynamically-allocated chunk, you
+%are likely to mangle these data structures.  The system usually won't
+%detect the problem until later, when you call {\tt malloc} or
+%{\tt free}, and those functions fail in some inscrutable way.
+事情可能更糟! C风格的内存管理中一个最常见的问题是用于实现
+{\tt malloc} 和 {\tt free}  (我们很快会看到)的数据结构通常和分配的内存块
+存储在一起. 因此, 如果你意外地在动态分配内存的末尾之后写入, 你
+很可能会破坏这些数据结构. 系统通常会在你调用{\tt malloc} 或
+{\tt free}, 同时这些函数莫名其妙失败时, 才会检测到问题. 
 
-One conclusion you should draw from this is that safe memory
-management requires design and discipline.  If you write a library
-or module that allocates memory, you should also provide an
-interface to free it, and memory management should be part of
-the API design from the beginning.
 
-If you use a library that allocates memory, you should be disciplined
-in your use of the API.  For example, if the library provides
-functions to allocate and deallocate storage, you should use those
-functions and not, for example, call {\tt free} on a chunk you did not
-{\tt malloc}.  And you should avoid keeping multiple references to the
-same chunk in different parts of your program.
+%One conclusion you should draw from this is that safe memory
+%management requires design and discipline.  If you write a library
+%or module that allocates memory, you should also provide an
+%interface to free it, and memory management should be part of
+%the API design from the beginning.
+从中, 你可以得到的结论是, 安全内存管理需要设计和纪律. 
+如果你编写了一个库或者模块来分配内存, 你也应该提供释放它的接口, 
+同时, 内存管理应该从开始便作为API设计的一部分.  
 
-Often there is a trade-off between safe memory management and performance.
-For example, the most common source of memory errors is writing 
-beyond the bounds of an array.  The obvious remedy for this problem
-is bounds checking; that is, every access to the array should check
-whether the index is out of bounds.  High-level libraries that provide
-array-like structures usually perform bounds checking.  But C arrays
-and most low-level libraries do not.
+%If you use a library that allocates memory, you should be disciplined
+%in your use of the API.  For example, if the library provides
+%functions to allocate and deallocate storage, you should use those
+%functions and not, for example, call {\tt free} on a chunk you did not
+%{\tt malloc}.  And you should avoid keeping multiple references to the
+%same chunk in different parts of your program.
+如果你使用一个库分配内存, 你应该在使用API时遵循纪律. 比如, 如果
+库提供了分配和释放存储的函数, 你应该先分配而不是先释放, 避免在一个
+没有执行{\tt malloc}的内存块上调用{\tt free}函数. 
+
+%Often there is a trade-off between safe memory management and performance.
+%For example, the most common source of memory errors is writing 
+%beyond the bounds of an array.  The obvious remedy for this problem
+%is bounds checking; that is, every access to the array should check
+%whether the index is out of bounds.  High-level libraries that provide
+%array-like structures usually perform bounds checking.  But C arrays
+%and most low-level libraries do not.
+通常需要在安全内存管理和性能之间进行权衡. 比如, 内存错误最常见的一个
+来源便是超出数组边界进行写入. 解决这个问题最明显的方法是边界检查;
+即每次数组访问都应该检查索引是否超出边界. 提供类似数组结构的高级库
+通常会执行边界检查. 但C数组和大多数底层库不会执行此类检查. 
 
 
 %\section{Memory leaks}
 \section{内存泄漏}
 \label{leak}
 
-There is one more memory error that may or may not deserve a paddling.
-If you allocate a chunk of memory and never free it, that's a ``memory
-leak''.
+%There is one more memory error that may or may not deserve a paddling.
+%If you allocate a chunk of memory and never free it, that's a ``memory
+%leak''.
+还有一种内存错误, 可能需要注意, 也可能不需要在意. 
+如果你分配了一块内存, 但从未释放, 这便是``内存泄漏''.
 
-For some programs, memory leaks are ok.  For example, if your program
-allocates memory, performs computations on it, and then exits, it is
-probably not necessary to free the allocated memory.  When the program
-exits, all of its memory is deallocated by the operating system.
-Freeing memory immediately before exiting might feel more responsible,
-but it is mostly a waste of time.
+%For some programs, memory leaks are ok.  For example, if your program
+%allocates memory, performs computations on it, and then exits, it is
+%probably not necessary to free the allocated memory.  When the program
+%exits, all of its memory is deallocated by the operating system.
+%Freeing memory immediately before exiting might feel more responsible,
+%but it is mostly a waste of time.
+对有些程序来说, 内存泄漏可以接受. 比如, 你的程序分配内存, 执行计算, 然后
+退出, 那么可能没有必要释放分配的内存. 当程序退出时, 全部内存都会被
+操作系统释放掉. 在退出之前立刻释放内存可能感觉更加负责, 
+但这基本上是浪费时间. 
 
-But if a program runs for a long time and leaks memory, its total
-memory use will increase indefinitely.  At that point, a few things
-might happen:
+%But if a program runs for a long time and leaks memory, its total
+%memory use will increase indefinitely.  At that point, a few things
+%might happen:
+但如果程序运行很长时间且存在内存泄漏, 它的总内存使用将无限增长. 
+这时候, 会发生以下情况:
 
 \begin{itemize}
 
-\item At some point, the system runs out of physical memory.  On
-  systems without virtual memory, the next call to {\tt malloc} will
-  fail, returning NULL.
+%\item At some point, the system runs out of physical memory.  On
+%  systems without virtual memory, the next call to {\tt malloc} will
+%  fail, returning NULL.
+\item 某些时候, 系统会用光物理内存. 在没有虚拟内存的系统上, 
+  再调用{\tt malloc} 会失败, 返回 NULL.
 
 \item On systems with virtual memory, the operating system can move
   another process's pages from memory to disk and then allocate
