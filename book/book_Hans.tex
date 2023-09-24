@@ -3095,25 +3095,35 @@ Jasper Beardly有点像; 在少数的几集中, 他作为一个严厉的代课�
 \item 某些时候, 系统会用光物理内存. 在没有虚拟内存的系统上, 
   再调用{\tt malloc} 会失败, 返回 NULL.
 
-\item On systems with virtual memory, the operating system can move
-  another process's pages from memory to disk and then allocate
-  more space to the leaking process.  I explain this mechanism
-  in Section~\ref{paging}.
+%\item On systems with virtual memory, the operating system can move
+%  another process's pages from memory to disk and then allocate
+%  more space to the leaking process.  I explain this mechanism
+%  in Section~\ref{paging}.
+\item 在具有虚拟内存的系统上, 操作系统可以将另一个进程的页从内存
+  移动到磁盘, 然后为泄漏的进程分配其他空间. 我在~\ref{paging}节解释了
+  这种机制.
 
-\item There might be a limit on the amount of space a single
-  process can allocate; beyond that, {\tt malloc} returns NULL.
+%\item There might be a limit on the amount of space a single
+%  process can allocate; beyond that, {\tt malloc} returns NULL.
+\item 单个进程可能存在分配空间的限额; 超出限额, {\tt malloc} 会返回NULL.
 
-\item Eventually, a process might fill its virtual address space (or
-  the usable part).  After that, there are no more addresses to
-  allocate, so {\tt malloc} returns NULL.
+%\item Eventually, a process might fill its virtual address space (or
+%  the usable part).  After that, there are no more addresses to
+%  allocate, so {\tt malloc} returns NULL.
+\item 最终, 一个进程可能会填满其虚拟地址空间(或可用部分). 
+  然后, 便没有了跟多地址可供分配, {\tt malloc} 则返回NULL.
 
 \end{itemize}
 
-If {\tt malloc} returns NULL, but you persist and access
-the chunk you think you allocated, you get a segmentation fault.
-For this reason, it is considered good style to check the result from
-{\tt malloc} before using it.  One option is to add a condition like
-this after every {\tt malloc} call:
+%If {\tt malloc} returns NULL, but you persist and access
+%the chunk you think you allocated, you get a segmentation fault.
+%For this reason, it is considered good style to check the result from
+%{\tt malloc} before using it.  One option is to add a condition like
+%this after every {\tt malloc} call:
+如果{\tt malloc}返回NULL, 但是你依然访问你认为已经分配的内存块, 
+那么会导致分段错误. 因此, 良好的编程风格应该是在使用{\tt malloc}的结果
+之前先检查它. 一个方法是在每个{\tt malloc} 调用后添加一个类似下面
+的条件:  
 
 \begin{verbatim}
 void *p = malloc(size);
@@ -3123,21 +3133,29 @@ if (p == NULL) {
 }
 \end{verbatim}
 
-{\tt perror} is declared in {\tt stdio.h}; it prints
-an error message and additional information about the last error
-that occurred.
+%{\tt perror} is declared in {\tt stdio.h}; it prints
+%an error message and additional information about the last error
+%that occurred.
+{\tt perror} 声明在 {\tt stdio.h}中; 它会打印一个错误消息以及关于
+最后发生错误的附加信息. 
 
-{\tt exit}, which is declared in {\tt stdlib.h}, causes the process
-to terminate.  The argument is a status code that indicates how
-the process terminated.  By convention, status code 0 indicates normal
-termination and -1 indicates an error condition.  Sometimes other
-codes are used to indicate different error conditions.
+%{\tt exit}, which is declared in {\tt stdlib.h}, causes the process
+%to terminate.  The argument is a status code that indicates how
+%the process terminated.  By convention, status code 0 indicates normal
+%termination and -1 indicates an error condition.  Sometimes other
+%codes are used to indicate different error conditions.
+{\tt exit} 也在 {\tt stdlib.h} 中声明, 它会导致进程终止. 参数是一个状态码, 
+表示进程终止方式. 按照惯例, 状态码0表示正常终止, -1 表示错误条件. 
+有时用不同代码表示不同错误条件.  
 
-Error-checking code can be a nuisance, and it makes programs
-harder to read.  You can mitigate these problems by wrapping library
-function calls and their error-checking code in your own
-functions.  For example, here is a {\tt malloc} wrapper that checks
-the return value.
+%Error-checking code can be a nuisance, and it makes programs
+%harder to read.  You can mitigate these problems by wrapping library
+%function calls and their error-checking code in your own
+%functions.  For example, here is a {\tt malloc} wrapper that checks
+%the return value.
+错误代码检查可能令人厌烦, 而且令程序难以阅读. 你可以通过将库函数
+调用以及错误代码检查封装进自己的函数中, 来减轻这些问题. 
+比如, 下面是一个检查返回值的{\tt malloc}封装函数. 
 
 \begin{verbatim}
 void *check_malloc(int size)
@@ -3151,20 +3169,25 @@ void *check_malloc(int size)
 }
 \end{verbatim}
 
-Because memory management is so difficult, most large programs, like
-web browsers, leak memory.  To see which programs on your system are
-using the most memory, you can use the UNIX utilities {\tt ps} and
-{\tt top}.
-
+%Because memory management is so difficult, most large programs, like
+%web browsers, leak memory.  To see which programs on your system are
+%using the most memory, you can use the UNIX utilities {\tt ps} and
+%{\tt top}.
+因为内存管理如此之难, 大多数的大型程序, 比如web浏览器, 会泄漏内存. 
+想要查看系统上哪些程序使用了最多的内存, 你可以用
+UNIX程序{\tt ps} 和{\tt top}.
 
 % TODO: using Valgrind here?
 
 
-\section{Implementation}
+%\section{Implementation}
+\section{实现}
 
-When a process starts, the system allocates space for the text segment
-and statically allocated data, space for the stack, and space for the
-heap, which contains dynamically allocated data.
+%When a process starts, the system allocates space for the text segment
+%and statically allocated data, space for the stack, and space for the
+%heap, which contains dynamically allocated data.
+当一个进程启动时, 系统会为文本段和静态分配的数据分配空间, 为堆栈分配
+空间, 以及包含动态分配数据的堆空间. 
 
 Not all programs allocate data dynamically, so the initial size of the
 heap might be small or zero.  Initially the heap contains only one
