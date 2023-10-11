@@ -3189,33 +3189,47 @@ UNIX程序{\tt ps} 和{\tt top}.
 当一个进程启动时, 系统会为文本段和静态分配的数据分配空间, 为堆栈分配
 空间, 以及包含动态分配数据的堆空间. 
 
-Not all programs allocate data dynamically, so the initial size of the
-heap might be small or zero.  Initially the heap contains only one
-free chunk.
+%Not all programs allocate data dynamically, so the initial size of the
+%heap might be small or zero.  Initially the heap contains only one
+%free chunk.
+并非所有程序都是动态分配数据, 因此堆的初始大小可能很小, 甚至是零. 
+初始时, 堆仅包含一个空闲块.
 
-When {\tt malloc} is called, it checks whether it can find a free
-chunk that's big enough.  If not, it has to request more memory
-from the system.  The function that does that is {\tt sbrk},
-which sets the ``program break'', which you can think of as a pointer
-to the end of the heap.
+%When {\tt malloc} is called, it checks whether it can find a free
+%chunk that's big enough.  If not, it has to request more memory
+%from the system.  The function that does that is {\tt sbrk},
+%which sets the ``program break'', which you can think of as a pointer
+%to the end of the heap.
+当调用 {\tt malloc} 时, 函数会检查是否可以找到足够大的空闲块. 
+如果无法找到, 便需要从系统申请更多内存. 执行此操作的函数是{\tt sbrk}, 
+它会设置``程序断点'', 你可以将其视为一个指向堆末尾的指针. 
 
-When {\tt sbrk} is called, the OS allocates new pages of physical
-memory, updates the process's page table, and sets the program
-break.
+%When {\tt sbrk} is called, the OS allocates new pages of physical
+%memory, updates the process's page table, and sets the program
+%break.
+当 {\tt sbrk}被调用, 操作系统会分配新的物理内存的页, 更新进程的页表, 
+并设置程序断点.  
 
-In theory, a program could call {\tt sbrk} directly (without using
-{\tt malloc}) and manage the heap itself.  But {\tt malloc} is easier
-to use and, for most memory-use patterns, it runs fast and uses memory
-efficiently.
+%In theory, a program could call {\tt sbrk} directly (without using
+%{\tt malloc}) and manage the heap itself.  But {\tt malloc} is easier
+%to use and, for most memory-use patterns, it runs fast and uses memory
+%efficiently.
+理论上, 一个程序可以直接调用{\tt sbrk}(无需使用{\tt malloc}), 并自行管理
+堆. 但{\tt malloc} 更易于使用, 同时对于大多数内存使用模式来说, 
+它速度更快, 而且内存使用率高.
 
-To implement the memory management API (that is, the functions
-{\tt malloc}, {\tt free}, {\tt calloc}, and {\tt realloc}),
-most Linux systems use {\tt ptmalloc},
-which is based on {\tt dlmalloc}, written by Doug Lea.  A short paper
-that describes key elements of the implementation is
-available at \url{http://gee.cs.oswego.edu/dl/html/malloc.html}.
+%To implement the memory management API (that is, the functions
+%{\tt malloc}, {\tt free}, {\tt calloc}, and {\tt realloc}),
+%most Linux systems use {\tt ptmalloc},
+%which is based on {\tt dlmalloc}, written by Doug Lea.  A short paper
+%that describes key elements of the implementation is
+%available at \url{http://gee.cs.oswego.edu/dl/html/malloc.html}.
+若要实现内存管理API (即, 函数{\tt malloc}, {\tt free}, {\tt calloc}, 和 {\tt realloc}), 大部分Linux系统使用{\tt ptmalloc}, 
+其源于 Doug Lea 写的{\tt dlmalloc}. 至于描述实现的关键要点的简短论文
+可以从\url{http://gee.cs.oswego.edu/dl/html/malloc.html}获取.
 
-For programmers, the most important elements to be aware of are:
+%For programmers, the most important elements to be aware of are:
+对于程序员来说, 需要关注的最重要的要素是: 
 
 \begin{itemize}
 
