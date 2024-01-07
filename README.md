@@ -20,9 +20,9 @@ Think OS[中文译本]
 
 :white_check_mark: 第五章: 描述了数字、字母和其他值如何编码, 并介绍了位运算符.
 
-:writing_hand: 第六章: 介绍了动态内存管理的使用及其工作原理. 推荐阅读: 《Head First C》 第6章.
+:white_check_mark: 第六章: 介绍了动态内存管理的使用及其工作原理. 推荐阅读: 《Head First C》 第6章.
 
-:white_medium_square: 第七章: 介绍了缓存和内存层次结构.
+:writing_hand: 第七章: 介绍了缓存和内存层次结构.
 
 :white_medium_square: 第八章: 介绍了多任务和调度.
 
