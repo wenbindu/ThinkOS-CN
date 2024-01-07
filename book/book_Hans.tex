@@ -3233,58 +3233,88 @@ UNIX程序{\tt ps} 和{\tt top}.
 
 \begin{itemize}
 
-\item The run time of {\tt malloc} does not usually depend on the
-size of the chunk, but might depend on how many free chunks there
-are.  {\tt free} is usually fast, regardless of the number of
-free chunks.  Because {\tt calloc} clears every byte in the chunk,
-the run time depends on chunk size (as well as the number of free
-chunks).
+%\item The run time of {\tt malloc} does not usually depend on the
+%size of the chunk, but might depend on how many free chunks there
+%are.  {\tt free} is usually fast, regardless of the number of
+%free chunks.  Because {\tt calloc} clears every byte in the chunk,
+%the run time depends on chunk size (as well as the number of free
+%chunks).
+\item {\tt malloc} 的运行时间通常并不取决于块的大小, 但可能取决于存在
+多少空闲块.  同时, 无论有多少空闲块, {\tt free} 通常都很快. 而因为
+{\tt calloc} 需要清除块中的每个字节, 所以其运行时间取决于块大小(也就是
+空闲块的数量).
 
-{\tt realloc} is sometimes fast, if the new size is smaller than the
-current size, or if space is available to expand the existing chunk.
-If not, it has to copy data from the old chunk to the new; in that
-case, the run time depends on the size of the old chunk.
+%{\tt realloc} is sometimes fast, if the new size is smaller than the
+%current size, or if space is available to expand the existing chunk.
+%If not, it has to copy data from the old chunk to the new; in that
+%case, the run time depends on the size of the old chunk.
+{\tt realloc} 有时很快, 比如要分配的空间小于当前块大小, 或者有可用空间来
+扩展当前块. 如果不是这样, 便需要将数据从旧块复制到新块; 这种情况下, 
+运行时间便取决于旧块的大小. 
 
-\item Boundary tags: When {\tt malloc} allocates a chunk, it adds
-  space at the beginning and end to store information about the chunk,
-  including its size and the state (allocated or free).  These bits of
-  data are called ``boundary tags''.  Using these tags, {\tt malloc}
-  can get from any chunk to the previous chunk and the next chunk in
-  memory.  In addition, free chunks are chained into a doubly-linked
-  list; each free chunk contains pointers to the next and previous
-  chunks in the ``free list''.
+%\item Boundary tags: When {\tt malloc} allocates a chunk, it adds
+%  space at the beginning and end to store information about the chunk,
+%  including its size and the state (allocated or free).  These bits of
+%  data are called ``boundary tags''.  Using these tags, {\tt malloc}
+%  can get from any chunk to the previous chunk and the next chunk in
+%  memory.  In addition, free chunks are chained into a doubly-linked
+%  list; each free chunk contains pointers to the next and previous
+%  chunks in the ``free list''.
+\item 边界标签(Boundary tags): 当{\tt malloc} 分配块时, 会在开始和
+  结尾添加空间, 以存储关于块的信息, 包括其大小和状态(占用或空闲).
+  这些数据位被称为``边界标签''.  {\tt malloc} 通过使用这些标签, 可以轻易
+  从任何一个块, 获取内存中其前后相邻的块. 此外, 空闲块被链接为一个
+  双向链表; 每个空闲块包含在``空闲列表''中指向下一个和前一个块的指针. 
 
-The boundary tags and free list pointers make up {\tt malloc}'s
-internal data structures.  These data structures are interspersed with
-program data, so it is easy for a program error to damage them.
+%The boundary tags and free list pointers make u {\tt malloc}s
+%internal data structures.  These data structures are interspersed with
+%program data, so it is easy for a program error to damage them.
+边界标签和空闲列表指针便组成了 {\tt malloc}的内部数据结构. 
+这些数据结构和程序数据交错在一起, 所以程序错误很容易便会
+破坏他们. 
 
-\item Space overhead: Boundary tags and free list pointers take up
-  space.  The minimum chunk size on most systems is 16 bytes.  So for
-  very small chunks, {\tt malloc} is not space efficient.  If your
-  program requires large numbers of small structures, it might be more
-  efficient to allocate them in arrays.
+%\item Space overhead: Boundary tags and free list pointers take up
+%  space.  The minimum chunk size on most systems is 16 bytes.  So for
+%  very small chunks, {\tt malloc} is not space efficient.  If your
+%  program requires large numbers of small structures, it might be more
+%  efficient to allocate them in arrays.
+\item 空间开销(Space overhead): 边界标签和空闲列表指针会占用空间. 
+大部分系统的最小块大小是16字节. 因此对于非常小的块, {\tt malloc} 无法
+高效利用空间. 如果你的程序需要大量小结构, 可能在数组中分配它们比较
+高效. 
+ 
+%\item Fragmentation: If you allocate and free chunks with varied
+%  sizes, the heap will tend to become fragmented.  That is, the free
+%  space might be broken into many small pieces.  Fragmentation wastes
+%  space; it also slows the program down by making memory caches less
+%  effective.
+\item 碎片化(Fragmentation): 如果你以各种大小分配和释放块, 
+  则堆很可能会变得碎片化. 也就是, 空闲块很可能会被拆分成很多小
+  碎片. 碎片化会浪费空间; 同时也会通过降低内存缓存的效率, 而减慢
+  程序运行速度.
 
-\item Fragmentation: If you allocate and free chunks with varied
-  sizes, the heap will tend to become fragmented.  That is, the free
-  space might be broken into many small pieces.  Fragmentation wastes
-  space; it also slows the program down by making memory caches less
-  effective.
 
-\item Binning and caching: The free list is sorted by size into bins,
-  so when {\tt malloc} searches for a chunk with a particular size, it
-  knows what bin to search in.  If you free a chunk and then
-  immediately allocate a chunk with the same size, {\tt malloc} will
-  usually be fast.
+%\item Binning and caching: The free list is sorted by size into bins,
+%  so when {\tt malloc} searches for a chunk with a particular size, it
+%  knows what bin to search in.  If you free a chunk and then
+%  immediately allocate a chunk with the same size, {\tt malloc} will
+%  usually be fast.
+\item 分箱和缓存(Binning and caching): 空闲列表会按照大小分箱, 
+  所以当 {\tt malloc} 检索特定大小的块时, 知道在哪个箱中进行检索. 
+  如果你释放一个块, 然后立刻分配一个同样大小的块, {\tt malloc} 通常
+  会很快.
 
 \end{itemize}
 
 
-\chapter{Caching}
+%\chapter{Caching}
+\chapter{缓存}
 
 %TODO: move this model of computer hardware to Chapter 1
 %TODO: talk about CPU modes, either here or in Chapter 1
 
-\section{How programs run}
+%\section{How programs run}
+\section{程序如何运行}
 
 In order to understand caching, you have to understand how computers
 execute programs.  For a deep understanding of this topic, you should
