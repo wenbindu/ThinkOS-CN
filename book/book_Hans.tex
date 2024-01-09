@@ -3316,57 +3316,77 @@ UNIX程序{\tt ps} 和{\tt top}.
 %\section{How programs run}
 \section{程序如何运行}
 
-In order to understand caching, you have to understand how computers
-execute programs.  For a deep understanding of this topic, you should
-study computer architecture.  My goal in this chapter is to provide
-a simple model of program execution.
+%In order to understand caching, you have to understand how computers
+%execute programs.  For a deep understanding of this topic, you should
+%study computer architecture.  My goal in this chapter is to provide
+%a simple model of program execution.
+为了理解缓存, 你需要了解计算机是如何执行程序的. 要想对这个主题有深入
+了解, 你需要学习计算机体系架构. 本章的目标是提供一个程序执行的简单
+模型.
 
-When a program starts, the code (or text) is usually on a hard disk
-or solid state drive.  The operating system creates a new process to
-run the program, then the ``loader''
-copies the text from storage into main memory and starts the program by
-calling {\tt main}.
+%When a program starts, the code (or text) is usually on a hard disk
+%or solid state drive.  The operating system creates a new process to
+%run the program, then the ``loader''
+%copies the text from storage into main memory and starts the program by
+%calling {\tt main}.
+当程序启动时, 代码(或文本)通常是位于硬盘或固态硬盘上. 
+操作系统会创建一个进程来运行程序, 然后``加载器''会从存储中将文本
+拷贝到主内存中, 并通过调用{\tt main}以启动程序.
 
-While the program is running, most of its data is stored in main
-memory, but some of the data is in registers, which are
-small units of memory on the CPU.  These registers include:
+%While the program is running, most of its data is stored in main
+%memory, but some of the data is in registers, which are
+%small units of memory on the CPU.  These registers include:
+当程序运行时, 大部分的数据存储在主内存中, 但有些数据存储在寄存器
+中, 寄存器是CPU上的小的内存单元. 这些寄存器包括:
 
 \begin{itemize}
 
-\item The program counter, or PC, which contains the address (in
-  memory) of the next instruction in the program.
+%\item The program counter, or PC, which contains the address (in
+%  memory) of the next instruction in the program.
+\item 程序计数器(PC), 其包含程序中下一条指令的内存地址.
 
-\item The instruction register, or IR, which contains the machine code
-  instruction currently executing.
+%\item The instruction register, or IR, which contains the machine code
+%  instruction currently executing.
+\item 指令寄存器(IR), 其包含当前运行的机器码指令.
 
-\item The stack pointer, or SP, which contains the address of the
-  stack frame for the current function, which contains its parameters
-  and local variables.
+%\item The stack pointer, or SP, which contains the address of the
+%  stack frame for the current function, which contains its parameters
+%  and local variables.
+\item 栈指针(SP), 其包含当前函数(包括其参数和局部变量)的栈帧地址.
 
-\item General-purpose registers that hold the data the program is
-  currently working with.
+%\item General-purpose registers that hold the data the program is
+%  currently working with.
+\item 通用寄存器, 用于保存程序当前处理的数据. 
 
-\item A status register, or flag register, that contains information
-  about the current computation.  For example, the flag register
-  usually contains a bit that is set if the result of the previous
-  operation was zero.
+%\item A status register, or flag register, that contains information
+%  about the current computation.  For example, the flag register
+%  usually contains a bit that is set if the result of the previous
+%  operation was zero.
+\item 状态寄存器, 或标志寄存器, 其包含当前计算的有关信息. 比如, 
+标志寄存器通常包含一个位, 如果前一操作的结果为零, 则该位便被设置. 
+  
 
 \end{itemize}
 
-When a program is running, the CPU executes the following steps,
-called the ``instruction cycle'':
+%When a program is running, the CPU executes the following steps,
+%called the ``instruction cycle'':
+当程序运行时, CPU执行以下步骤, 被称为``指令周期'':
 
 \begin{itemize}
 
-\item Fetch: The next instruction is fetched from memory and stored
-in the instruction register.
+%\item Fetch: The next instruction is fetched from memory and stored
+%in the instruction register.
+\item 取指(Fetch): 从内存获取下一指令, 并存储到指令寄存器中. 
 
-\item Decode: Part of the CPU, called the ``control unit'', decodes
-the instruction and sends signals to the other parts of
-the CPU.
+%\item Decode: Part of the CPU, called the ``control unit'', decodes
+%the instruction and sends signals to the other parts of
+%the CPU.
+\item 解码(Decode): CPU 的一部分, 叫做``控制单元'', 解码指令
+并向CPU其他部分发送信号. 
 
-\item Execute: Signals from the control unit cause the appropriate
-  computation to occur.
+%\item Execute: Signals from the control unit cause the appropriate
+%  computation to occur.
+\item 执行(Execute): 来自控制单元的信号会引发适当计算的执行.
 
 \end{itemize}
 
