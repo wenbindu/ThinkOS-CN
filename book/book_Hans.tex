@@ -3390,81 +3390,123 @@ UNIX程序{\tt ps} 和{\tt top}.
 
 \end{itemize}
 
-Most computers can execute a few hundred different instructions,
-called the ``instruction set''.  But most instructions fall
-into a few general categories:
+%Most computers can execute a few hundred different instructions,
+%called the ``instruction set''.  But most instructions fall
+%into a few general categories:
+多数计算机可以执行几百个不同的指令, 叫做``指令集''. 
+但是大部分的指令可以归纳为以下几种通用类别:
 
 \begin{itemize}
 
-\item Load: Transfers a value from memory to a register.
+%\item Load: Transfers a value from memory to a register.
+\item 加载(Load): 将值从内存传输到寄存器.
 
-\item Arithmetic/logic: Loads operands from registers, performs
-a mathematical operation, and stores the result in a register.
+%\item Arithmetic/logic: Loads operands from registers, performs
+%a mathematical operation, and stores the result in a register.
+\item 算术/逻辑(Arithmetic/logic): 从寄存器加载操作数, 执行数学运算,
+将结果存储到寄存器.
 
-\item Store: Transfers a value from a register to memory.
+%\item Store: Transfers a value from a register to memory.
+\item 存储(Store): 将值从寄存器传输到内存. 
 
-\item Jump/branch: Changes the program counter, causing the flow
-of execution to jump to another location in the program.  Branches
-are usually conditional, which means that they check a flag
-in the flag register and jump only if it is set.
+%\item Jump/branch: Changes the program counter, causing the flow
+%of execution to jump to another location in the program.  Branches
+%are usually conditional, which means that they check a flag
+%in the flag register and jump only if it is set.
+\item 跳转/分支(Jump/branch): 更改程序计数器的值, 
+令执行流程跳转到程序的另一个位置. 分支通常是有条件的, 也就意味着
+它们会检查标志寄存器中的标志, 且仅在标志被设置时才跳转.
 
 \end{itemize}
 
-Some instructions sets, including the ubiquitous x86, provide
-instructions that combine a load and an arithmetic operation.
+%Some instructions sets, including the ubiquitous x86, provide
+%instructions that combine a load and an arithmetic operation.
+一些指令集, 包括无处不在的x86, 提供了一些将加载和算术运算组合在
+一起的指令.
 
-During each instruction cycle, one instruction is read from the
-program text.  In addition, about half of the instructions in a
-typical program load or store data.  And therein
-lies one of the fundamental problems of computer architecture: the
-``memory bottleneck''.
+%During each instruction cycle, one instruction is read from the
+%program text.  In addition, about half of the instructions in a
+%typical program load or store data.  And therein
+%lies one of the fundamental problems of computer architecture: the
+%``memory bottleneck''.
+在每个指令周期中, 一条指令都是从程序文本中读取.
+此外, 典型的程序中大约一半的指令是加载或存储数据.
+因此正是在这里, 存在计算机架构的一个基本问题: ``内存瓶颈''.
 
-In current computers, a typical core is capable of executing an instruction in less than 1 ns.  But the time it takes to transfer data to and from memory is about 100 ns.  If the CPU has to wait 100 ns to fetch the next instruction, and another 100 ns to load data, it would complete instructions 200 times slower than what's theoretically possible.  For many computations, memory is the speed limiting factor, not the CPU.
+%In current computers, a typical core is capable of executing an instruction in less than 1 ns.  But the time it takes to transfer data to and from memory is about 100 ns.  If the CPU has to wait 100 ns to fetch the next instruction, and another 100 ns to load data, it would complete instructions 200 times slower than what's theoretically possible.  For many computations, memory is the speed limiting factor, not the CPU.
+在现在计算机中, 典型的核心处理器可以在不到1纳秒内执行一条指令.
+而它与内存交换数据则需要100纳秒. 如果CPU需要等待100纳秒来获取
+下一条指令, 又等待100纳秒以加载数据, 那么它完成指令的速度相比于其
+理论可行速度要慢200倍. 对于许多计算任务来说, 限制速度的因素是内存,
+ 而不是CPU.
 
+%\section{Cache performance}
+\section{缓存性能}
 
-\section{Cache performance}
-
-The solution to this problem, or at least a partial solution, is
-caching.  A ``cache'' is a small, fast memory that is physically close
-to the CPU, usually on the same chip.
+这个问题的解决方案, 或至少一个部分解决方案, 便是缓存.
+``缓存''是一种小型, 高速的内存, 在物理上靠近CPU, 通常
+位于同一个芯片上. 
+%The solution to this problem, or at least a partial solution, is
+%caching.  A ``cache'' is a small, fast memory that is physically close
+%to the CPU, usually on the same chip.
 
 %TODO: Clean up these paragraphs
 
-Actually, current computers typically have several levels of cache: the Level 1 cache, which is the smallest and fastest, might be 1--2 MiB with a access times near 1 ns; the Level 2 cache might have access times near 4 ns, and the Level 3 might take 16 ns.
+%Actually, current computers typically have several levels of cache: the Level 1 cache, which is the smallest and fastest, might be 1--2 MiB with a access times near 1 ns; the Level 2 cache might have access times near 4 ns, and the Level 3 might take 16 ns.
+实际上, 现代计算机通常有多级缓存: 一级缓存, 是最小最快的, 可能有
+1--2 MiB, 访问时间接近1纳秒; 二级缓存访问时间可能接近4纳秒; 而三级缓存
+可能需要16纳秒.
 
-When the CPU loads a value from memory, it stores a copy in the cache.
-If the same value is loaded again, the CPU gets the cached copy
-and doesn't have to wait for memory.
+%When the CPU loads a value from memory, it stores a copy in the cache.
+%If the same value is loaded again, the CPU gets the cached copy
+%and doesn't have to wait for memory.
+当CPU从内存加载数据, 会将拷贝保存在缓存中. 
+如果同样的值需要再次加载, CPU会取用缓存中的拷贝, 无需等待内存. 
 
-Eventually the cache gets full.  Then, in order to bring something
-new in, we have to kick something out.  So if the CPU loads a value
-and then loads it again much later, it might not be in cache any more.
+%Eventually the cache gets full.  Then, in order to bring something
+%new in, we have to kick something out.  So if the CPU loads a value
+%and then loads it again much later, it might not be in cache any more.
+最终缓存会被填满. 然后, 为了引入新数据, 我们需要先淘汰一些旧数据.
+所以如果CPU加载了一个值, 很久之后再次加载， 这个值可能已经不在
+缓存中了.
 
-The performance of many programs is limited by the effectiveness
-of the cache.  If the instructions and data needed by the CPU are usually in cache, the program can run close to the full speed of the CPU.  If the CPU
-frequently needs data that are not in cache, the program is
-limited by the speed of memory.
+%The performance of many programs is limited by the effectiveness
+%of the cache.  If the instructions and data needed by the CPU are usually in cache, the program can run close to the full speed of the CPU.  If the CPU
+%frequently needs data that are not in cache, the program is
+%limited by the speed of memory.
+许多程序的性能受限于缓存效率. 如果CPU需要的指令和数据通常都在缓存中,
+程序便能以接近CPU满速的性能执行. 如果CPU频繁需要不在缓存中的数据,
+程序便受限于内存速度了.
 
-The cache ``hit rate'', $h$, is the fraction of memory accesses that
-find data in cache; the ``miss rate'', $m$, is the fraction of memory
-accesses that have to go to memory.  If the time to process a cache
-hit is $T_h$ and the time for a cache miss is $T_m$, the average time
-for each memory access is
+%The cache ``hit rate'', $h$, is the fraction of memory accesses that
+%find data in cache; the ``miss rate'', $m$, is the fraction of memory
+%accesses that have to go to memory.  If the time to process a cache
+%hit is $T_h$ and the time for a cache miss is $T_m$, the average time
+%for each memory access is
+缓存的``命中率(hit rate)'', $h$, 是在内存访问时找到数据在缓存中的比例;
+``未命中率(miss rate)'', $m$, 是在内存访问时必须访问内存的比例.
+如果处理缓存命中的时间是 $T_h$, 同时缓存未命中的时间是$T_m$, 
+每次内存访问的平均时间为
 %
 \[ h T_h + m T_m \]
 %
-Equivalently, we could define the ``miss penalty'' as the extra
-time to process a cache miss, $T_p = T_m - T_h$.  Then the average access
-time is
+%Equivalently, we could define the ``miss penalty'' as the extra
+%time to process a cache miss, $T_p = T_m - T_h$.  Then the average access
+%time is
+同样的, 我们可以将``未命中惩罚''定义为处理未命中缓存的额外时间, 
+ $T_p = T_m - T_h$. 那么平均访问时间便是
 %
 \[ T_h + m T_p \]
 %
-When the miss rate is low, the average access time can be close to
-$T_h$.  That is, the program can perform as if memory ran at
-cache speeds.
+%When the miss rate is low, the average access time can be close to
+%$T_h$.  That is, the program can perform as if memory ran at
+%cache speeds.
+当未命中率较低时, 平均访问时间会接近于$T_h$. 也就是说, 程序运行中
+内存访问的速度接近于缓存速度.
 
+%\section{Locality}
+\section{局部性}
 
-\section{Locality}
 
 When a program reads a byte for the first time, the cache usually
 loads a ``block'' or ``line'' of data that includes the requested
