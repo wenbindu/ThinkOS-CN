@@ -3588,18 +3588,25 @@ UNIX程序{\tt ps} 和{\tt top}.
 %\section{Measuring cache performance}
 \section{测量缓存性能}
 
-When I was a graduate student at U.C. Berkeley I was a teaching
-assistant for Computer Architecture with Brian Harvey.  One of my
-favorite exercises involved a program that iterates through an array
-and measures the average time to read and write an element.  By
-varying the size of the array, it is possible to infer the size
-of the cache, the block size, and some other attributes.
+%When I was a graduate student at U.C. Berkeley I was a teaching
+%assistant for Computer Architecture with Brian Harvey.  One of my
+%favorite exercises involved a program that iterates through an array
+%and measures the average time to read and write an element.  By
+%varying the size of the array, it is possible to infer the size
+%of the cache, the block size, and some other attributes.
+当我在加利福尼亚州伯克利分校攻读研究生时, 我是 Brian Harvey 的
+计算机架构课程的教学助教. 其中一个我最喜欢的练习是一个通过迭代数组
+来测量读写元素的平均时间的程序. 通过改变数组大小, 大概率可以推断
+出缓存大小, 块带下, 以及其他一些属性. 
 
-My modified version of this program is in the {\tt cache} directory
-of the repository for this
-book (see Section~\ref{code}).
+%My modified version of this program is in the {\tt cache} directory
+%of the repository for this
+%book (see Section~\ref{code}).
+我关于这个程序的修订版本位于本书存储库的{\tt 缓存}目录中
+(见第~\ref{code}节)
 
-The important part of the program is this loop:
+%The important part of the program is this loop:
+程序中最重要的部分是这个循环:
 
 \begin{verbatim}
     iters = 0;
