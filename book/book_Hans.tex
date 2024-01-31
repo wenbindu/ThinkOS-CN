@@ -3508,60 +3508,85 @@ UNIX程序{\tt ps} 和{\tt top}.
 \section{局部性}
 
 
-When a program reads a byte for the first time, the cache usually
-loads a ``block'' or ``line'' of data that includes the requested
-byte and some of its neighbors.  If the program goes on to read one
-of the neighbors, it will already be in cache.
+%When a program reads a byte for the first time, the cache usually
+%loads a ``block'' or ``line'' of data that includes the requested
+%byte and some of its neighbors.  If the program goes on to read one
+%of the neighbors, it will already be in cache.
+当程序首次读取一个字节, 缓存通常会加载包含请求字节及其相邻字节
+的``块'' 或``行'' 数据. 如果程序继续读取一个相邻字节, 那么已经在缓存中了.
 
-As an example, suppose the block size is 64 B;
-you read a string with length 64, and the first
-byte of the string happens to fall at the beginning of a block.  When
-you load the first byte, you incur a miss penalty, but
-after that the rest of the string will be in cache.  After
-reading the whole string, the hit rate will be 63/64, about 98\%.
-If the string spans two blocks, you would incur 2 miss penalties.  But
-even then the hit rate would be 62/64, or almost 97\%.  If you then
-read the same string again, the hit rate would be 100\%.
+%As an example, suppose the block size is 64 B;
+%you read a string with length 64, and the first
+%byte of the string happens to fall at the beginning of a block.  When
+%you load the first byte, you incur a miss penalty, but
+%after that the rest of the string will be in cache.  After
+%reading the whole string, the hit rate will be 63/64, about 98\%.
+%If the string spans two blocks, you would incur 2 miss penalties.  But
+%even then the hit rate would be 62/64, or almost 97\%.  If you then
+%read the same string again, the hit rate would be 100\%.
+举个例子, 假设块大小是64 B; 你读取一个长度64的字符串, 字符串
+的首个字节恰好位于块的开头. 当你加载第一个字节时, 会遇到缺失惩罚, 
+但之后的整个字符串都会存在于缓存中. 读取整个字符串, 命中率将会是
+63/43, 大约 98\%. 如果字符串横跨两个块, 你会遇到2次缺失惩罚. 
+但即便如此, 命中率仍将是62/64, 接近97\%. 如果你之后再次读取相同字符串,
+命中率将是100\%. 
 
-On the other hand, if the program jumps around unpredictably,
-reading data from scattered locations in memory, and seldom
-accessing the same location twice, cache performance would be
-poor.
+%On the other hand, if the program jumps around unpredictably,
+%reading data from scattered locations in memory, and seldom
+%accessing the same location twice, cache performance would be
+%poor.
+另一方面, 如果程序以不可预料的方式跳转, 从内存的分散位置读取数据,
+并几乎不会再次访问同样位置, 那缓存性能将会变差.
 
-The tendency of a program to use the same data more than once is
-called ``temporal locality''.  The tendency to use data in nearby
-locations is called ``spatial locality''.  Fortunately, many
-programs naturally display both kinds of locality:
+%The tendency of a program to use the same data more than once is
+%called ``temporal locality''.  The tendency to use data in nearby
+%locations is called ``spatial locality''.  Fortunately, many
+%programs naturally display both kinds of locality:
+程序多次使用相同数据的趋势叫做``时间局部性''. 而使用临近位置数据
+的趋势叫做``空间局部性''. 幸运的是, 很多程序天然地表现出了
+两种局部性:
 
 \begin{itemize}
 
-\item Most programs contain blocks of code with no jumps or
-branches.  Within these blocks, instructions run
-sequentially, so the access pattern has
-spatial locality.
+%\item Most programs contain blocks of code with no jumps or
+%branches.  Within these blocks, instructions run
+%sequentially, so the access pattern has
+%spatial locality.
+\item 多数程序包含没有跳转和分支的代码块. 在这些块中, 指令
+顺序运行, 所以访问模式具有空间局部性.
 
-\item In a loop, programs execute the same instructions many
-times, so the access pattern has temporal locality.
+%\item In a loop, programs execute the same instructions many
+%times, so the access pattern has temporal locality.
+\item 在循环中, 程序多次执行相同的指令, 因此访问模式具有空间
+局部性.
 
-\item The result of one instruction is often used immediately as
-an operand of the next instruction, so the data access pattern
-has temporal locality.
+%\item The result of one instruction is often used immediately as
+%an operand of the next instruction, so the data access pattern
+%has temporal locality.
+\item 一个指令的结果通常会立刻用作下一个指令的操作数, 所以数据
+访问模式具有时间局部性. 
 
-\item When a program executes a function, its parameters and local
-variables are stored together on the stack; accessing these values
-has spatial locality.
+%\item When a program executes a function, its parameters and local
+%variables are stored together on the stack; accessing these values
+%has spatial locality.
+\item 当程序执行函数时, 其参数和局部变量都被存储在堆栈上;
+访问这些值便具有空间局部性.
 
-\item One of the most common processing patterns is to read or write
-the elements of an array sequentially; this pattern also has
-spatial locality.
+%\item One of the most common processing patterns is to read or write
+%the elements of an array sequentially; this pattern also has
+%spatial locality.
+\item 读取或写入数组元素的一个最常见的模式便是顺序操作; 这种模式
+也具有空间局部性. 
 
 \end{itemize}
 
-The next section explores the relationship
-between a program's access pattern and cache performance.
+%The next section explores the relationship
+%between a program's access pattern and cache performance.
+下一节会探讨程序的访问模式和缓存性能之间的关系.
 
 
-\section{Measuring cache performance}
+%\section{Measuring cache performance}
+\section{测量缓存性能}
 
 When I was a graduate student at U.C. Berkeley I was a teaching
 assistant for Computer Architecture with Brian Harvey.  One of my
