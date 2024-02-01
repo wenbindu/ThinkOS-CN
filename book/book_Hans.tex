@@ -3622,19 +3622,27 @@ UNIX程序{\tt ps} 和{\tt top}.
     } while (sec < 0.1);
 \end{verbatim}
 
-The inner {\tt for} loop traverses the array.  {\tt limit}
-determines how much of the array it traverses; {\tt stride}
-determines how many elements it skips over.  For example, if
-{\tt limit} is 16 and {\tt stride} is 4, the loop would access
-elements 0, 4, 8, and 12.
+%The inner {\tt for} loop traverses the array.  {\tt limit}
+%determines how much of the array it traverses; {\tt stride}
+%determines how many elements it skips over.  For example, if
+%{\tt limit} is 16 and {\tt stride} is 4, the loop would access
+%elements 0, 4, 8, and 12.
+内部的{\tt for}循环会遍历数组. {\tt limit} 则决定了循环遍历数组的范围;
+{\tt stride} 决定跳过多少元素. 例如, 如果{\tt limit} 是16, 而{\tt stride} 是4,
+循环将访问第0, 4, 8, 和 12个元素.
 
-{\tt sec} keeps track of the total CPU time used by the inner loop.
-The outer loop runs until {\tt sec} exceeds 0.1 seconds, which is
-long enough that we can compute the average time with sufficient
-precision.
+%{\tt sec} keeps track of the total CPU time used by the inner loop.
+%The outer loop runs until {\tt sec} exceeds 0.1 seconds, which is
+%long enough that we can compute the average time with sufficient
+%precision.
+{\tt sec} 会记录内部循环使用的CPU总时间.
+外部循环则运行到{\tt sec} 超过0.1秒为止, 而这时间已足以令
+我们用较高的精度计算平均时间.
 
-\verb"get_seconds" uses the system call \verb"clock_gettime",
-converts to seconds, and returns the result as a {\tt double}:
+%\verb"get_seconds" uses the system call \verb"clock_gettime",
+%converts to seconds, and returns the result as a {\tt double}:
+\verb"get_seconds" 使用系统调用 \verb"clock_gettime", 并转换
+为秒, 然后以 {\tt double}格式为结果返回:
 
 \begin{verbatim}
 double get_seconds(){
@@ -3647,7 +3655,8 @@ double get_seconds(){
 \begin{figure}
 % graph_cache_data.py
 \centerline{\includegraphics[width=3in]{figs/cache_data.pdf}}
-\caption{Average miss penalty as a function of array size and stride.}
+%\caption{Average miss penalty as a function of array size and stride.}
+\caption{数组大小和步长的平均缺失惩罚函数}
 \label{cachedata}
 \end{figure}
 
