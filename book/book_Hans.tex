@@ -3493,7 +3493,7 @@ UNIX程序{\tt ps} 和{\tt top}.
 %Equivalently, we could define the ``miss penalty'' as the extra
 %time to process a cache miss, $T_p = T_m - T_h$.  Then the average access
 %time is
-同样的, 我们可以将``未命中惩罚''定义为处理未命中缓存的额外时间, 
+同样的, 我们可以将``未命中损失''定义为处理未命中缓存的额外时间, 
  $T_p = T_m - T_h$. 那么平均访问时间便是
 %
 \[ T_h + m T_p \]
@@ -3513,7 +3513,7 @@ UNIX程序{\tt ps} 和{\tt top}.
 %byte and some of its neighbors.  If the program goes on to read one
 %of the neighbors, it will already be in cache.
 当程序首次读取一个字节, 缓存通常会加载包含请求字节及其相邻字节
-的``块'' 或``行'' 数据. 如果程序继续读取一个相邻字节, 那么已经在缓存中了.
+的``块'' 或``行'' 数据. 如果程序继续读取一个相邻字节, 那么它已经在缓存中了.
 
 %As an example, suppose the block size is 64 B;
 %you read a string with length 64, and the first
@@ -3525,9 +3525,9 @@ UNIX程序{\tt ps} 和{\tt top}.
 %even then the hit rate would be 62/64, or almost 97\%.  If you then
 %read the same string again, the hit rate would be 100\%.
 举个例子, 假设块大小是64 B; 你读取一个长度64的字符串, 字符串
-的首个字节恰好位于块的开头. 当你加载第一个字节时, 会遇到缺失惩罚, 
+的首个字节恰好位于块的开头. 当你加载第一个字节时, 会遇到缺失损失, 
 但之后的整个字符串都会存在于缓存中. 读取整个字符串, 命中率将会是
-63/43, 大约 98\%. 如果字符串横跨两个块, 你会遇到2次缺失惩罚. 
+63/43, 大约 98\%. 如果字符串横跨两个块, 你会遇到2次缺失损失. 
 但即便如此, 命中率仍将是62/64, 接近97\%. 如果你之后再次读取相同字符串,
 命中率将是100\%. 
 
@@ -3656,14 +3656,15 @@ double get_seconds(){
 % graph_cache_data.py
 \centerline{\includegraphics[width=3in]{figs/cache_data.pdf}}
 %\caption{Average miss penalty as a function of array size and stride.}
-\caption{数组大小和步长的平均缺失惩罚函数}
+\caption{数组大小和步长的平均缺失损失函数.}
 \label{cachedata}
 \end{figure}
 
-To isolate the time to access the elements of the array,
-the program runs a second loop that is almost identical except
-that the inner loop doesn't touch the array; it always increments
-the same variable:
+%To isolate the time to access the elements of the array,
+%the program runs a second loop that is almost identical except
+%that the inner loop doesn't touch the array; it always increments
+%the same variable:
+为了排除访问数组元素的时间, 程序运行了第二个循环, 和第一个循环几乎相同, 唯一的差异在于内部循环不涉及数组; 其始终递增同一个变量:
 
 \begin{verbatim}
     iters2 = 0;
@@ -3679,19 +3680,26 @@ the same variable:
     } while (iters2 < iters);
 \end{verbatim}
 
-The second loop runs the same number of iterations as the first.
-After each iteration, it {\em subtracts} the elapsed time from
-{\tt sec}.  When the loop completes, {\tt sec} contains the total
-time for all array accesses, minus the total time it took to increment
-{\tt temp}.  This difference is the total miss penalty incurred by
-all accesses.  Finally, we divide by the number of accesses to
-get the average miss penalty per access, in ns:
+%The second loop runs the same number of iterations as the first.
+%After each iteration, it {\em subtracts} the elapsed time from
+%{\tt sec}.  When the loop completes, {\tt sec} contains the total
+%time for all array accesses, minus the total time it took to increment
+%{\tt temp}.  This difference is the total miss penalty incurred by
+%all accesses.  Finally, we divide by the number of accesses to
+%get the average miss penalty per access, in ns:
+第二个循环与第一个循环迭代相同次数. 
+每次迭代之后, 它从 {\tt sec}变量中 {\em 减去} 经过的时间. 
+当循环结束, {\tt sec} 包含所有数组访问的总时间, 减去递增 {\tt temp} 
+花费的时间. 这个差值便是所有访问产生的总缺失损失. 
+最后, 我们通过除以访问次数, 得到每次访问的平均缺失损失, 单位为纳秒：
+
 
 \begin{verbatim}
 sec * 1e9 / iters / limit * stride
 \end{verbatim}
 
-If you compile and run {\tt cache.c} you should see output like this:
+%If you compile and run {\tt cache.c} you should see output like this:
+如果你编译并运行{\tt cache.c}, 你会看到如下输出:
 
 \begin{verbatim}
 Size:    4096 Stride:       8 read+write: 0.8633 ns
@@ -3700,30 +3708,43 @@ Size:    4096 Stride:      32 read+write: 0.7105 ns
 Size:    4096 Stride:      64 read+write: 0.7058 ns
 \end{verbatim}
 
-If you have Python and {\tt matplotlib} installed, you can use
-\verb"graph_data.py" to graph the results.  Figure~\ref{cachedata}
-shows the results when I ran it on a Dell Optiplex 7010.
-Notice that the array size and stride are reported in
-bytes, not number of array elements.
+%If you have Python and {\tt matplotlib} installed, you can use
+%\verb"graph_data.py" to graph the results.  Figure~\ref{cachedata}
+%shows the results when I ran it on a Dell Optiplex 7010.
+%Notice that the array size and stride are reported in
+%bytes, not number of array elements.
+如果您已安装Python和{\tt matplotlib} , 便可以使用\verb"graph_data.py"
+来绘制结果. 图~\ref{cachedata}展示了我在戴尔Optiplex 7010上运行时的结果.
+请注意, 数组大小和步长的单位是字节, 而不是数组元素的数量。
 
-Take a minute to consider this graph, and see what you can infer
-about the cache.  Here are some things to think about:
+%Take a minute to consider this graph, and see what you can infer
+%about the cache.  Here are some things to think about:
+花一分钟来考虑这个图表, 看看您能从中推断出哪些关于缓存的信息. 
+以下是一些需要考虑的事项:
 
 \begin{itemize}
 
-\item The program reads through the array many times, so it has plenty
-  of temporal locality.  If the entire array fits in cache, we expect
-  the average miss penalty to be near 0.
+%\item The program reads through the array many times, so it has plenty
+%  of temporal locality.  If the entire array fits in cache, we expect
+%  the average miss penalty to be near 0.
+\item 程序会遍历多次数组, 所以会有大量的时间局部性. 如果缓存包含了
+全部数据, 我们便可以预计平均缺失损失接近于0.
 
-\item When the stride is 4 bytes, we read every element of the array,
-  so the program has plenty of spatial locality.  If the block size is
-  big enough to contain 64 elements, for example, the hit rate would
-  be 63/64, even if the array does not fit in cache.
+%\item When the stride is 4 bytes, we read every element of the array,
+%  so the program has plenty of spatial locality.  If the block size is
+%  big enough to contain 64 elements, for example, the hit rate would
+%  be 63/64, even if the array does not fit in cache.
+  \item 当步长为4个字节, 我们会读取数组每个元素, 所以程序具有大量
+  空间局部性. 如果块大小足够容纳64个元素, 即使缓存没有容纳整个数组, 
+  命中率也是63/64.
 
-\item If the stride is equal to the block size (or greater), the
-  spatial locality is effectively zero, because each time we read a
-  block, we only access one element.  In that case we expect to see
-  the maximum miss penalty.
+%\item If the stride is equal to the block size (or greater), the
+%  spatial locality is effectively zero, because each time we read a
+%  block, we only access one element.  In that case we expect to see
+%  the maximum miss penalty.
+ \item 如果步长等于(或大于)块大小, 则空间局部性为零, 因为我们每次
+ 读取一个块, 仅仅需要访问一个元素. 如此情况, 我们可以预期会
+ 看到最大的缺失损失.
 
 \end{itemize}
 
