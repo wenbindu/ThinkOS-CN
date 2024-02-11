@@ -3748,28 +3748,40 @@ Size:    4096 Stride:      64 read+write: 0.7058 ns
 
 \end{itemize}
 
-In summary, we expect good cache performance if the array is smaller
-than the cache size {\em or} if the stride is smaller than the block
-size.  Performance only degrades if the array is bigger than the
-cache {\em and} the stride is large.
+%In summary, we expect good cache performance if the array is smaller
+%than the cache size {\em or} if the stride is smaller than the block
+%size.  Performance only degrades if the array is bigger than the
+%cache {\em and} the stride is large.
+总之, 如果数组小于内存大小{\em 或}步长小于块大小, 我们便可以相信
+内存性能良好. 只有当数组大于内存大小{\em 且}步长较大时, 性能才会
+下降. 
 
-In Figure~\ref{cachedata}, cache performance is good, for all strides,
-as long as the array is less than $2^{22}$ B.  We can infer that the
-cache size is near 4 MiB; in fact, according to the specs, it is 3
-MiB.
+%In Figure~\ref{cachedata}, cache performance is good, for all strides,
+%as long as the array is less than $2^{22}$ B.  We can infer that the
+%cache size is near 4 MiB; in fact, according to the specs, it is 3
+%MiB.
+图~\ref{cachedata}中, 只要数组小于$2^{22}$ B, 对于所有步长, 内存
+性能都很好. 我们可以推断缓存大小接近 4 MiB; 实际上, 根据规格, 
+是 3 MiB.
 
-When the stride is 8, 16, or 32 B, cache performance is good.  At 64 B
-it starts to degrade, and for larger strides the average miss
-penalty is about 9 ns.  We can infer that the block size near 128 B.
+%When the stride is 8, 16, or 32 B, cache performance is good.  At 64 B
+%it starts to degrade, and for larger strides the average miss
+%penalty is about 9 ns.  We can infer that the block size near 128 B.
+当步长是8, 16, 或 32 B时, 缓存性能良好. 当步长64B时, 性能开始下降, 
+对于较大的步长, 内存损失大约9纳秒. 我们可以推断块大小接近128B. 
 
-Many processors use ``multi-level caches'' that include a small,
-fast cache and a bigger, slower cache.  In this example, it looks 
-like the miss penalty increases a little when the array size is bigger
-than $2^{14}$ B, so it's possible that this processor also has a 16 KB
-cache with an access time less than 1 ns.
+%Many processors use ``multi-level caches'' that include a small,
+%fast cache and a bigger, slower cache.  In this example, it looks 
+%like the miss penalty increases a little when the array size is bigger
+%than $2^{14}$ B, so it's possible that this processor also has a 16 KB
+%cache with an access time less than 1 ns.
+很多处理器使用 ``多级缓存'',  其中包括一个小而快的缓存和一个大而慢
+的缓存. 在这个示例中, 当数组大小大于$2^{14}$ B时, 缺失损失会略有
+增加, 所以很可能处理器还有一个16KB的缓存, 其访问时间小于1纳秒.
 
 
-\section{Programming for cache performance}
+%\section{Programming for cache performance}
+\section{缓存性能编程}
 
 Memory caching is implemented in hardware, so most of the time
 programmers don't need to know much about it.  But if you know how
