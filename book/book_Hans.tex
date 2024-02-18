@@ -35,7 +35,8 @@
 \usepackage{upquote}
 \usepackage{listings}
 \usepackage{color}
-
+% add cbox for translator-speak.
+\usepackage{translator}
 % include this so we can compile without hyperref
 % https://tex.stackexchange.com/questions/44088/when-do-i-need-to-invoke-phantomsection
 \providecommand\phantomsection{}
@@ -1486,9 +1487,9 @@ TB 表示 ``terabyte,'' 也就是 $10^{12}$ 字节.
 相反, 程序会使用从 0 到 $M-1$ 编号的{\bf 虚拟地址}, 其中$M$ 是有效
 虚拟地址的数量. 虚拟地址空间的大小是由操作系统和其运行的硬件共同决定的.
 
-你可能听锅别人谈论32位系统和64位系统.
+你可能听过别人谈论32位系统和64位系统.
 这些术语表示的是寄存器的大小, 通常也是虚拟地址的大小.
-在32位系统上, 虚拟地址为32位, 也就是虚拟地址空间从0到0xffff ffff.
+在32位系统上, 虚拟地址为32比特, 也就是虚拟地址空间从0到0xffff ffff.
 所以地址空间的大小为$2^{32}$字节, 或 4 GiB.
 
 %On a 64-bit system, the size of the virtual address space is $2^{64}$
@@ -1510,9 +1511,9 @@ TB 表示 ``terabyte,'' 也就是 $10^{12}$ 字节.
 %virtual address it can generate that maps to physical memory
 %allocated to another process.
 而在64位系统上, 虚拟地址空间是$2^{64}$字节, 或$2^4 \cdot 1024^6$ 字节.
-这是16 exbibytes, 约为当前物理内存的十亿倍.
-虚拟地址空间比物理内存大这么多, 这看起来很奇怪, 但是我们稍后就会看到它是
-如何工作的.
+这是16 艾字节, 约为当前物理内存的十亿倍.
+虚拟地址空间比物理内存大这么多, 这看起来很奇怪, 
+但是我们稍后就会看到它是如何工作的.
 
 当程序从内存读取或者向内存写入值时, 它会生成虚拟地址.
 在操作系统的帮助下, 访问内存之前, 硬件会被转换成物理地址.
@@ -1807,7 +1808,7 @@ TLB 包含来自页表(存储在内核内存中)数据的缓存副本.
 由于每个进程都有自己的页表, 因此TLB必需确保它只使用正在运行的进程的页表中的条目.
 
 图~\ref{addtrans} 是这个过程的示意图.
-若要明了其工作原理, 假设VA是32位, 物理内存是 1 GiB, 并划分为了 1 KiB 的页.
+若要明了其工作原理, 假设VA是32比特, 物理内存是 1 GiB, 并划分为了 1 KiB 的页.
 
 \begin{itemize}
 
@@ -1834,12 +1835,12 @@ TLB 包含来自页表(存储在内核内存中)数据的缓存副本.
   所以有 $2^{22}$ 个虚拟页.
 
 \item 偏移量的大小由页面大小决定.  这个例子中, 页面大小是 $2^{10}$ B, 
-  所以需要10位来定位页面上的字节.
+  所以需要10比特来定位页面上的字节.
 
-\item 如果 VA 是 32 位, 同时偏移量是 10 位, 剩下的22位便构成了虚拟页号.
+\item 如果 VA 是 32 比特, 同时偏移量是 10 比特, 剩下的22比特便构成了虚拟页号.
 
-\item 由于有 $2^{20}$ 个物理页, 每个物理页号是20位. 
-  加上10位的偏移量, 得到的 PA 便是 30 位.
+\item 由于有 $2^{20}$ 个物理页, 每个物理页号是20比特. 
+  加上10比特的偏移量, 得到的 PA 便是 30 比特.
 
 \end{itemize}
 %So far this all seems feasible.  But let's think about how big a page
@@ -1856,7 +1857,7 @@ TLB 包含来自页表(存储在内核内存中)数据的缓存副本.
 %VAs, the numbers are ridiculous.
 至此, 一切似乎看起来可行. 但让我们想一下, 页表可能有多大.
 页表的最简单实现是一个数组, 其中每个条目对应一个虚拟页.
-每个条目包含物理页号, 本例中是20位, 以及关于每帧的附加信息.
+每个条目包含物理页号, 本例中是20比特, 以及关于每帧的附加信息.
 所以我们预计每个条目需要3--4字节的空间.
 由于存在$2^{22}$个虚拟页, 
 页表将需要$2^{24}$字节, 即 16 MiB.
@@ -1864,7 +1865,7 @@ TLB 包含来自页表(存储在内核内存中)数据的缓存副本.
 由于每个进程都需要一个页表, 
 那么运行256个进程的系统, 便需要$2^{32}$字节, 即 4GiB, 还只是页表空间!
 而这仅仅是针对32位虚拟地址的情况.
-对于48-或64-位的虚拟地址来说, 这个数字就太吓人了.
+对于48或64位的虚拟地址来说, 这个数字就太吓人了.
 
 
 %Fortunately, we don't actually need that much space, because
@@ -3783,114 +3784,170 @@ Size:    4096 Stride:      64 read+write: 0.7058 ns
 %\section{Programming for cache performance}
 \section{缓存性能编程}
 
-Memory caching is implemented in hardware, so most of the time
-programmers don't need to know much about it.  But if you know how
-caches work, you can write programs that use them more effectively.
+%Memory caching is implemented in hardware, so most of the time
+%programmers don't need to know much about it.  But if you know how
+%caches work, you can write programs that use them more effectively.
+内存缓存是通过硬件实现, 所以多数时候, 程序员不需要对其了解太多.
+但如果知道缓存的工作原理, 你可以写出更高效使用缓存的程序代码. 
 
-For example, if you are working with a large array, it might be
-faster to traverse the array once, performing several operations with
-each element, rather than traversing the array several times.
+%For example, if you are working with a large array, it might be
+%faster to traverse the array once, performing several operations with
+%each element, rather than traversing the array several times.
+例如, 假设你正在处理一个大数组, 对其进行一次遍历, 
+同时对每个元素执行数个操作, 相比对数组遍历多次要更快一些.
 
-If you are working with a 2-D array, it might be stored as an array
-of rows.  If you traverse through the elements, it would be faster
-to go row-wise, with stride equal to the element size, rather
-than column-wise, with stride equal to the row length.
+%If you are working with a 2-D array, it might be stored as an array
+%of rows.  If you traverse through the elements, it would be faster
+%to go row-wise, with stride equal to the element size, rather
+%than column-wise, with stride equal to the row length.
+如果你正在处理一个行存储的二维数组, 那么你遍历数组时, 
+逐行操作, 同时步长等于元素大小, 相比于逐列操作, 步长等于行
+长度的遍历方式, 要更快一些.
 
-Linked data structures don't always exhibit spatial locality, because
-the nodes aren't necessarily contiguous in memory.  But if you allocate
-many nodes at the same time, they are usually co-located in the heap.
-Or, even better, if you allocate an array of nodes all at once, you
-know they will be contiguous.
+%Linked data structures don't always exhibit spatial locality, because
+%the nodes aren't necessarily contiguous in memory.  But if you allocate
+%many nodes at the same time, they are usually co-located in the heap.
+%Or, even better, if you allocate an array of nodes all at once, you
+%know they will be contiguous.
+链式数据结构并不总是表现出空间局部性, 因为节点在内存中并不一定
+是连续的. 但如果你一次性分配了很多节点，它们通常在堆的相邻位置.
+或者, 更好的操作是, 你分配一个节点数组, 你便知道他们会是连续的. 
 
-Recursive strategies like mergesort often have good cache behavior
-because they break big arrays into smaller pieces and then work
-with the pieces.  Sometimes these algorithms can be tuned to take
-advantage of cache behavior.
+%Recursive strategies like mergesort often have good cache behavior
+%because they break big arrays into smaller pieces and then work
+%with the pieces.  Sometimes these algorithms can be tuned to take
+%advantage of cache behavior.
+递归策略, 例如归并排序, 通常都有很好的缓存操作, 因为他们会将大数组
+拆成小片段处理. 有时候这些算法还可以通过微调来更充分地利用缓存操作.
 
-For applications where performance is critical, it is possible
-to design algorithms tailored to the size of the cache, the block size,
-and other hardware characterstics.  Algorithms like that are
-called ``cache-aware''.  The obvious drawback of cache-aware
-algorithms is that they are hardware-specific.
+%For applications where performance is critical, it is possible
+%to design algorithms tailored to the size of the cache, the block size,
+%and other hardware characterstics.  Algorithms like that are
+%called ``cache-aware''.  The obvious drawback of cache-aware
+%algorithms is that they are hardware-specific.
+对于性能优先的应用来说, 可以针对缓存大小, 块大小, 以及其他硬件
+特性来设计算法. 这样的算法叫做``缓存感知''算法. 
+而缓存感知算法的明显缺点则是他们是针对特定硬件的.
 
+%\section{The memory hierarchy}
+\section{内存层次架构}
 
-\section{The memory hierarchy}
+%At some point during this chapter, a question like the following
+%might have occurred to you: ``If caches are so much faster than
+%main memory, why not make a really big cache and forget about
+%memory?''
+在本章的某个节点, 你可能会遇到如下问题: ``如果缓存比内存要
+快很多, 为什么不制造一个足够大的缓存来替代内存?''
 
-At some point during this chapter, a question like the following
-might have occurred to you: ``If caches are so much faster than
-main memory, why not make a really big cache and forget about
-memory?''
+%Without going too far into computer architecture, there are two
+%reasons: electronics and economics.  Caches are fast because they are
+%small and close to the CPU, which minimizes delays due to capacitance
+%and signal propagation.  If you make a cache big, it will be slower.
+在不涉及过多计算机架构的情况下, 有两个原因: 电子学和经济学. 
+缓存很快是因为它们小同时靠近CPU, 这便最小化了因电容和信号传播而造成
+的延迟. 如果你制造一个大缓存, 速度便会慢很多.
 
-Without going too far into computer architecture, there are two
-reasons: electronics and economics.  Caches are fast because they are
-small and close to the CPU, which minimizes delays due to capacitance
-and signal propagation.  If you make a cache big, it will be slower.
+%Also, caches take up space on the processor chip, and bigger chips are
+%more expensive.  Main memory is usually dynamic random-access memory
+%(DRAM), which uses only one transistor and one capacitor per bit, so
+%it is possible to pack more memory into the same amount of space.  But
+%this way of implementing memory is slower than the way caches are
+%implemented.
+此外, 缓存占据了处理器芯片上的空间, 而更大的芯片往往更加昂贵.
+主存通常是动态随机访问存储(DRAM), 每比特只需要一个晶体管和一个电容, 
+所以可以在相同空间内装入更多的内存. 但这种内存实现方式比缓存的
+实现方式在速度上要慢很多.
 
-Also, caches take up space on the processor chip, and bigger chips are
-more expensive.  Main memory is usually dynamic random-access memory
-(DRAM), which uses only one transistor and one capacitor per bit, so
-it is possible to pack more memory into the same amount of space.  But
-this way of implementing memory is slower than the way caches are
-implemented.
- 
-Also main memory is usually packaged in a dual in-line memory module
-(DIMM) that includes 16 or more chips.  Several small chips are cheaper
-than one big one.
+% translator's note
+\begin{note}
+位和比特的翻译实在令我头疼, 后续将再次更正和优化.
+\end{note}
 
-The trade-off between speed, size, and cost is the fundamental reason
-for caching.  If there were one memory technology that was fast,
-big, and cheap, we wouldn't need anything else.
+%Also main memory is usually packaged in a dual in-line memory module
+%(DIMM) that includes 16 or more chips.  Several small chips are cheaper
+%than one big one.
+此外, 主内存通常封装在一个双列直插内存模块(DIMM)中, 这个模块包括16个
+或者更多的芯片. 而多个小芯片相比一个大芯片价格上要更加便宜.
 
-The same principle applies to storage as well as memory.  Solid state drives (SSD) are fast, but they are more expensive than hard drives (HDD), so they tend to be smaller.  Tape drives are even slower than hard
-drives, but they can store large amounts of data relatively
-cheaply.
+%The trade-off between speed, size, and cost is the fundamental reason
+%for caching.  If there were one memory technology that was fast,
+%big, and cheap, we wouldn't need anything else.
+速度, 大小和成本之间的权衡是缓存实现的根本原因. 
+如果有一种快速, 容量大而且便宜的内存技术, 那我们便无需其他考虑了. 
 
-The following table shows typical access times, sizes, and 
-costs for each of these technologies.  
+%The same principle applies to storage as well as memory.  Solid state drives (SSD) are fast, but they are more expensive than hard drives (HDD), so they tend to be smaller.  Tape drives are even slower than hard
+%drives, but they can store large amounts of data relatively
+%cheaply.
+这个原则同样适用于存储和内存. 固态硬盘(SSD)速度很快, 但相比于
+硬盘驱动器(HDD)更加昂贵, 所以倾向于更小. 磁带驱动器比硬盘驱动器
+更慢, 但它们可以相对廉价地存储大量数据.
+
+%The following table shows typical access times, sizes, and 
+%costs for each of these technologies.  
+下表展示了每种技术的访问时间, 容量以及成本.
 
 \vspace{0.1in}
 \begin{center}
     \begin{tabular}{| l | l | l | l |}
     \hline
-    Device   &   Access   &   Typical    &   Cost   \\
-             &   time     &   size       &          \\ \hline
-    Register &   0.5 ns   &   256 B      &   ?      \\ \hline
-    Cache    &   1 ns     &   2 MiB      &   ?      \\ \hline
-    DRAM     &   100 ns   &   4 GiB      &   \$10 / GiB       \\ \hline
-    SSD      &   10 \mus  &   100 GiB    &   \$1 / GiB      \\ \hline
-    HDD      &   5 ms     &   500 GiB    &   \$0.25 / GiB     \\ \hline
-    Tape     &   minutes  &   1--2 TiB   &   \$0.02 / GiB      \\ \hline
+    设备   &   访问   &   典型    &   成本   \\
+             &   时间     &   容量       &          \\ \hline
+    寄存器(Register) &   0.5 ns   &   256 B      &   ?      \\ \hline
+    缓存(Cache)    &   1 ns     &   2 MiB      &   ?      \\ \hline
+    动态随机访问存储(DRAM)     &   100 ns   &   4 GiB      &   \$10 / GiB       \\ \hline
+    固态硬盘(SSD)      &   10 \mus  &   100 GiB    &   \$1 / GiB      \\ \hline
+    硬盘驱动器(HDD)      &   5 ms     &   500 GiB    &   \$0.25 / GiB     \\ \hline
+    磁带(Tape)     &   minutes  &   1--2 TiB   &   \$0.02 / GiB      \\ \hline
     \end{tabular}
 \end{center}
 \vspace{0.1in}
 
-The number and size of registers depends on details of the
-architecture.  Current computers have about 32 general-purpose
-registers, each storing one ``word''.  On a 32-bit computer, a word
-is 32 bits or 4 B.  On a 64-bit computer, a word is 64 bits or 8 B.
-So the total size of the register file is 100--300 B.
+\begin{note}
+对于一些常用词汇，例如{\tt minutes}, {\tt ns} 等, 如果也强求翻译,
+那我建议先补充一下英文基础知识.
+\end{note}
 
-The cost of registers and caches is hard to quantify.  They contribute
-to the cost of the chips they are on, but consumers don't see that
-cost directly.
+%The number and size of registers depends on details of the
+%architecture.  Current computers have about 32 general-purpose
+%registers, each storing one ``word''.  On a 32-bit computer, a word
+%is 32 bits or 4 B.  On a 64-bit computer, a word is 64 bits or 8 B.
+%So the total size of the register file is 100--300 B.
+寄存器的数量和大小取决于架构的细节. 当前的计算机拥有大约32个
+通用寄存器, 每个存储一个``单词''. 在32位计算机上, 一个单词是32比特
+或4字节. 在64位计算机上, 一个单词是64比特或8字节. 
+所以寄存器文件的总大小是100--300字节.
 
-For the other numbers in the table, I looked at the specifications for
-typical hardware for sale from online computer hardware stores.  By
-the time you read this, these numbers will be obsolete, but they give
-you an idea of what the performance and cost gaps looked like at one
-point in time.
+%The cost of registers and caches is hard to quantify.  They contribute
+%to the cost of the chips they are on, but consumers don't see that
+%cost directly.
+寄存器和缓存的成本是很难量化的. 它们会增加芯片的成本, 而消费者
+很难直接看到这些费用. 
 
-These technologies make up the ``memory hierarchy'' (note that this
-use of ``memory'' also includes storage).  Each
-level of the hierarchy is bigger and slower than the one above it.
-And in some sense, each level acts as a cache for the one below
-it.  You can think of main memory as a cache for programs and data
-that are stored permanently on SSDs and HHDs.  And if you are working
-with very large datasets stored on tape, you could use hard drives
-to cache one subset of the data at a time.
+%For the other numbers in the table, I looked at the specifications for
+%typical hardware for sale from online computer hardware stores.  By
+%the time you read this, these numbers will be obsolete, but they give
+%you an idea of what the performance and cost gaps looked like at one
+%point in time.
+对于表中的其他数字, 我查阅了在线计算机硬件商店中销售的典型硬件
+的规格信息. 当你阅读本书时, 这些数字可能已经过时, 但它们可以让你
+了解, 在某个时间节点, 不同硬件的性能和成本之间的差距是什么样子.
 
+%These technologies make up the ``memory hierarchy'' (note that this
+%use of ``memory'' also includes storage).  Each
+%level of the hierarchy is bigger and slower than the one above it.
+%And in some sense, each level acts as a cache for the one below
+%it.  You can think of main memory as a cache for programs and data
+%that are stored permanently on SSDs and HHDs.  And if you are working
+%with very large datasets stored on tape, you could use hard drives
+%to cache one subset of the data at a time.
+这些技术构成了``内存层次结构''(注意, 此处的``内存''也包括存储).
+层次结构中的每一层级相比于上一层级都要更大且更慢. 某种意义上, 
+每层都充当了下一层的缓存. 你可以将主存看作固态硬盘和硬盘驱动器
+上永久存储的程序和数据的缓存. 如果你正在处理存储在磁带上的大数据集, 
+你可以使用硬盘驱动器来一次缓存一个数据子集.
 
-\section{Caching policy}
+%\section{Caching policy}
+\section{缓存策略}
 
 The memory hierarchy suggests a framework for thinking about
 caching.  At every level of the hierarchy, we have to address
