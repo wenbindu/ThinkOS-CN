@@ -41,4 +41,16 @@ Think OS[中文译本]
 
 - READEME.md 只包含了10章，和书中的序不一致.
 - 代码使用: download Zip file，目前GitHub 下载按钮在仓库右上，而不是右下了.
+- 其他...
+
+## 提示
+
+如果你想重新编译，安装texlive采用*XeLatex* 重新编译。
+
+编译本书需要安装：
+-  texlive-latex-base
+-  texlive-latex-extra
+-  texlive-fonts-recommended
+-  ctex
+
 
