@@ -22,7 +22,7 @@ Think OS[中文译本]
 
 :white_check_mark: 第六章: 介绍了动态内存管理的使用及其工作原理. 推荐阅读: 《Head First C》 第6章.
 
-:wwhite_check_mark: 第七章: 介绍了缓存和内存层次结构.
+:white_check_mark: 第七章: 介绍了缓存和内存层次结构.
 
 :writing_hand: 第八章: 介绍了多任务和调度.
 
