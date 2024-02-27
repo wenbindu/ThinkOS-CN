@@ -4180,90 +4180,129 @@ Size:    4096 Stride:      64 read+write: 0.7058 ns
 %\chapter{Multitasking}
 \chapter{多任务}
 
-In many current systems, the CPU contains multiple cores, which means
-it can run several processes at the same time.  In addition, each core
-is capable of ``multitasking'', which means it can switch from one
-process to another quickly, creating the illusion that many processes
-are running at the same time.
+%In many current systems, the CPU contains multiple cores, which means
+%it can run several processes at the same time.  In addition, each core
+%is capable of ``multitasking'', which means it can switch from one
+%process to another quickly, creating the illusion that many processes
+%are running at the same time.
+当前很多系统中, CPU包括多个核, 也就表示系统可以同时运行多个进程. 
+另外, 每个核都能够进行``多任务处理'', 意味着可以从一个进程快速切换
+到另一个进程, 从而产生多个进程同时运行的错觉. 
 
-The part of the operating system that implements multitasking is
-the ``kernel''.  In a nut or seed, the kernel is the innermost
-part, surrounded by a shell.  In an operating system, the kernel
-is the lowest level of software, surrounded by several other
-layers, including an interface called a ``shell.''  Computer
-scientists love extended metaphors.
+%The part of the operating system that implements multitasking is
+%the ``kernel''.  In a nut or seed, the kernel is the innermost
+%part, surrounded by a shell.  In an operating system, the kernel
+%is the lowest level of software, surrounded by several other
+%layers, including an interface called a ``shell.''  Computer
+%scientists love extended metaphors.
+操作系统实现多任务处理的部分是``内核''. 在坚果或种子中, 内核是最
+内层的部分, 被壳所包围. 操作系统中, 内核是软件最底层的部分, 外部被
+其他层环绕, 其中包括一个叫做``shell'' 的接口层. 
+计算机专家往往喜欢使用这种类比的方式. 
 
-At its most basic, the kernel's job is to
-handle interrupts.  An ``interrupt'' is an event that stops the
-normal instruction cycle and causes the flow of execution to jump to a
-special section of code called an ``interrupt handler''.
+%At its most basic, the kernel's job is to
+%handle interrupts.  An ``interrupt'' is an event that stops the
+%normal instruction cycle and causes the flow of execution to jump to a
+%special section of code called an ``interrupt handler''.
+在最基本的功能中, 内核的工作是处理中断. 一个``中断'' 就是一个事件, 
+这个事件会停止正常指令周期, 并使执行流跳转到被称为``中断处理程序''
+的特定代码部分.
 
 %TODO: put new vocab in bold and add glossaries
 
-A {\bf hardware interrupt} is caused when a device sends a signal to the
-CPU.  For example, a network interface might cause an interrupt when
-a packet of data arrives, or a disk drive might cause an interrupt
-when a data transfer is complete.  Most systems also have timers that
-cause interrupts at regular intervals, or after an elapsed time.
+%A {\bf hardware interrupt} is caused when a device sends a signal to the
+%CPU.  For example, a network interface might cause an interrupt when
+%a packet of data arrives, or a disk drive might cause an interrupt
+%when a data transfer is complete.  Most systems also have timers that
+%cause interrupts at regular intervals, or after an elapsed time.
+ {\bf 硬件中断}是由设备向CPU发送信号引发的. 例如, 网络接口会在
+ 数据包到达时引起中断, 或着, 数据传输结束会, 磁盘驱动器也会触发中断.
+ 大部分的系统还有计时器会在定期, 或某段时间后触发中断.
+ 
 
-A {\bf software interrupt} is caused by a running program.  For example, if
-an instruction cannot complete for some reason, it might trigger an
-interrupt so the condition can be handled by the operating system.
-Some floating-point errors, like division by zero, are handled
-using interrupts.
+%A {\bf software interrupt} is caused by a running program.  For example, if
+%an instruction cannot complete for some reason, it might trigger an
+%interrupt so the condition can be handled by the operating system.
+%Some floating-point errors, like division by zero, are handled
+%using interrupts.
+{\bf 软件中断}通常由运行中的程序触发. 例如, 如果某个指令因为某种原因
+无法完成, 便可能触发中断, 以便操作系统可以处理该状况. 有些浮点错误, 
+比如除零操作, 也是通过中断来处理. 
 
-When a program needs to access a hardware device,
-it makes a {\bf system call}, which is similar to a function call,
-except that instead of jumping to the beginning of the function,
-it executes a special instruction that triggers an interrupt, causing
-the flow of execution to jump to the kernel.  The kernel reads the
-parameters of the system call, performs the requested operation,
-and then resumes the interrupted process.
+%When a program needs to access a hardware device,
+%it makes a {\bf system call}, which is similar to a function call,
+%except that instead of jumping to the beginning of the function,
+%it executes a special instruction that triggers an interrupt, causing
+%the flow of execution to jump to the kernel.  The kernel reads the
+%parameters of the system call, performs the requested operation,
+%and then resumes the interrupted process.
+当程序需要访问硬件设备时, 会进行一次{\bf 系统调用}, 类似于函数调用, 
+但不同之处在于, 它不会跳转到函数的开头, 而是执行某个特殊指令触发
+中断, 从而令执行流跳转到内核. 内核读取系统调用的参数, 执行请求的操作, 
+然后恢复被中断的进程.
 
 
-\section{Hardware state}
+%\section{Hardware state}
+\section{硬件状态}
 
-Handling interrupts requires cooperation between hardware and
-software.  When an interrupt occurs, there might be several
-instructions running on the CPU, data stored in registers, and
-other {\bf hardware state}.
+%Handling interrupts requires cooperation between hardware and
+%software.  When an interrupt occurs, there might be several
+%instructions running on the CPU, data stored in registers, and
+%other {\bf hardware state}.
+处理中断需要硬件和软件之间的协作. 当中断发生时, 可能CPU正有多条
+指令在运行, 寄存器中正存储着数据, 以及其他的{\bf 硬件状态}.
 
-Usually the hardware is responsible for bringing the CPU
-to a consistent state; for example, every instruction should either
-complete or behave as if it never started.  No instruction should
-be left half complete.  Also, the hardware is responsible for
-saving the program counter (PC), so the kernel knows where to
-resume.
+%Usually the hardware is responsible for bringing the CPU
+%to a consistent state; for example, every instruction should either
+%complete or behave as if it never started.  No instruction should
+%be left half complete.  Also, the hardware is responsible for
+%saving the program counter (PC), so the kernel knows where to
+%resume.
+通常, 硬件负责将CPU带到一个一致性的状态; 例如, 每个指令都应该完成, 
+或者如同从未开始. 任何指令都不应该被留在半完成的状态. 此外, 硬件负责
+保存程序计数器(PC), 以便内核知道从何处恢复. 
 
-Then, usually, it is the responsibility of the interrupt handler
-to save the rest of the hardware state before it does anything that
-might modify it, and then restore the saved state before the interrupted
-process resumes.
+%Then, usually, it is the responsibility of the interrupt handler
+%to save the rest of the hardware state before it does anything that
+%might modify it, and then restore the saved state before the interrupted
+%process resumes.
+然后, 通常情况下, 中断处理程序需要在任何可能改变某个硬件状态的操作前, 
+保存其余的硬件状态, 然后在被中断进程恢复前, 还原被保存的状态. 
 
-Here is an outline of this sequence of events:
+%Here is an outline of this sequence of events:
+以下是此事件序列的概要: 
 
 \begin{enumerate}
 
-\item When the interrupt occurs, the hardware saves the program
-counter in a special register and jumps to the appropriate interrupt
-handler.
+%\item When the interrupt occurs, the hardware saves the program
+%counter in a special register and jumps to the appropriate interrupt
+%handler.
+\item 当中断发生, 硬件将程序计数器保存在某个特殊的寄存器中, 
+同时跳转到适当的中断处理程序. 
 
-\item The interrupt handler stores the program counter and the
-status register in memory, along with the contents of any data
-registers it plans to use.
+%\item The interrupt handler stores the program counter and the
+%status register in memory, along with the contents of any data
+%registers it plans to use.
+\item 中断处理程序将程序计数器和状态寄存器, 以及计划使用的
+数据寄存器的任何数据, 一并存储在内存中.
 
-\item The interrupt handler runs whatever code is needed to handle
-the interrupt.
+%\item The interrupt handler runs whatever code is needed to handle
+%the interrupt.
+\item 中断处理程序运行处理中断所需的所有代码. 
 
 \item Then it restores the contents of the saved registers.  Finally,
 it restores the program counter of the interrupted process, which
 has the effect of jumping back to the interrupted instruction.
+\item 然后它会恢复保存的寄存器的内容. 最后, 它恢复中断程序的程序计数器, 
+这会令执行流回到中断指令处. 
 
 \end{enumerate}
 
-If this mechanism works correctly, there is generally no way for
-the interrupted process to know there was an interrupt, unless
-it detects the change in time between instructions.
+%If this mechanism works correctly, there is generally no way for
+%the interrupted process to know there was an interrupt, unless
+%it detects the change in time between instructions.
+如果这个机制运转正常, 通常情况下, 被中断的进程不会觉察到中断发生, 
+除非它检测到指令间的事件变化.
 
 
 \section{Context switching}
