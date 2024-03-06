@@ -4290,9 +4290,9 @@ Size:    4096 Stride:      64 read+write: 0.7058 ns
 %the interrupt.
 \item 中断处理程序运行处理中断所需的所有代码. 
 
-\item Then it restores the contents of the saved registers.  Finally,
-it restores the program counter of the interrupted process, which
-has the effect of jumping back to the interrupted instruction.
+%\item Then it restores the contents of the saved registers.  Finally,
+%it restores the program counter of the interrupted process, which
+%has the effect of jumping back to the interrupted instruction.
 \item 然后它会恢复保存的寄存器的内容. 最后, 它恢复中断程序的程序计数器, 
 这会令执行流回到中断指令处. 
 
@@ -4305,135 +4305,191 @@ has the effect of jumping back to the interrupted instruction.
 除非它检测到指令间的事件变化.
 
 
-\section{Context switching}
+%\section{Context switching}
+\section{上下文切换}
 
-Interrupt handlers can be fast because they don't have to save the
-entire hardware state; they only have to save registers they are
-planning to use.
+%Interrupt handlers can be fast because they don't have to save the
+%entire hardware state; they only have to save registers they are
+%planning to use.
+中断处理程序之所以快速, 是因为它们不必存储整个硬件状态; 只需要
+存储它们后续使用的寄存器.
 
-But when an interrupt occurs, the kernel does not always resume the
-interrupted process.  It has the option of switching to another
-process.  This mechanism is called a ``context switch''.
+%But when an interrupt occurs, the kernel does not always resume the
+%interrupted process.  It has the option of switching to another
+%process.  This mechanism is called a ``context switch''.
+但是当中断发生时, 内核并不总是会恢复中断的进程. 
+它也可以切换到另一个进程. 这种机制叫做``上下文切换''.
 
-In general, the kernel doesn't know which registers a process will
-use, so it has to save all of them.  Also, when it switches to a new
-process, it might have to clear data stored in the memory management
-unit (see
-Section~\ref{address_translation}).  And after the context switch, it
-might take some time for the new process to load data into the cache.
-For these reasons, context switches are relatively slow, on the order
-of thousands of cycles, or a few microseconds.
+%In general, the kernel doesn't know which registers a process will
+%use, so it has to save all of them.  Also, when it switches to a new
+%process, it might have to clear data stored in the memory management
+%unit (see
+%Section~\ref{address_translation}).  And after the context switch, it
+%might take some time for the new process to load data into the cache.
+%For these reasons, context switches are relatively slow, on the order
+%of thousands of cycles, or a few microseconds.
+一般来说, 内核并不知道进程要使用哪个寄存器, 所以需要保存所有寄存器. 
+此外, 当内核切换到一个新的进程, 可能需要清理存储在内存管理
+单元中的数据(见第~\ref{address_translation}节). 
+在上下文切换后, 新进程需要一些时间将数据加载到缓存中. 
+因此, 上下文切换相对较慢, 大约需要上千个时间周期, 或者几微秒. 
 
-In a multi-tasking system, each process is allowed to run for a short
-period of time called a ``time slice'' or ``quantum''.  During
-a context switch, the kernel sets a hardware timer that causes
-an interrupt at the end of the time slice.  When the interrupt
-occurs, the kernel can switch to another process or allow the
-interrupted process to resume.  The part of the operating system
-that makes this decision is the ``scheduler''.
+%In a multi-tasking system, each process is allowed to run for a short
+%period of time called a ``time slice'' or ``quantum''.  During
+%a context switch, the kernel sets a hardware timer that causes
+%an interrupt at the end of the time slice.  When the interrupt
+%occurs, the kernel can switch to another process or allow the
+%interrupted process to resume.  The part of the operating system
+%that makes this decision is the ``scheduler''.
+在一个多任务系统中, 每个进程都会运行一小段时间, 这段时间称为
+``时间片'' 或 ``量子''. 在上下文切换期间, 内核会设置一个硬件
+定时器, 在时间片结束时引发中断. 当中断发生时, 内核可以切换到
+另一个进程或者恢复中断的进程. 操作系统中做这一决策的部分叫做
+``调度程序''.
 
 
-\section{The process life cycle}
+%\section{The process life cycle}
+\section{进程生命周期}
 
-When a process is created, the operating system allocates a
-data structure that contains information about the process, called
-a ``process control block'' or PCB.  Among other things, the
-PCB keeps track of the process state, which is one of:
+%When a process is created, the operating system allocates a
+%data structure that contains information about the process, called
+%a ``process control block'' or PCB.  Among other things, the
+%PCB keeps track of the process state, which is one of:
+当进程被创建时, 操作系统会分配一个包含进程相关信息的数据结构, 
+被称作``进程控制块(process control block)'' 或 PCB. 
+此外, PCB还会追踪进程状态, 其中如下:
 
 \begin{itemize}
 
-\item Running, if the process is currently running on a core.
+%\item Running, if the process is currently running on a core.
+\item 运行状态, 即进程当前正在核心上运行.
 
-\item Ready, if the process could be running, but isn't, usually because
-there are more runnable processes than cores.
+%\item Ready, if the process could be running, but isn't, usually because
+%there are more runnable processes than cores.
+\item 就绪状态, 即进程可以运行但还未运行, 通常是因为
+可运行的进程数超过了核心数.
 
-\item Blocked, if the process cannot run because it is waiting for
-a future event like network communication or a disk read.
+%\item Blocked, if the process cannot run because it is waiting for
+%a future event like network communication or a disk read.
+\item 阻塞状态, 即进程暂时无法运行, 通常因要等待一个将来的事件, 
+比如网络通信或磁盘读取.
 
-\item Done, if the process has completed, but has exit status
-information that has not been read yet.
+%\item Done, if the process has completed, but has exit status
+%information that has not been read yet.
+\item 完成状态, 即进程已经完成, 但还有退出状态信息未被读取.
 
 \end{itemize}
 
-Here are the events that cause a process to transition from one state to another:
+%Here are the events that cause a process to transition from one state to another:
+下面是导致进程从一个状态转换到另一个状态的事件: 
 
 \begin{itemize}
 
-\item A process is created when the running program executes a system
-  call like {\tt fork}.  At the end of the system call, the new
-  process is usually ready.  Then the scheduler might resume the
-  original process (the ``parent'') or start the new process (the
-  ``child'').
+%\item A process is created when the running program executes a system
+%  call like {\tt fork}.  At the end of the system call, the new
+%  process is usually ready.  Then the scheduler might resume the
+%  original process (the ``parent'') or start the new process (the
+%  ``child'').
+\item 当运行的程序执行类似 {\tt fork} 的系统调用时, 就会创建一个进程.
+系统调用结束时, 新进程通常处于就绪状态. 然后调度程序会恢复
+原始程序(``父进程'') 或者启动新进程(``子进程''). 
 
-\item When a process is started or resumed by the scheduler, its state
-  changes from ready to running.
+%\item When a process is started or resumed by the scheduler, its state
+%  changes from ready to running.
+\item 当一个进程被调度程序启动或恢复, 其状态便会从就绪变为运行.
 
-\item When a process is interrupted and the scheduler chooses not
-  to let it resume, its state changes from running to ready.
+%\item When a process is interrupted and the scheduler chooses not
+%  to let it resume, its state changes from running to ready.
 
-\item If a process executes a system call that cannot complete
-  immediately, like a disk request, it becomes blocked
-  and the scheduler usually chooses another process.
+%\item If a process executes a system call that cannot complete
+%  immediately, like a disk request, it becomes blocked
+%  and the scheduler usually chooses another process.
+\item 如果一个进程执行一个无法立刻完成的系统调用时, 像磁盘
+请求, 便会被堵塞住, 同时调度程序通常会选择另一个进程执行. 
 
-\item When an operation like a disk request completes, it causes an
-  interrupt.  The interrupt handler figures out which process was
-  waiting for the request and switches its state from
-  blocked to ready.  Then the scheduler may or may not choose to
-  resume the unblocked process.
+%\item When an operation like a disk request completes, it causes an
+%  interrupt.  The interrupt handler figures out which process was
+%  waiting for the request and switches its state from
+%  blocked to ready.  Then the scheduler may or may not choose to
+%  resume the unblocked process.
+\item 当一个像磁盘请求这样的操作完成, 会触发中断. 中断处理程序
+会确定等待该请求的进程, 并将其状态从堵塞切换为就绪. 然后
+调度程序会选择是否恢复未堵塞的进程. 
 
-\item When a process calls {\tt exit}, the interrupt handler stores
-  the exit code in the PCB and changes the process's state to done.
+%\item When a process calls {\tt exit}, the interrupt handler stores
+%  the exit code in the PCB and changes the process's state to done.
+\item 当一个进程调用 {\tt exit}, 中断处理程序会将退出码存储在PCB, 
+并将进程状态更改为完成. 
 
 \end{itemize}
 
 
-\section{Scheduling}
+%\section{Scheduling}
+\section{调度}
 
-As we saw in Section~\ref{unixps} there might be hundreds of
-processes on a computer, but usually most of them are blocked.  Most
-of the time, there are only a few processes that are ready or running.
-When an interrupt occurs, the scheduler decides which process to start
-or resume.
+%As we saw in Section~\ref{unixps} there might be hundreds of
+%processes on a computer, but usually most of them are blocked.  Most
+%of the time, there are only a few processes that are ready or running.
+%When an interrupt occurs, the scheduler decides which process to start
+%or resume.
+正如在第~\ref{unixps}节中看到的, 计算机上可能有数百个进程, 但通常大多数进程都是被阻塞的。大多数时候, 只有少数进程处于就绪或运行状态. 当中断发生时, 调度程序决定启动或恢复某个进程。
 
-On a workstation or laptop, the primary goal of the scheduler is to
-minimize response time; that is, the computer should respond quickly
-to user actions.  Response time is also important on a server, but in
-addition the scheduler might try to maximize throughput, which is the
-number of requests that complete per unit of time.
+%On a workstation or laptop, the primary goal of the scheduler is to
+%minimize response time; that is, the computer should respond quickly
+%to user actions.  Response time is also important on a server, but in
+%addition the scheduler might try to maximize throughput, which is the
+%number of requests that complete per unit of time.
+在工作站或笔记本电脑上, 调度程序的主要目标是最小化响应时间, 也就是说,计算机应该对用户操作快速做出响应. 在服务器上, 响应时间也很重要, 但此外, 调度程序可能会尝试最大化吞吐量, 即单位时间内完成的请求数量.
 
-Usually the scheduler doesn't have much information about what
-processes are doing, so its decisions are based on a few
-heuristics:
+%Usually the scheduler doesn't have much information about what
+%processes are doing, so its decisions are based on a few
+%heuristics:
+通常,调度程序并不清楚进程正在做什么, 因此其决策基于一些启发式规则:
+
 
 \begin{itemize}
 
-\item Processes might be limited by different resources.  A process
-that does a lot of computation is probably CPU-bound, which means that
-its run time depends on how much CPU time it gets.  A process that
-reads data from a network or disk might be I/O-bound, which means that
-it would run faster if data input and output went faster, but would not
-run faster with more CPU time.  Finally, a process that interacts with
-the user is probably blocked, most of the time, waiting for user actions.
+%\item Processes might be limited by different resources.  A process
+%that does a lot of computation is probably CPU-bound, which means that
+%its run time depends on how much CPU time it gets.  A process that
+%reads data from a network or disk might be I/O-bound, which means that
+%it would run faster if data input and output went faster, but would not
+%run faster with more CPU time.  Finally, a process that interacts with
+%the user is probably blocked, most of the time, waiting for user actions.
+\item 进程可能受限于不同的资源. 进行大量计算的进程是CPU密集型, 
+表示其运行时间取决于取得的CPU时间. 从网络或磁盘读取数据的进程是
+I/O密集型, 意味着如果数据输入输出速度越快, 便运行越快, 但即使取得
+更多CPU时间, 也不会更快. 最后, 与用户交互的进程很可能会被堵塞, 
+其大部分时间在等待用户操作.
+%\item 進程可能會受到不同資源的限制。進行大量運算的進程可能是CPU密集型的,這意味著其執行時間取決於獲得的CPU時間。從網路或磁碟讀取資料的進程可能是I/O密集型的,這意味著如果資料輸入和輸出速度更快,它將執行得更快,但不會因為更多的CPU時間而執行得更快。最後,與使用者互動的進程可能大部分時間都在等待使用者操作而被阻塞。
 
-The operating system can sometimes classify processes based on their
-past behavior, and schedule them accordingly.  For example, when an
-interactive process is unblocked, it should probably run immediately,
-because a user is probably waiting for a reply.  On the other hand,
-a CPU-bound process that has been running for a long time might be
-less time-sensitive.
+%The operating system can sometimes classify processes based on their
+%past behavior, and schedule them accordingly.  For example, when an
+%interactive process is unblocked, it should probably run immediately,
+%because a user is probably waiting for a reply.  On the other hand,
+%a CPU-bound process that has been running for a long time might be
+%less time-sensitive.
+操作系统有时可以根据进程过去的行为, 对其进行分类, 并进行相应
+调度. 例如, 当一个交互进程解除堵塞时, 它应该立刻运行, 因为用户
+可能正在等待一个回复. 另一方面, 一个长时间运行的CPU密集型进程,
+对于时间便不再敏感.
+%作業系統有時可以根據程序過去的行為對其進行分類,並相應地進行排程。例如,當一個互動式程序被解除阻塞時,它可能應該立即執行,因為使用者可能正在等待回覆。另一方面,一個長時間執行的CPU密集型程序可能不太時間敏感。
 
-\item If a process is likely to run for a short time and then make
-a blocking request, it should probably run immediately, for two reasons:
-(1) if the request takes some time to complete, we should start it as soon
-as possible, and (2) it is better for a long-running process to wait
-for a short one, rather than the other way around.
+%\item If a process is likely to run for a short time and then make
+%a blocking request, it should probably run immediately, for two reasons:
+%(1) if the request takes some time to complete, we should start it as soon
+%as possible, and (2) it is better for a long-running process to wait
+%for a short one, rather than the other way around.
+\item 如果一个进程可能只会运行一小段时间, 然后会发出一个阻塞请求, 它可能应该立即运行, 原因有二: (1) 如果请求需要一些时间才能完成, 我们应该尽快开始; (2) 让一个耗时长的进程等待一个耗时短的进程, 要比反过来好很多. 
 
-As an analogy, suppose you are making an apple pie.  The crust takes
-5 minutes to prepare, but then it has to chill for half an hour.  It takes
-20 minutes to prepare the filling.  If you prepare the crust first,
-you can prepare the filling while the crust is chilling, and you can
-finish the pie in 35 minutes.  If you prepare the filling first, the
-process takes 55 minutes.
+%As an analogy, suppose you are making an apple pie.  The crust takes
+%5 minutes to prepare, but then it has to chill for half an hour.  It takes
+%20 minutes to prepare the filling.  If you prepare the crust first,
+%you can prepare the filling while the crust is chilling, and you can
+%finish the pie in 35 minutes.  If you prepare the filling first, the
+%process takes 55 minutes.
+打个比方, 假设你正在做苹果派. 准备外皮需要5分钟, 但之后需要冷藏半小时. 准备馅料需要20分钟. 如果你先准备外皮, 你可以在外皮冷藏的时候准备馅料, 35分钟就可以完成苹果派. 如果你先准备馅料, 整个过程需要55分钟. 
+
 
 \end{itemize}
 
