@@ -24,9 +24,9 @@ Think OS[中文译本]
 
 :white_check_mark: 第七章: 介绍了缓存和内存层次结构.
 
-:writing_hand: 第八章: 介绍了多任务和调度.
+:white_check_mark: 第八章: 介绍了多任务和调度.
 
-:white_medium_square: 第九章: 线程.
+:writing_hand: 第九章: 线程.
 
 :white_medium_square: 第十章: POSIX条件变量和生产者/消费者问题.
 
