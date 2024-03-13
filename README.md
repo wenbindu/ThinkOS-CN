@@ -53,4 +53,7 @@ Think OS[中文译本]
 -  texlive-fonts-recommended
 -  ctex
 
+## 译者注
+
+- 增加译者对于相关知识的理解. 
 
