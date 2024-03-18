@@ -360,14 +360,14 @@ Griffiths 和 Griffiths编写的{\it Head First C}一书,
 \url{https://github.com/AllenDowney/ThinkOS}下载.  
 Git 是个版本管理系统, 可以让你跟踪项目文件. 
 Git 管理的文件集合叫做{\bf 仓库}.
-GitHub 是一个提供Git仓库存储和方便的web界面的托管服务.
+GitHub 是一个提供Git仓库存储以及友好web界面的托管服务.
 \index{repository}
 \index{Git}
 \index{GitHub}
 
 %The GitHub homepage for my repository provides several ways to
 %work with the code:
-我的仓库的GitHub主页提供了多种使用代码的方法:
+我的仓库的GitHub主页, 提供了多种使用此代码的方法:
 
 \begin{itemize}
 %\item You can create a copy of my repository
@@ -4619,54 +4619,78 @@ I/O密集型, 意味着如果数据输入输出速度越快, 便运行越快, �
 %\chapter{Threads}
 \chapter{线程}
 
-When I mentioned threads in Section~\ref{unixps}, I said that a thread
-is a kind of process.  Now I will provide a more careful explanation.
+%When I mentioned threads in Section~\ref{unixps}, I said that a thread
+%is a kind of process.  Now I will provide a more careful explanation.
+当我在第~\ref{unixps}节提到线程时, 我说线程就是一种进程. 
+现在我会提供一种更加谨慎的解释.
 
-When you create a process, the operating system creates a new address
-space, which includes the text segment, static segment, and heap; it
-also creates a new ``thread of execution'', which includes the program
-counter and other hardware state, and the call stack.
+%When you create a process, the operating system creates a new address
+%space, which includes the text segment, static segment, and heap; it
+%also creates a new ``thread of execution'', which includes the program
+%counter and other hardware state, and the call stack.
+当你创建一个进程时, 操作系统会创建一个新的地址空间, 其中包括文本段, 
+静态段, 以及堆; 也会创建一个新的``执行线程'', 其包括程序计数器和其他
+硬件状态, 以及调用堆栈. 
 
-The processes we have seen so far are ``single-threaded'', which means
-that only one thread of execution runs in each address space.  In this
-chapter, you will learn about ``multi-threaded'' processes that have
-multiple threads running in the same address space.
+%The processes we have seen so far are ``single-threaded'', which means
+%that only one thread of execution runs in each address space.  In this
+%chapter, you will learn about ``multi-threaded'' processes that have
+%multiple threads running in the same address space.
+我们目前见到的进程都是``单线程的'', 也就是说每个地址空间中仅运行一个
+执行线程. 本章中, 我们会学习 ``多线程的'' 进程, 即同一地址空间中运行多个线程的进程.   
 
-Within a single process, all threads share the same text segment, so
-they run the same code.  But different threads often run different parts
-of the code.
+%Within a single process, all threads share the same text segment, so
+%they run the same code.  But different threads often run different parts
+%of the code.
+在单个进程内, 所有线程共享相同的文本段, 因此它们执行相同的
+代码. 但不同的线程通常执行代码的不同部分. 
 
-And they share the same static segment, so if one thread changes a
-global variable, other threads see the change.  They also share the heap,
-so threads can share dynamically-allocated chunks.
-
-But each thread has its own stack, so threads can call functions without
-interfering with each other.  Usually threads don't access each
-other's local variables (and sometimes they can't).
-
-The example code for this chapter is in the repository for this book,
-in a directory named {\tt counter}.  For information on downloading
-this code, see Section~\ref{code}.
+%And they share the same static segment, so if one thread changes a
+%global variable, other threads see the change.  They also share the heap,
+%so threads can share dynamically-allocated chunks.
+同时, 它们共享同样的静态段, 所以如果一个线程修改了一个全局变量, 
+其他线程也会看到变化. 它们还共享堆, 所以线程可以共享动态分配的块. 
 
 
-\section{Creating threads}
+%But each thread has its own stack, so threads can call functions without
+%interfering with each other.  Usually threads don't access each
+%other's local variables (and sometimes they can't).
+但每个线程拥有自己的堆栈, 因此线程可以互不干扰地调用函数. 
+通常线程不会访问彼此的局部变量(有时候它们也不能).
 
-The most popular threading standard used with C is POSIX Threads, or Pthreads for short.  The POSIX standard defines a thread model and an interface for creating and controlling threads.  Most versions of UNIX provide an implementation of Pthreads.
+%The example code for this chapter is in the repository for this book,
+%in a directory named {\tt counter}.  For information on downloading
+%this code, see Section~\ref{code}.
+本章的样例代码在本书的代码仓库中, 名为 {\tt counter}的目录下. 
+有关下载代码的更多信息, 见第~\ref{code}节.
 
-Using Pthreads is like using most C libraries:
+%\section{Creating threads}
+\section{创建线程}
+
+%The most popular threading standard used with C is POSIX Threads, or Pthreads for short.  The POSIX standard defines a thread model and an interface for creating and controlling threads.  Most versions of UNIX provide an implementation of Pthreads.
+在C语言中, 最流行的线程标准是POSIX线程, 简称为Pthread. 
+POSIX标准定义了一个线程模型, 以及创建和控制线程的接口. 
+多数UNIX版本都提供了Pthread的实现.
+
+%Using Pthreads is like using most C libraries:
+使用Pthread就像使用多数C库一样:
 
 \begin{itemize}
 
-\item You include headers files at the beginning of your
-program.
+%\item You include headers files at the beginning of your
+%program.
+\item 在程序的开头包括头文件.
 
-\item You write code that calls functions defined by Pthreads.
+%\item You write code that calls functions defined by Pthreads.
+\item 编写调用基于Pthread定义的函数代码.
 
-\item When you compile the program, you link it with the Pthread library.
+%\item When you compile the program, you link it with the Pthread library.
+\item 当编译程序时, 将其与Pthread库链接. 
 
 \end{itemize}
 
-For my examples, I include the following headers:
+%For my examples, I include the following headers:
+比如我的例子, 包含以下头文件: 
 
 \begin{verbatim}
 #include <stdio.h>
@@ -4675,22 +4699,29 @@ For my examples, I include the following headers:
 #include <semaphore.h>
 \end{verbatim}
 
-The first two are standard; the third is for Pthreads and
-the fourth is for semaphores.  To compile with the Pthread library in {\tt gcc}, you can use the {\tt -l} option on the command line:
+%The first two are standard; the third is for Pthreads and
+%the fourth is for semaphores.  To compile with the Pthread library in {\tt gcc}, you can use the {\tt -l} option on the command line:
+前两个是标准库; 第三个是用于Pthreads的, 第四个是用于信号量的.
+若要在{\tt gcc}中使用Pthread库编译, 你可以在命令行使用 {\tt -l} 选项:
 
 \begin{verbatim}
 gcc -g -O2 -o array array.c -lpthread
 \end{verbatim}
 
-This compiles a source file named {\tt array.c} with debugging info
-and optimization, links with the Pthread library, and generates an
-executable named {\tt array}.
+%This compiles a source file named {\tt array.c} with debugging info
+%and optimization, links with the Pthread library, and generates an
+%executable named {\tt array}.
+这将编译名为{\tt array.c} 的源文件, 包含调试信息和优化, 链接Pthread库, 
+以及生成名为{\tt array}的可执行文件.
 
 
-\section{Creating threads}
+%\section{Creating threads}
+\section{创建线程}
 
-The Pthread function that creates threads is called \verb"pthread_create".
-The following function shows how to use it:
+%The Pthread function that creates threads is called \verb"pthread_create".
+%The following function shows how to use it:
+创建线程的Pthread函数叫做\verb"pthread_create".
+下面函数展示了如何使用它:
 
 \begin{verbatim}
 pthread_t make_thread(void *(*entry)(void *), Shared *shared)
@@ -4707,8 +4738,11 @@ pthread_t make_thread(void *(*entry)(void *), Shared *shared)
 }
 \end{verbatim}
 
-\verb"make_thread" is a wrapper I wrote to make
-\verb"pthread_create" easier to use, and to provide error-checking.
+%\verb"make_thread" is a wrapper I wrote to make
+%\verb"pthread_create" easier to use, and to provide error-checking.
+\verb"make_thread" 是我编写的一个包装函数, 以便
+\verb"pthread_create" 更易用, 同时也提供错误检查.
+
 
 %TODO: Define a newcommand like \py to make verb easier to use, and
 % get rid of the \_ hockey sticks
