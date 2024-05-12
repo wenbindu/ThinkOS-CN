@@ -4865,11 +4865,14 @@ void child_code(Shared *shared)
 {\tt child} 是一个线程句柄的数组. 
 
 %\section{Joining threads}
-\section{线程合并}
+\section{线程等待}
 
-When one thread wants to wait for another thread to complete,
-it invokes {\tt pthread\_join}.
-Here is my wrapper for {\tt pthread\_join}:
+%When one thread wants to wait for another thread to complete,
+%it invokes {\tt pthread\_join}.
+%Here is my wrapper for {\tt pthread\_join}:
+当一个线程希望等待另一个线程完成, 它会调用 {\tt pthread\_join}.
+下面是我对{\tt pthread\_join}的封装:
+
 
 \begin{verbatim}
 void join_thread(pthread_t thread)
@@ -4882,14 +4885,19 @@ void join_thread(pthread_t thread)
 }
 \end{verbatim}
 
-The parameter is the handle of the thread you want to wait for.
-All the wrapper does is call {\tt pthread\_join} and check the
-result.
+%The parameter is the handle of the thread you want to wait for.
+%All the wrapper does is call {\tt pthread\_join} and check the
+%result.
+参数是你等待的线程的句柄. 封装函数的全部作用是
+调用{\tt pthread\_join}, 并检查结果. 
 
-Any thread can join any other thread, but in the most common pattern
-the parent thread creates and joins all child threads.
-Continuing the example from the previous section, here's the
-code that waits on the children:
+%Any thread can join any other thread, but in the most common pattern
+%the parent thread creates and joins all child threads.
+%Continuing the example from the previous section, here's the
+%code that waits on the children:
+任何线程都可以等待任何其他线程, 但在最常见的模式中, 
+父线程会创建并等待所有的子线程. 
+继续上一章的示例, 下面是等待子线程的代码: 
 
 \begin{verbatim}
     for (i=0; i<NUM_CHILDREN; i++) {
@@ -4897,16 +4905,22 @@ code that waits on the children:
     }
 \end{verbatim}
 
-This loops waits for the children one at a time in the order they
-were created.  There is no guarantee that the child threads complete 
-in that order, but this loop works correctly even if they don't.  If one
-of the children is late, the loop might have to wait, and other children
-might complete in the meantime.  But regardless, the loop exits
-only when all children are done.
+%This loops waits for the children one at a time in the order they
+%were created.  There is no guarantee that the child threads complete 
+%in that order, but this loop works correctly even if they don't.  If one
+%of the children is late, the loop might have to wait, and other children
+%might complete in the meantime.  But regardless, the loop exits
+%only when all children are done.
+这个循环按照子线程创建的顺序依次等待. 虽然无法保证子线程按照顺序
+完成, 但循环依然会正确工作. 如果一个子线程完成较晚, 循环可能需要等待, 
+而其他子线程可能会在此期间完成. 但无论如何, 只有在所有子线程结束后, 
+循环才会退出.
 
-If you have downloaded the repository for this book (see
-Section~\ref{code}), you'll find this example in {\tt
-  counter/counter.c}.  You can compile and run it like this:
+%If you have downloaded the repository for this book (see
+%Section~\ref{code}), you'll find this example in {\tt
+%  counter/counter.c}.  You can compile and run it like this:
+如果你下载了本书的代码库(参见第~\ref{code}节), 你会在
+{\tt counter/counter.c} 看到这个示例. 你可以像这样编译和运行它: 
 
 \begin{verbatim}
 $ make counter
@@ -4914,7 +4928,8 @@ gcc -Wall counter.c -o counter -lpthread
 $ ./counter
 \end{verbatim}
 
-When I ran it with 5 children, I got the following output:
+%When I ran it with 5 children, I got the following output:
+当我用5个子线程运行时, 我得到以下输出:
 
 \begin{verbatim}
 counter = 0
@@ -4924,20 +4939,27 @@ counter = 0
 counter = 3
 \end{verbatim}
 
-When you run it, you will probably get different results.  And if
-you run it again, you might get different results each time.  What's
-going on?
+%When you run it, you will probably get different results.  And if
+%you run it again, you might get different results each time.  What's
+%going on?
+当你又运行它, 你可能会得到不同结果. 如果你再次运行, 你可能每次都会
+得到不同的结果. 发生了什么?
 
 
-\section{Synchronization errors}
+%\section{Synchronization errors}
+\section{同步错误}
 
-The problem with the previous program is that the children
-access the shared variable, {\tt counter}, without synchronization,
-so several threads can read the same value of {\tt counter} before
-any threads increment it.
+%The problem with the previous program is that the children
+%access the shared variable, {\tt counter}, without synchronization,
+%so several threads can read the same value of {\tt counter} before
+%any threads increment it.
+前一个程序的问题在于, 子线程在没有同步的情况下, 访问了共享
+变量 {\tt counter}. 所以任何线程在任意线程对{\tt counter} 递增之前, 
+都可以读到相同的值.
 
-Here is a sequence of events that could explain the output in the
-previous section:
+%Here is a sequence of events that could explain the output in the
+%previous section:
+下面是可以解释上一节输出的事件序列:
 
 \begin{verbatim}
 Child A reads 0
@@ -4958,25 +4980,37 @@ Child D sets counter=4
 Child E sets counter=5
 \end{verbatim}
 
-Each time you run the program, threads might be interrupted at different
-points, or the scheduler might choose different threads to run, so
-the sequence of events, and the results, will be different.
+%Each time you run the program, threads might be interrupted at different
+%points, or the scheduler might choose different threads to run, so
+%the sequence of events, and the results, will be different.
+每次运行程序, 线程都可能在不同的点被中断, 
+或者调度器可能会选择不同的线程运行, 所以事件序列, 以及结果,
+都可能不同.
 
-Suppose we want to impose some order.  For example, we might want
-each thread to read a different value of {\tt counter} and increment
-it, so that the value of {\tt counter} reflects the number of
-threads that have executed \verb"child_code".
+%Suppose we want to impose some order.  For example, we might want
+%each thread to read a different value of {\tt counter} and increment
+%it, so that the value of {\tt counter} reflects the number of
+%threads that have executed \verb"child_code".
+假如我们希望施加一些顺序. 例如, 我们可能希望每个线程读取
+ {\tt counter}的不同值, 并递增它, 以便 {\tt counter} 的值可以反映
+ 执行\verb"child_code"的线程数量.
 
-To enforce that requirement, we can use a ``mutex'', which is
-an object that guarantees ``mutual exclusion'' for a block of code;
-that is, only one thread can execute the block at a time.
+%To enforce that requirement, we can use a ``mutex'', which is
+%an object that guarantees ``mutual exclusion'' for a block of code;
+%that is, only one thread can execute the block at a time.
+为了强制满足这个需求, 我们使用``互斥锁'', 这是一个为一段代码
+保证``互斥访问''的对象; 也就是说, 同一时间只有一个线程可以执行
+这段代码.  
 
-I have written a small module called {\tt mutex.c} that provides
-mutex objects.  I'll show you how to use it first; then I'll explain
-how it works.
+%I have written a small module called {\tt mutex.c} that provides
+%mutex objects.  I'll show you how to use it first; then I'll explain
+%how it works.
+我已经编写了一个提供互斥对象, 称作 {\tt mutex.c} 的小模块. 
+我先展示如何使用它; 然后解释其如何工作.
 
-Here's a version of \verb"child_code" that uses a mutex to synchronize
-threads:
+%Here's a version of \verb"child_code" that uses a mutex to synchronize
+%threads:
+下面是使用互斥锁来同步线程的\verb"child_code" 的一个版本: 
 
 \begin{verbatim}
 void child_code(Shared *shared)
@@ -4988,17 +5022,23 @@ void child_code(Shared *shared)
 }
 \end{verbatim}
 
-Before any thread can access {\tt counter}, it has to ``lock''
-the mutex, which has the effect of barring all other threads.
-Suppose Thread A has locked the mutex and is in the
-middle of \verb"child_code".  If Thread B arrives and
-executes \verb"mutex_lock", it blocks.
+%Before any thread can access {\tt counter}, it has to ``lock''
+%the mutex, which has the effect of barring all other threads.
+%Suppose Thread A has locked the mutex and is in the
+%middle of \verb"child_code".  If Thread B arrives and
+%executes \verb"mutex_lock", it blocks.
+在任何线程访问 {\tt counter}之前, 它会``锁定''互斥锁, 而这将会阻止所有
+其他线程. 假如线程A锁定了互斥锁, 并且执行到了\verb"child_code"的
+中间部分. 如果线程B到达并执行\verb"mutex_lock", 则会被堵塞.
 
-When Thread A is done, it executes \verb"mutex_unlock",
-which allows Thread B to proceed.  In effect, the threads
-line up to execute \verb"child_code" one at a time, so they
-can't interfere with each other.  When I run this code with
-5 children, I get:
+%When Thread A is done, it executes \verb"mutex_unlock",
+%which allows Thread B to proceed.  In effect, the threads
+%line up to execute \verb"child_code" one at a time, so they
+%can't interfere with each other.  When I run this code with
+%5 children, I get:
+当线程A执行结束, 它会执行\verb"mutex_unlock", 而这会允许线程B
+继续执行. 实际上, 线程顺序执行\verb"child_code", 一次一个, 它们
+不会相互干扰. 当我用5个子线程执行这段代码, 会得到: 
 
 \begin{verbatim}
 counter = 0
@@ -5008,8 +5048,10 @@ counter = 3
 counter = 4
 \end{verbatim}
 
-And that satisfies the requirements.  In order for this solution to
-work, I have to add the Mutex to the Shared struct:
+%And that satisfies the requirements.  In order for this solution to
+%work, I have to add the Mutex to the Shared struct:
+这满足了要求. 为了让这个解决方案生效, 我需要将互斥锁加到
+Shared 结构中: 
 
 \begin{verbatim}
 typedef struct {
@@ -5018,7 +5060,9 @@ typedef struct {
 } Shared;
 \end{verbatim}
 
-And initialize it in \verb"make_shared"
+%And initialize it in \verb"make_shared"
+同时在\verb"make_shared"中对其初始化: 
+
 
 \begin{verbatim}
 Shared *make_shared(int end)
@@ -5030,28 +5074,40 @@ Shared *make_shared(int end)
 }
 \end{verbatim}
 
-The code in this section is in \verb"counter_mutex.c".
-The definition of {\tt Mutex} is in {\tt mutex.c}, which I
-explain in the next section.
+%The code in this section is in \verb"counter_mutex.c".
+%The definition of {\tt Mutex} is in {\tt mutex.c}, which I
+%explain in the next section.
+本节的代码位于\verb"counter_mutex.c"中.  {\tt Mutex} 定义在
+{\tt mutex.c} 内, 我会在下一节解释.
 
 
+%\section{Mutex}
+\section{互斥锁}
 
-\section{Mutex}
 
-My definition of {\tt Mutex} is a wrapper for a type called
-\verb"pthread_mutex_t", which is defined in the POSIX threads API.
+%My definition of {\tt Mutex} is a wrapper for a type called
+%\verb"pthread_mutex_t", which is defined in the POSIX threads API.
+我对 {\tt Mutex(互斥锁)} 的定义是对\verb"pthread_mutex_t"类型的封装,
+该类型定义在了POSIX 线程API中.
 
-To create a POSIX mutex, you have to allocate space for a
-\verb"pthread_mutex_t" type and then call \verb"pthread_mutex_init".
+%To create a POSIX mutex, you have to allocate space for a
+%\verb"pthread_mutex_t" type and then call \verb"pthread_mutex_init".
+若要创建一个POSIX互斥锁, 你需要为\verb"pthread_mutex_t"类型
+分配空间, 然后调用 \verb"pthread_mutex_init".
 
-One of the problems with this API is that \verb"pthread_mutex_t"
-behaves like a structure, so if you pass it as an argument, it makes a
-copy, which makes the mutex behave incorrectly.  To avoid that, you have to
-pass \verb"pthread_mutex_t" by address.
+%One of the problems with this API is that \verb"pthread_mutex_t"
+%behaves like a structure, so if you pass it as an argument, it makes a
+%copy, which makes the mutex behave incorrectly.  To avoid that, you have to
+%pass \verb"pthread_mutex_t" by address.
+该API的一个问题是 \verb"pthread_mutex_t"表现得像一个结构, 所以如果你
+将它作为参数传递, 它会创建一个副本, 而这会导致互斥锁的行为错误. 
+为了避免这种情况, 你需要通过地址传递\verb"pthread_mutex_t".
 
-My code makes it easier to get that right.  It defines a
-type, {\tt Mutex}, which is just a more readable name for
-\verb"pthread_mutex_t":
+%My code makes it easier to get that right.  It defines a
+%type, {\tt Mutex}, which is just a more readable name for
+%\verb"pthread_mutex_t":
+我的代码简化了这一过程. 定义了一个类型, {\tt Mutex},
+只是\verb"pthread_mutex_t"的更易读的名字:
 
 \begin{verbatim}
 #include <pthread.h>
@@ -5059,8 +5115,9 @@ type, {\tt Mutex}, which is just a more readable name for
 typedef pthread_mutex_t Mutex;
 \end{verbatim}
 
-Then it defines \verb"make_mutex", which allocates space and
-initializes the mutex:
+%Then it defines \verb"make_mutex", which allocates space and
+%initializes the mutex:
+然后定义了\verb"make_mutex", 它会分配空间并初始化互斥锁:
 
 \begin{verbatim}
 Mutex *make_mutex()
@@ -5072,11 +5129,13 @@ Mutex *make_mutex()
 }
 \end{verbatim}
 
-The return value is a pointer, which you can pass around as an
-argument without causing unwanted copying.
+%The return value is a pointer, which you can pass around as an
+%argument without causing unwanted copying.
+返回值是个指针, 你可以将其作为参数传递, 而不会引起不必要的复制.
 
-The functions to lock and unlock the mutex are simple wrappers
-for POSIX functions:
+%The functions to lock and unlock the mutex are simple wrappers
+%for POSIX functions:
+锁定和解锁互斥锁的函数是对POSIX函数的简单封装:
 
 \begin{verbatim}
 void mutex_lock(Mutex *mutex)
@@ -5092,10 +5151,11 @@ void mutex_unlock(Mutex *mutex)
 }
 \end{verbatim}
 
-This code is in {\tt mutex.c} and the header file {\tt mutex.h}.
+%This code is in {\tt mutex.c} and the header file {\tt mutex.h}.
+这些代码在{\tt mutex.c} 和 同文件{\tt mutex.h}中. 
 
-
-\chapter{Condition variables}
+%\chapter{Condition variables}
+\chapter{条件变量}
 \label{csem}
 
 Many simple synchronization problems can be solved using mutexes
