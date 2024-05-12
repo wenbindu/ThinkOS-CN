@@ -4747,19 +4747,29 @@ pthread_t make_thread(void *(*entry)(void *), Shared *shared)
 %TODO: Define a newcommand like \py to make verb easier to use, and
 % get rid of the \_ hockey sticks
 
-The return type from \verb"pthread_create" is \verb"pthread_t",
-which you can think of as an id or ``handle'' for the new thread.  
+%The return type from \verb"pthread_create" is \verb"pthread_t",
+%which you can think of as an id or ``handle'' for the new thread.  
+\verb"pthread_create" 的返回类型是 \verb"pthread_t", 
+你可以将其视为新线程的标识或``句柄''.
 
-If {\tt pthread\_create} succeeds, it returns 0 and \verb"make_thread"
-returns the handle of the new thread.
-If an error occurs, {\tt pthread\_create} 
-returns an error code and \verb"make_thread" prints an error message
-and exits.
 
-The parameters of \verb"make_thread" take some
-explaining.  Starting with the second, {\tt Shared}
-is a structure I defined to contain values shared between threads.
-The following {\tt typedef} statement creates the new type:
+%If {\tt pthread\_create} succeeds, it returns 0 and \verb"make_thread"
+%returns the handle of the new thread.
+%If an error occurs, {\tt pthread\_create} 
+%returns an error code and \verb"make_thread" prints an error message
+%and exits.
+如果{\tt pthread\_create}执行成功, 会返回 0, \verb"make_thread" 
+则会返回新线程的句柄. 
+如果有错误发生, {\tt pthread\_create} 会返回错误码, 
+而\verb "make_thread" 会打印错误信息并退出. 
+
+%The parameters of \verb"make_thread" take some
+%explaining.  Starting with the second, {\tt Shared}
+%is a structure I defined to contain values shared between threads.
+%The following {\tt typedef} statement creates the new type:
+\verb"make_thread" 的参数需要一些解释. 从第二个参数开始, 
+{\tt Shared} 是我定义的一个结构体, 用于存储线程间共享的值. 
+下面的{\tt typedef}语句会创建新的类型:
 
 \begin{verbatim}
 typedef struct {
@@ -4767,9 +4777,11 @@ typedef struct {
 } Shared;
 \end{verbatim}
 
-In this case, the only shared variable is {\tt counter}.
-{\tt make\_shared} allocates
-space for a {\tt Shared} structure and initializes the contents:
+%In this case, the only shared variable is {\tt counter}.
+%{\tt make\_shared} allocates
+%space for a {\tt Shared} structure and initializes the contents:
+在这种情况下, 唯一的共享变量是{\tt counter}. 而{\tt make\_shared} 
+则会为{\tt Shared} 分配空间并初始化其内容: 
 
 \begin{verbatim}
 Shared *make_shared()
@@ -4780,14 +4792,19 @@ Shared *make_shared()
 }
 \end{verbatim}
 
-Now that we have a shared data structure, let's get back to
-\verb"make_thread".
-The first parameter is a pointer to a function that takes
-a {\tt void} pointer and returns a {\tt void} pointer.  If the syntax
-for declaring this type makes your eyes bleed, you are not alone.
-Anyway, the purpose of this parameter is to specify the function where
-the execution of the new thread will begin.  By convention, this
-function is named {\tt entry}:
+%Now that we have a shared data structure, let's get back to
+%\verb"make_thread".
+%The first parameter is a pointer to a function that takes
+%a {\tt void} pointer and returns a {\tt void} pointer.  If the syntax
+%for declaring this type makes your eyes bleed, you are not alone.
+%Anyway, the purpose of this parameter is to specify the function where
+%the execution of the new thread will begin.  By convention, this
+%function is named {\tt entry}:
+现在, 我们有了一个共享的数据结构, 让我们回到\verb"make_thread".
+第一个参数是个指向函数的指针, 被指向的函数会接收一个{\tt void} 指针, 
+同时返回一个 {\tt void} 指针. 如果这种类型声明的语法令你眼花缭乱, 
+那你并不孤单. 无论如何, 这个参数的目的是指定新线程开始执行的函数. 
+依照惯例, 这个函数被命名为{\tt entry}:
 
 \begin{verbatim}
 void *entry(void *arg)
@@ -4798,13 +4815,18 @@ void *entry(void *arg)
 }
 \end{verbatim}
 
-The parameter of {\tt entry} has to be declared as a {\tt void}
-pointer, but in this program we know that it is really a pointer to a
-{\tt Shared} structure, so we can typecast it accordingly and then
-pass it along to {\tt child\_code}, which does the real work.
+%The parameter of {\tt entry} has to be declared as a {\tt void}
+%pointer, but in this program we know that it is really a pointer to a
+%{\tt Shared} structure, so we can typecast it accordingly and then
+%pass it along to {\tt child\_code}, which does the real work.
+{\tt entry}的参数必须声明为一个{\tt void}指针, 但在这个程序中, 我们
+知道它只是一个指向{\tt Shared} 结构的指针. 因此我们进行相应的
+类型转换, 然后将其传递给执行实际工作的{\tt child\_code}. 
 
-As a simple example, \verb"child_code" prints the value of
-the shared counter and increments it.
+%As a simple example, \verb"child_code" prints the value of
+%the shared counter and increments it.
+作为一个简单的例子, \verb"child_code" 会打印共享计数器的值, 
+并递增它.
 
 \begin{verbatim}
 void child_code(Shared *shared)
@@ -4814,12 +4836,16 @@ void child_code(Shared *shared)
 }
 \end{verbatim}
 
-When {\tt child\_code} returns, {\tt entry} invokes
-\verb"pthread_exit" which can be used to pass a value to the thread
-that joins with this thread.  In this case, the child has nothing to
-say, so we pass {\tt NULL}.
+%When {\tt child\_code} returns, {\tt entry} invokes
+%\verb"pthread_exit" which can be used to pass a value to the thread
+%that joins with this thread.  In this case, the child has nothing to
+%say, so we pass {\tt NULL}.
+当{\tt child\_code} 返回时,  {\tt entry} 调用\verb"pthread_exit", 
+其用来传递参数给与此线程相连接的线程. 这个例子中, 子线程没什么
+需要做的, 所以我们传递了{\tt NULL}.
 
-Finally, here is the code that creates the child threads:
+%Finally, here is the code that creates the child threads:
+最后, 下面是创建子线程的代码:
 
 \begin{verbatim}
     int i;
@@ -4832,12 +4858,14 @@ Finally, here is the code that creates the child threads:
     }
 \end{verbatim}
 
-\verb"NUM_CHILDREN" is a compile-time constant that determines
-the number of child threads.  {\tt child} is an array of
-thread handles.
+%\verb"NUM_CHILDREN" is a compile-time constant that determines
+%the number of child threads.  {\tt child} is an array of
+%thread handles.
+\verb"NUM_CHILDREN" 是一个编译时间常量, 用来决定子线程的数量. 
+{\tt child} 是一个线程句柄的数组. 
 
-
-\section{Joining threads}
+%\section{Joining threads}
+\section{线程合并}
 
 When one thread wants to wait for another thread to complete,
 it invokes {\tt pthread\_join}.
