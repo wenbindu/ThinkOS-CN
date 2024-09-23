@@ -5158,39 +5158,56 @@ void mutex_unlock(Mutex *mutex)
 \chapter{条件变量}
 \label{csem}
 
-Many simple synchronization problems can be solved using mutexes
-as shown in the previous chapter.  In this chapter I introduce a
-bigger challenge, the well-known ``Producer-Consumer problem'', and
-a new tool to solve it, the condition variable.
+许多简单的同步问题都可以使用上一章讲述的互斥锁来解决.
+在本章我将介绍一个更大的挑战, 即著名的``生产者-消费者问题'', 
+以及解决它的新工具: 条件变量.
+%Many simple synchronization problems can be solved using mutexes
+%as shown in the previous chapter.  In this chapter I introduce a
+%bigger challenge, the well-known ``Producer-Consumer problem'', and
+%a new tool to solve it, the condition variable.
 
-\section{The work queue}
+%\section{The work queue}
+\section{工作对列}
 \label{queue}
 
-In some multi-threaded programs, threads are organized to perform
-different tasks.  Often they communicate with each other using a queue,
-where some threads, called ``producers'', put data into the queue
-and other threads, called ``consumers'', take data out.
+在一些多线程问题中, 线程被用来执行不同的任务. 他们通常使用队列
+进行相互通信, 其中一些线程叫做``生产者'', 会将数据放入对列中, 
+而其他线程被称为``消费者'', 从队列中取出数据.
+%In some multi-threaded programs, threads are organized to perform
+%different tasks.  Often they communicate with each other using a queue,
+%where some threads, called ``producers'', put data into the queue
+%and other threads, called ``consumers'', take data out.
 
-For example, in applications with a graphical user interface, there
-might be one thread that runs the GUI, responding to user events,
-and another thread that processes user requests.  In that case,
-the GUI thread might put requests into a queue and the ``back end''
-thread might take requests out and process them.
+例如, 在带有用户交互界面的应用中, 可能有一个线程运行GUI, 以响应
+用户事件, 另一个线程处理用户请求. 这种情况下, GUI线程会将请求放入
+队列, 而``后端''线程则从队列中取出请求并进行处理.
+%For example, in applications with a graphical user interface, there
+%might be one thread that runs the GUI, responding to user events,
+%and another thread that processes user requests.  In that case,
+%the GUI thread might put requests into a queue and the ``back end''
+%thread might take requests out and process them.
 
-To support this organization, we need a queue implementation that is
-``thread safe'', which means that both threads (or more than two) can
-access the queue at the same time.  And we need to handle the special
-cases when the queue is empty and, if the size of the queue is
-bounded, when the queue is full.
+为了支持这种组织方式, 我们需要一个``线程安全''的队列实现, 也就是
+两个线程(或多于两个)可以同时访问队列. 此外, 我们还需要能处理特殊情况,  
+队列为空时, 以及队列大小有限制, 而队列已满时.
+%To support this organization, we need a queue implementation that is
+%``thread safe'', which means that both threads (or more than two) can
+%access the queue at the same time.  And we need to handle the special
+%cases when the queue is empty and, if the size of the queue is
+%bounded, when the queue is full.
 
-I'll start with a simple queue that is not thread safe, then we'll see
-what goes wrong and fix it.  The code for this example is in the
-repository for this book, in a folder called {\tt queue}.  The file
-{\tt queue.c} contains a basic implementation of a circular buffer,
-which you can read about at
-\url{https://en.wikipedia.org/wiki/Circular_buffer}.
+我将从一个不是线程安全的简单队列开始, 然后我们会看到它哪里出错
+并修复它. 该示例的代码位于本书的代码库中, 名为{\tt queue}的文件夹.
+文件{\tt queue.c}包含一个环形缓冲区的基本实现, 你可以阅读这里\url{https://en.wikipedia.org/wiki/Circular_buffer}了解更多.
+%I'll start with a simple queue that is not thread safe, then we'll see
+%what goes wrong and fix it.  The code for this example is in the
+%repository for this book, in a folder called {\tt queue}.  The file
+%{\tt queue.c} contains a basic implementation of a circular buffer,
+%which you can read about at
+%\url{https://en.wikipedia.org/wiki/Circular_buffer}.
 
-Here's the structure definition:
+%Here's the structure definition:
+以下是结构定义: 
 
 \begin{verbatim}
 typedef struct {
@@ -5201,17 +5218,22 @@ typedef struct {
 } Queue;
 \end{verbatim}
 
-{\tt array} is the array that contains the elements of the queue.
-For this example the elements are ints, but more generally
-they would be structures that contain user events, items of work, etc.
+{\tt array} 是包含队列元素的数组. 在这个例子中, 元素是整数, 但
+通常情况下, 它们可能是包含用户事件, 工作项等的结构体.
+%{\tt array} is the array that contains the elements of the queue.
+%For this example the elements are ints, but more generally
+%they would be structures that contain user events, items of work, etc.
 
-{\tt length} is the length of the array.  \verb"next_in" is an
-index into the array that indices where the next element should be
-added; similarly, \verb"next_out" is the index of the next element
-that should be removed.
+{\tt length} 是数组的长度. \verb"next_in" 是数组的索引, 指示下一个元素应该
+添加的位置; 类似的, \verb"next_out" 是下一个应该移除元素的索引.
+%{\tt length} is the length of the array.  \verb"next_in" is an
+%index into the array that indices where the next element should be
+%added; similarly, \verb"next_out" is the index of the next element
+%that should be removed.
 
-\verb"make_queue" allocates space for this structure and initializes
-the fields:
+\verb"make_queue" 为这个结构体分配了空间, 并初始化了各个字段:
+%\verb"make_queue" allocates space for this structure and initializes
+%the fields:
 
 \begin{verbatim}
 Queue *make_queue(int length)
