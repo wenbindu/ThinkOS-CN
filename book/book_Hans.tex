@@ -5247,11 +5247,15 @@ Queue *make_queue(int length)
 }
 \end{verbatim}
 
-The initial value for \verb"next_out" needs some explaining.
-Since the queue is initially empty, there is no next element to
-remove, so \verb"next_out" is invalid.  Setting
-\verb"next_out == next_in" is a special case that indicates
-that the queue is empty, so we can write:
+\verb"next_out"的初始值需要解释一下. 
+由于队列初始为空, 没有下一个元素可以移除, 
+所以 \verb"next_out"无效.  令\verb"next_out == next_in"
+设置为特殊情况, 表示队列为空, 所以我们可以写成:
+%The initial value for \verb"next_out" needs some explaining.
+%Since the queue is initially empty, there is no next element to
+%remove, so \verb"next_out" is invalid.  Setting
+%\verb"next_out == next_in" is a special case that indicates
+%that the queue is empty, so we can write:
 
 \begin{verbatim}
 int queue_empty(Queue *queue)
@@ -5260,7 +5264,8 @@ int queue_empty(Queue *queue)
 }
 \end{verbatim}
 
-Now we can add elements to the queue using \verb"queue_push":
+现在我们可以使用\verb"queue_push", 向队列添加元素:
+%Now we can add elements to the queue using \verb"queue_push":
 
 \begin{verbatim}
 void queue_push(Queue *queue, int item) {
@@ -5273,11 +5278,15 @@ void queue_push(Queue *queue, int item) {
 }
 \end{verbatim}
 
-If the queue is full, \verb"queue_push" prints an error message
-and exits.  I will explain \verb"queue_full" soon.
+如果队列满了,  \verb"queue_push" 会打印一条错误信息并退出.
+我稍后会解释 \verb"queue_full".
+%If the queue is full, \verb"queue_push" prints an error message
+%and exits.  I will explain \verb"queue_full" soon.
 
-If the queue is not full, \verb"queue_push" inserts the new
-element and then increments \verb"next_in" using \verb"queue_incr":
+如果队列未满, \verb"queue_push" 会插入新元素, 然后使用
+\verb"queue_incr" 增加 \verb"next_in":
+%If the queue is not full, \verb"queue_push" inserts the new
+%element and then increments \verb"next_in" using \verb"queue_incr":
 
 \begin{verbatim}
 int queue_incr(Queue *queue, int i)
@@ -5286,14 +5295,19 @@ int queue_incr(Queue *queue, int i)
 }
 \end{verbatim}
 
-When the index, {\tt i}, gets to the end of the array, it wraps around
-to 0.  And that's where we run into a tricky part.  If we keep adding
-elements to the queue, eventually \verb"next_in" wraps around and catches
-up with \verb"next_out".  But if \verb"next_in == next_out", we would
-incorrectly conclude that the queue was empty.
+当索引{\tt i}到达数组结尾, 它会绕回到 0. 这才是我们遇到的棘手之处. 
+如果我们依然向队列中添加元素, 最后 \verb"next_in" 会绕回去追上
+ \verb"next_out". 但如果 \verb"next_in == next_out",  我们又会错误认为
+ 队列为空. 
+%When the index, {\tt i}, gets to the end of the array, it wraps around
+%to 0.  And that's where we run into a tricky part.  If we keep adding
+%elements to the queue, eventually \verb"next_in" wraps around and catches
+%up with \verb"next_out".  But if \verb"next_in == next_out", we would
+%incorrectly conclude that the queue was empty.
 
-To avoid that, we define another special case to indicate that the
-queue is full:
+为了避免此情况, 我们定义其他方案来表示队列已满:
+%To avoid that, we define another special case to indicate that the
+%queue is full:
 
 \begin{verbatim}
 int queue_full(Queue *queue)
@@ -5302,13 +5316,18 @@ int queue_full(Queue *queue)
 }
 \end{verbatim}
 
-If incrementing \verb"next_in" lands on \verb"next_out", that means
-we can't add another element without making the queue seem empty.  So
-we stop one element before the ``end'' (keeping in mind that the end of
-the queue can be anywhere, not necessarily the end of the array).
+如果递增 \verb"next_in" 会导致与  \verb"next_out" 重合, 意味着
+我们无法添加元素, 否则队列便看起来空了. 
+所以我们在``末尾''的前一元素的位置停止插入(注意队列的末尾可以在
+任何位置, 不一定是数组的末尾).
+%If incrementing \verb"next_in" lands on \verb"next_out", that means
+%we can't add another element without making the queue seem empty.  So
+%we stop one element before the ``end'' (keeping in mind that the end of
+%the queue can be anywhere, not necessarily the end of the array).
 
-Now we can write \verb"queue_pop", which removes and returns the next
-element from the queue:
+现在我们可以编写\verb"queue_pop"函数, 它会从队列移除并返回下一个元素:
+%Now we can write \verb"queue_pop", which removes and returns the next
+%element from the queue:
 
 \begin{verbatim}
 int queue_pop(Queue *queue) {
@@ -5322,15 +5341,19 @@ int queue_pop(Queue *queue) {
 }
 \end{verbatim}
 
-If you try to pop from an empty queue, \verb"queue_pop" prints
-an error message and exits.
+如果你尝试从空队列中弹出元素, \verb"queue_pop"会打印错误信息并退出.
+%If you try to pop from an empty queue, \verb"queue_pop" prints
+%an error message and exits.
 
 
-\section{Producers and consumers}
+%\section{Producers and consumers}
+\section{生产者与消费者}
 \label{prodcon}
 
-Now let's make some threads to access this queue.  Here's the
-producer code:
+现在让我们创造一些线程来访问队列. 
+下面是生产者代码:
+%Now let's make some threads to access this queue.  Here's the
+%producer code:
 
 \begin{verbatim}
 void *producer_entry(void *arg) {
