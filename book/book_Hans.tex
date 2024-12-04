@@ -5367,7 +5367,8 @@ void *producer_entry(void *arg) {
 }
 \end{verbatim}
 
-Here's the consumer code:
+下面是消费者代码:
+%Here's the consumer code:
 
 \begin{verbatim}
 void *consumer_entry(void *arg) {
@@ -5382,7 +5383,8 @@ void *consumer_entry(void *arg) {
 }
 \end{verbatim}
 
-Here's the parent code that starts the threads and waits for them
+这是启动线程并等待它们的父线程代码:
+%Here's the parent code that starts the threads and waits for them
 
 \begin{verbatim}
     pthread_t child[NUM_CHILDREN];
@@ -5397,7 +5399,8 @@ Here's the parent code that starts the threads and waits for them
     }
 \end{verbatim}
 
-And finally here's the shared structure that contains the queue:
+最后这是包含队列的共享结构:
+%And finally here's the shared structure that contains the queue:
 
 \begin{verbatim}
 typedef struct {
@@ -5412,34 +5415,46 @@ Shared *make_shared()
 }
 \end{verbatim}
 
-The code we have so far is a good starting place, but it has
-several problems:
+到目前为止, 我们的代码是个好的开始, 但仍然有几个问题:
+%The code we have so far is a good starting place, but it has
+%several problems:
 
 \begin{itemize}
 
-\item Access to the queue is not thread safe.  Different threads
-could access {\tt array}, \verb"next_in", and \verb"next_out"
-at the same time and leave the queue in a broken, ``inconsistent''
-state.
+\item 访问队列不是线程安全的. 不同的线程可以同时访问{\tt array}, 
+\verb"next_in", 和 \verb"next_out", 从而使队列处于破损的, ``不一致''的状态.
+%\item Access to the queue is not thread safe.  Different threads
+%could access {\tt array}, \verb"next_in", and \verb"next_out"
+%at the same time and leave the queue in a broken, ``inconsistent''
+%state.
 
-\item If the consumer is scheduled first, it finds the queue empty,
-print an error message, and exits.  We would rather have the consumer
-block until the queue is not empty.  Similarly, we would like the
-producer to block if the queue is full.
+\item 如果消费者先被调度, 它发现队列未空, 便打印错误信息并退出.
+我们更希望消费者一直堵塞到队列不为空. 同样的, 我们也希望生产者
+在队列满的时候进行堵塞等待. 
+%\item If the consumer is scheduled first, it finds the queue empty,
+%print an error message, and exits.  We would rather have the consumer
+%block until the queue is not empty.  Similarly, we would like the
+%producer to block if the queue is full.
 
 \end{itemize}
 
-In the next section, we solve the first problem with a {\tt Mutex}.
-In the following section, we solve the second problem with condition
-variables.
+下一节, 我们使用{\tt Mutex}来解决第一个问题.
+后续章节, 我们通过条件变量解决第二个问题.
+%In the next section, we solve the first problem with a {\tt Mutex}.
+%In the following section, we solve the second problem with condition
+%variables.
 
 
-\section{Mutual exclusion}
+\section{互斥}
+%\section{Mutual exclusion}
 
-We can make the queue thread safe with a mutex.  This version
-of the code is in \verb"queue_mutex.c".
+我们可以使用互斥锁令线程安全. 
+这个版本的代码在 \verb"queue_mutex.c"中.
+%We can make the queue thread safe with a mutex.  This version
+%of the code is in \verb"queue_mutex.c".
 
-First we add a {\tt Mutex} pointer to the queue structure:
+首先我们在队列结构中添加一个 {\tt Mutex} 指针:
+%First we add a {\tt Mutex} pointer to the queue structure:
 
 \begin{verbatim}
 typedef struct {
@@ -5451,7 +5466,7 @@ typedef struct {
 } Queue;
 \end{verbatim}
 
-And initialize the {\tt Mutex} in \verb"make_queue":
+同时在\verb"make_queue"中初始化{\tt Mutex}:
 
 \begin{verbatim}
 Queue *make_queue(int length) {
@@ -5465,7 +5480,8 @@ Queue *make_queue(int length) {
 }
 \end{verbatim}
 
-Next we add synchronization code to \verb"queue_push":
+然后我们在 \verb"queue_push"中添加同步代码:
+%Next we add synchronization code to \verb"queue_push":
 
 \begin{verbatim}
 void queue_push(Queue *queue, int item) {
