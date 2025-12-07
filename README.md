@@ -28,9 +28,9 @@ Think OS[中文译本]
 
 :white_check_mark: 第九章: 线程.
 
-:writing_hand: 第十章: POSIX条件变量和生产者/消费者问题.
+:write_check_mark: 第十章: POSIX条件变量和生产者/消费者问题.
 
-:white_medium_square: 第十一章: 介绍了POSIX信号量的使用以及在C语言中的实现.
+:whiting_hand: 第十一章: 介绍了POSIX信号量的使用以及在C语言中的实现.
 
 ### 备注
 
