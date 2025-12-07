@@ -5448,12 +5448,12 @@ Shared *make_shared()
 \section{互斥}
 %\section{Mutual exclusion}
 
-我们可以使用互斥锁令线程安全. 
-这个版本的代码在 \verb"queue_mutex.c"中.
+我们可以使用互斥锁（mutex）来保证线程安全。  
+该版本的代码位于 \verb"queue_mutex.c" 中。
 %We can make the queue thread safe with a mutex.  This version
 %of the code is in \verb"queue_mutex.c".
 
-首先我们在队列结构中添加一个 {\tt Mutex} 指针:
+首先，我们在队列结构中添加一个 {\tt Mutex} 指针:
 %First we add a {\tt Mutex} pointer to the queue structure:
 
 \begin{verbatim}
@@ -5497,12 +5497,11 @@ void queue_push(Queue *queue, int item) {
 }
 \end{verbatim}
 
-Before checking whether the queue is full, we have to lock
-the {\tt Mutex}.  If the queue is full, we have to unlock
-the {\tt Mutex} before exiting; otherwise the thread would leave
-it locked and no other threads could proceed.
+检查队列是否已满之前，我们需要先锁定 {\tt Mutex}。  
+如果队列已满，则在退出之前必须先解锁 {\tt Mutex}；否则，
+该线程将保持锁定状态，其他线程将无法继续执行。
 
-The synchronization code for \verb"queue_pop" is similar:
+\verb"queue_pop" 的同步代码与此类似：
 
 \begin{verbatim}
 int queue_pop(Queue *queue) {
@@ -5519,35 +5518,37 @@ int queue_pop(Queue *queue) {
 }
 \end{verbatim}
 
-Note that the other {\tt Queue} functions, \verb"queue_full",
-\verb"queue_empty", and \verb"queue_incr" do not try to lock
-the mutex.  Any thread that calls these functions is required to
-lock the mutex first; this requirement is part of the documented
-interface for these functions.
+注意，其他 {\tt Queue} 相关函数——包括 \verb"queue_full"、\verb"queue_empty" 和 \verb"queue_incr"——都不会尝试去锁定互斥锁。  
+任何调用这些函数的线程都需要先手动加锁；这是这些函数接口文档中的一部分约定。
 
-With this additional code, the queue is thread safe; if you run it, you
-should not see any synchronization errors.  But it is likely
-that the consumer will exit at some point because the queue is
-empty, or the producer will exit because the queue is full,
-or both.
+通过添加这些代码，现在队列已经是线程安全的；如果你运行它，应该不会再看到任何同步错误。  
+但是，很可能在某个时刻消费者会因为队列为空而退出，或者生产者因为队列已满而退出，或者两者都会发生。
 
-The next step is to add condition variables.
+下一步，我们将引入条件变量。
 
+%\section{Condition variables}
+\section{条件变量}
 
-\section{Condition variables}
+条件变量是一种与“条件”相关联的数据结构；它允许线程在条件变为真之前一直阻塞等待。  
+例如，\verb"thread_pop" 可能想先检查队列是否为空，如果为空，就等待“队列非空”这一条件。
 
-A condition variable is a data structure associated with a condition;
-it allows threads to block until the condition becomes true.  For
-example, \verb"thread_pop" might want check whether the queue is
-empty and, if so, wait for a condition like ``queue not empty''.
+类似地，\verb"thread_push" 可能需要检查队列是否已满，如果已满，就阻塞直到队列不再是满的。
 
-Similarly, \verb"thread_push" might want to check whether the queue is
-full and, if so, block until it is not full.
+这里我先处理第一个条件，而第二个条件将作为练习留给你完成。
 
-I'll handle the first condition here, and you will have a chance to
-handle the second condition as an exercise.
-
-First we add a condition variable to the {\tt Queue} structure:
+首先，我们在 {\tt Queue} 结构中添加一个条件变量：
+%A condition variable is a data structure associated with a condition;
+%it allows threads to block until the condition becomes true.  For
+%example, \verb"thread_pop" might want check whether the queue is
+%empty and, if so, wait for a condition like ``queue not empty''.
+%
+%Similarly, \verb"thread_push" might want to check whether the queue is
+%full and, if so, block until it is not full.
+%
+%I'll handle the first condition here, and you will have a chance to
+%handle the second condition as an exercise.
+%
+%First we add a condition variable to the {\tt Queue} structure:
 
 \begin{verbatim}
 typedef struct {
@@ -5560,7 +5561,9 @@ typedef struct {
 } Queue;
 \end{verbatim}
 
-And initialize it in \verb"make_queue":
+%And initialize it in \verb"make_queue":
+并在 \verb"make_queue" 中对其进行初始化：
+
 
 \begin{verbatim}
 Queue *make_queue(int length)
@@ -5576,8 +5579,10 @@ Queue *make_queue(int length)
 }
 \end{verbatim}
 
-Now in \verb"queue_pop", if we find the queue empty, we don't
-exit; instead we use the condition variable to block:
+现在，在 \verb"queue_pop" 中，如果发现队列为空，我们不再直接退出；而是使用条件变量进行阻塞等待：
+%Now in \verb"queue_pop", if we find the queue empty, we don't
+%exit; instead we use the condition variable to block:
+
 
 \begin{verbatim}
 int queue_pop(Queue *queue) {
@@ -5594,19 +5599,30 @@ int queue_pop(Queue *queue) {
 }
 \end{verbatim}
 
-\verb"cond_wait" is complicated, so let's take it slow.  
-The first argument is the condition variable; in this case,
-the condition we are waiting for is ``queue not empty''.  The second
-argument is the mutex that protects the queue.
+\verb"cond_wait" 的行为比较复杂，因此我们一步一步来看。  
+第一个参数是条件变量，在这里我们等待的条件是“队列非空”。  
+第二个参数是用于保护队列的互斥锁。
 
-When the thread that locked the mutex calls \verb"cond_wait", it
-unlocks the mutex and then blocks.  This is important.  If
-\verb"cond_wait" did not unlock the mutex before blocking, no
-other thread would be able to access the queue, no more items
-could be added, and the queue would always be empty.
+当已经锁定互斥锁的线程调用 \verb"cond_wait" 时，它会先解锁互斥锁，然后进入阻塞状态。  
+这一点非常重要。  
+如果 \verb"cond_wait" 在阻塞前没有释放互斥锁，那么其他线程将无法访问队列，也就无法继续添加新元素，队列将永远保持为空。
 
-So while the consumer is blocked on {\tt nonempty}, the producer can
-run.  Let's see what happens when the producer runs \verb"queue_push":
+因此，当消费者线程阻塞在 {\tt nonempty} 上时，生产者线程是可以继续运行的。  
+来看一下生产者运行 \verb"queue_push" 时发生了什么：
+
+%\verb"cond_wait" is complicated, so let's take it slow.  
+%The first argument is the condition variable; in this case,
+%the condition we are waiting for is ``queue not empty''.  The second
+%argument is the mutex that protects the queue.
+%
+%When the thread that locked the mutex calls \verb"cond_wait", it
+%unlocks the mutex and then blocks.  This is important.  If
+%\verb"cond_wait" did not unlock the mutex before blocking, no
+%other thread would be able to access the queue, no more items
+%could be added, and the queue would always be empty.
+%
+%So while the consumer is blocked on {\tt nonempty}, the producer can
+%run.  Let's see what happens when the producer runs \verb"queue_push":
 
 \begin{verbatim}
 void queue_push(Queue *queue, int item) {
@@ -5622,92 +5638,143 @@ void queue_push(Queue *queue, int item) {
 }
 \end{verbatim}
 
-Just as before, \verb"queue_push" locks the {\tt Mutex} and checks
-whether the queue is full.  Assuming it is not, \verb"queue_push" adds
-a new element to the queue and then unlocks the {\tt Mutex}.
+与之前一样，\verb"queue_push" 会先锁定 {\tt Mutex}，并检查队列是否已满。  
+在假设队列未满的情况下，它会向队列中添加一个新元素，然后解锁 {\tt Mutex}。
 
-But before returning, it does one more thing: it ``signals'' the
-condition variable {\tt nonempty}.
+但在返回之前，它还会多做一件事：对条件变量 {\tt nonempty} 进行一次“信号通知（signal）”。
 
-Signalling a condition variable usually indicates that the condition is
-true.  If there are no threads waiting
-on the condition variable, the signal has no effect.
+%Just as before, \verb"queue_push" locks the {\tt Mutex} and checks
+%whether the queue is full.  Assuming it is not, \verb"queue_push" adds
+%a new element to the queue and then unlocks the {\tt Mutex}.
+%
+%But before returning, it does one more thing: it ``signals'' the
+%condition variable {\tt nonempty}.
+%
+%Signalling a condition variable usually indicates that the condition is
+%true.  If there are no threads waiting
+%on the condition variable, the signal has no effect.
 
-If there are threads waiting on the condition variable, one of them
-gets unblocked and resumes execution of \verb"cond_wait".  But before
-the awakened thread can return from \verb"cond_wait", it has
-to wait for and lock the {\tt Mutex}, again.
+对条件变量发出信号，通常意味着对应的条件已经为真。  
+如果此时没有线程在该条件变量上等待，那么该信号不会产生任何影响。
 
-Now go back to \verb"queue_pop" and see what happens when the thread
-returns from \verb"cond_wait".  It loops back to the top of the while
-loop and checks the condition again.  I'll explain why in just a
-second, but for now let's assume that the condition is true; that is,
-the queue is not empty.
+如果有线程正在该条件变量上等待，则其中一个线程会被唤醒，并继续执行 \verb"cond_wait" 之后的代码。  
+但是，在被唤醒的线程真正从 \verb"cond_wait" 返回之前，它必须重新获取并锁定 {\tt Mutex}。
 
-When the consumer thread exits the while loop, we know two things: (1)
-the condition is true, so there is at least one item in the queue, and
-(2) the {\tt Mutex} is locked, so it is safe to access the queue.
 
-After removing an item, \verb"queue_pop" unlocks the mutex
-and returns.
+%If there are threads waiting on the condition variable, one of them
+%gets unblocked and resumes execution of \verb"cond_wait".  But before
+%the awakened thread can return from \verb"cond_wait", it has
+%to wait for and lock the {\tt Mutex}, again.
 
-In the next section I'll show you how my {\tt Cond} code works, but first I
-want to answer two frequently-asked questions:
+现在回到 \verb"queue_pop"，看看线程从 \verb"cond_wait" 返回时会发生什么。  
+它会回到 while 循环的开头，再次检查条件。  
+稍后我会解释原因，但现在先假设条件为真，也就是说队列中已经有元素。
 
+当消费者线程跳出 while 循环时，我们可以确定两点：  
+(1) 条件为真，即队列中至少有一个元素；  
+(2) {\tt Mutex} 已经被锁定，因此可以安全地访问队列。
+
+在取出一个元素之后，\verb"queue_pop" 会解锁互斥锁并返回。
+
+在下一节中，我会展示 {\tt Cond} 的具体实现方式，但在此之前，我想先回答两个常见问题：
+%Now go back to \verb"queue_pop" and see what happens when the thread
+%returns from \verb"cond_wait".  It loops back to the top of the while
+%loop and checks the condition again.  I'll explain why in just a
+%second, but for now let's assume that the condition is true; that is,
+%the queue is not empty.
+%
+%When the consumer thread exits the while loop, we know two things: (1)
+%the condition is true, so there is at least one item in the queue, and
+%(2) the {\tt Mutex} is locked, so it is safe to access the queue.
+%
+%After removing an item, \verb"queue_pop" unlocks the mutex
+%and returns.
+%
+%In the next section I'll show you how my {\tt Cond} code works, but first I
+%want to answer two frequently-asked questions:
+%
 \begin{itemize}
 
-\item Why is \verb"cond_wait" inside a while loop rather than an if
-statement; that is, why do we have to check the condition again after
-returning from \verb"cond_wait"?
+%\item Why is \verb"cond_wait" inside a while loop rather than an if
+%statement; that is, why do we have to check the condition again after
+%returning from \verb"cond_wait"?
+\item 为什么 \verb"cond_wait" 要放在 while 循环中，而不是 if 语句中？
+也就是说，为什么从 \verb"cond_wait" 返回后还需要再次检查条件？
 
-The primary reason you have to re-check the condition is the possibility
-of an intercepted signal.  Suppose Thread A is waiting on {\tt nonempty}.
-Thread B adds an item to the queue and signals {\tt nonempty}.  Thread
-A wakes up an tries to lock the mutex, but before it gets the chance,
-Evil Thread C swoops in, locks the mutex, pops the item from the
-queue, and unlocks the mutex.  Now the queue is empty again, but
-Thread A is not blocked any more.  Thread A could lock the mutex and
-returns from \verb"cond_wait".  If Thread A does not check the condition
-again, it would try to pop an element from an empty queue, and probably
-cause an error.
 
-\item The other question that comes up when people learn about condition
-variables is ``How does the condition variable know what condition it
-is associated with?''
+%The primary reason you have to re-check the condition is the possibility
+%of an intercepted signal.  Suppose Thread A is waiting on {\tt nonempty}.
+%Thread B adds an item to the queue and signals {\tt nonempty}.  Thread
+%A wakes up an tries to lock the mutex, but before it gets the chance,
+%Evil Thread C swoops in, locks the mutex, pops the item from the
+%queue, and unlocks the mutex.  Now the queue is empty again, but
+%Thread A is not blocked any more.  Thread A could lock the mutex and
+%returns from \verb"cond_wait".  If Thread A does not check the condition
+%again, it would try to pop an element from an empty queue, and probably
+%cause an error.
+主要原因在于“信号被截获”的可能性。  
+假设线程 A 正在 {\tt nonempty} 上等待。  
+线程 B 向队列中添加了一个元素，并对 {\tt nonempty} 发出了信号。  
+线程 A 被唤醒并试图获取互斥锁，但在它成功获取之前，邪恶的线程 C 抢先一步，锁定互斥锁，从队列中取走了这个元素，然后解锁。  
+此时队列再次变为空，但线程 A 已经不再处于阻塞状态。  
+线程 A 随后获取互斥锁，并从 \verb"cond_wait" 返回。  
+如果线程 A 不再次检查条件，它就会从一个空队列中取数据，从而很可能导致错误。
 
-This question is understandable because there is no explicit connection
-between a {\tt Cond} structure and the condition it relates to.  The
-connection is implicit in the way it is used.
+%\item The other question that comes up when people learn about condition
+%variables is ``How does the condition variable know what condition it
+%is associated with?''
+\item 另一个常见问题是：“条件变量如何知道它对应的具体条件是什么？”
 
-Here's one way to think of it: the condition associated with a Cond
-is the thing that is false when you call \verb"cond_wait" and true
-when you call \verb"cond_signal".
+这是可以理解的，因为在 {\tt Cond} 结构体与其所关联的条件之间，并不存在显式的绑定关系。  
+它们之间的关联是通过使用方式隐式建立的。
+
+可以这样理解：  
+当你调用 \verb"cond_wait" 时，条件是“假”的；  
+当你调用 \verb"cond_signal" 时，条件是“真”的。
+
+%This question is understandable because there is no explicit connection
+%between a {\tt Cond} structure and the condition it relates to.  The
+%connection is implicit in the way it is used.
+%
+%Here's one way to think of it: the condition associated with a Cond
+%is the thing that is false when you call \verb"cond_wait" and true
+%when you call \verb"cond_signal".
 
 \end{itemize}
 
-Because threads have to check the condition when they return from
-\verb"cond_wait", it is not strictly necessary to call \verb"cond_signal"
-only when the condition is true.  If you have reason to think the
-condition {\em might} be true, you could call \verb"cond_signal" as
-a suggestion that now is a good time to check.
+%Because threads have to check the condition when they return from
+%\verb"cond_wait", it is not strictly necessary to call \verb"cond_signal"
+%only when the condition is true.  If you have reason to think the
+%condition {\em might} be true, you could call \verb"cond_signal" as
+%a suggestion that now is a good time to check.
+由于线程在从 \verb"cond_wait" 返回后都会重新检查条件，因此实际上并不要求只在条件一定为真时才调用 \verb"cond_signal"。  
+只要你有理由认为条件“可能”为真，就可以调用 \verb"cond_signal" 作为一种提示，提示现在是检查条件的合适时机。
 
 
-\section{Condition variable implementation}
+%\section{Condition variable implementation}
+\section{条件变量实现}
 
-The Cond structure I used in the previous section is a wrapper
-for a type called \verb"pthread_cond_t", which is defined in the POSIX
-threads API.  It is very similar to Mutex, which is a wrapper for
-\verb"pthread_mutex_t".  Both wrappers are defined in {\tt utils.c} and
-{\tt utils.h}.
 
-Here's the typedef:
+%The Cond structure I used in the previous section is a wrapper
+%for a type called \verb"pthread_cond_t", which is defined in the POSIX
+%threads API.  It is very similar to Mutex, which is a wrapper for
+%\verb"pthread_mutex_t".  Both wrappers are defined in {\tt utils.c} and
+%{\tt utils.h}.
+%
+%Here's the typedef:
+前一节中使用的 {\tt Cond} 结构，是对 POSIX 线程 API 中 \verb"pthread_cond_t" 类型的一个封装。  
+这与 {\tt Mutex} 非常相似，{\tt Mutex} 是 \verb"pthread_mutex_t" 的封装。  
+这两个封装都定义在 {\tt utils.c} 和 {\tt utils.h} 中。
+
+其类型定义如下：
 
 \begin{verbatim}
 typedef pthread_cond_t Cond;
 \end{verbatim}
 
-\verb"make_cond" allocates space, initializes the condition variable,
-and returns a pointer:
+%\verb"make_cond" allocates space, initializes the condition variable,
+%and returns a pointer:
+\verb"make_cond" 负责分配空间、初始化条件变量，并返回一个指针：
 
 \begin{verbatim}
 Cond *make_cond() {
@@ -5719,7 +5786,9 @@ Cond *make_cond() {
 }
 \end{verbatim}
 
-And here are the wrappers for \verb"cond_wait" and \verb"cond_signal".
+%And here are the wrappers for \verb"cond_wait" and \verb"cond_signal".
+下面是 \verb"cond_wait" 和 \verb"cond_signal" 的封装实现：
+
 
 \begin{verbatim}
 void cond_wait(Cond *cond, Mutex *mutex) {
@@ -5733,11 +5802,12 @@ void cond_signal(Cond *cond) {
 }
 \end{verbatim}
 
-At this point there should be nothing too surprising there.
+%At this point there should be nothing too surprising there.
+到这里为止，这些代码应该都不会让你感到意外。
 
+%\chapter{Semaphores in C}
 
-
-\chapter{Semaphores in C}
+\chapter{C中的信号量}
 
 Semaphores are a good way to learn about synchronization, but
 they are not as widely used, in practice, as mutexes and
